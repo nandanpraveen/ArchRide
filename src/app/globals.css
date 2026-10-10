@@ -1,0 +1,53 @@
+@layer theme, base, mui, components, utilities;
+@import "tailwindcss";
+:root {
+  --archride-background: oklch(1 0 0);
+  --archride-surface: oklch(0.97 0 0);
+  --archride-ink: oklch(0.2 0 0);
+  --archride-primary: oklch(0.48 0.18 24);
+}
+@theme inline {
+  --font-sans: var(--font-roboto);
+}
+html {
+  min-width: 320px;
+}
+body {
+  margin: 0;
+  background: var(--archride-background);
+  color: var(--archride-ink);
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+:focus-visible {
+  outline: 3px solid var(--archride-primary);
+  outline-offset: 4px;
+}
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 1500;
+  padding: 12px 18px;
+  background: var(--archride-background);
+  color: var(--archride-ink);
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

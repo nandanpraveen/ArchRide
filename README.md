@@ -1,0 +1,54 @@
+# ArchRide
+
+A mobile-first campus transit app for UGA students, built as a KTP pledge project with **Next.js, TypeScript, Material UI, Tailwind CSS, and Supabase**.
+
+ArchRide will help a student choose between walking and a direct bus trip, identify the correct boarding stop/direction, and understand when to leave and whether a class deadline looks achievable. The repository currently contains the **development starter**; the full app is the twelve-task team project.
+
+[GitHub project and draft issues](https://github.com/users/nandanpraveen/projects/1) · [Delivery plan](docs/ROADMAP.md) · [Full app brief](docs/APP_BRIEF.md) · [Design system](DESIGN.md) · [Development notes](docs/DEVELOPMENT.md)
+
+## Start locally
+
+Use Node.js 24 and pnpm 12.5.1. Dependencies and the public Supabase configuration are already set up on the bootstrap machine at `/Users/nandanpraveen/Documents/ArchRide`.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm dev
+```
+
+Open [localhost:3000](http://localhost:3000). For a fresh clone, first copy `.env.example` to `.env.local` and obtain the ArchRide project URL and **publishable** key from the project owner or your authorized Supabase dashboard. Never put a secret/service-role key in a `NEXT_PUBLIC_` variable.
+
+```sh
+cp .env.example .env.local
+```
+
+The Material shell includes Home, Map, Plan, Saved, and Profile, responsive bottom/rail navigation, accessible focus and skip links, and honest empty states. Live transit and personalized features are implemented through the project drafts. Location and an account will not be required for public transit browsing.
+
+## Check your work
+
+```sh
+pnpm lint
+pnpm typecheck
+pnpm exec playwright install chromium # first test run on a new machine
+pnpm test
+pnpm build
+```
+
+`pnpm test` runs the desktop/mobile browser suite and starts its own test server on port 3100. `pnpm test:e2e` is an alias. CI runs lint, type checks, a production build, and browser tests for pushes and pull requests. Tests do not need shared Supabase secrets.
+
+`GET /api/health` checks database connectivity. With the configured starter database it reports `status: ok`, `database: connected`, and `transit: not-connected`; it does not claim a live transit feed.
+
+## Team workflow
+
+The private repository collaborators are `varunsayana`, `IvanI2006`, `jadon-montgomery`, and `alethearocks`. Repository invitations must be accepted. They also have write access to the private GitHub project so they can claim draft work.
+
+There are exactly four drafts per Sunday-to-Sunday work window: **October 11–18**, **October 18–25**, and **October 25–November 1, 2026**, using America/New_York. Assign yourself on the project before starting, use a feature branch and pull request, and coordinate dependencies in the draft's Background section. Convert the draft to a repository issue when needed; do not duplicate it.
+
+Every draft follows Summary, Background, Requirements, Out of scope, What we'll test, Resources. Task 12 is the complete production release gate; it stays open until tasks 1–11 and the agreed app's end-to-end acceptance checks are complete.
+
+## Backend
+
+[ArchRide Supabase dashboard](https://supabase.com/dashboard/project/yivnryjbzhampecphlgr) · Free plan · US East/North Virginia.
+
+The starter has typed browser/server Supabase clients, session-refresh support, two applied migrations, public read-only feed health, and private owner-only profiles. The full shared/private schema, Auth screens, ingestion, jobs, and admin features are scoped in the project. See [development notes](docs/DEVELOPMENT.md) for linking, migrations, type generation, and optional local Docker workflows.
+
+This is a student-built project, not affiliated with or endorsed by UGA. Live data access, reuse terms, provider limits, and prediction quality must be verified before launch. [UGA's official transit page](https://tps.uga.edu/transit/) links the [official bus tracker](https://routes.uga.edu/); it does not establish reuse rights for every underlying endpoint.
