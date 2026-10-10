@@ -37,18 +37,8 @@ pnpm build
 
 `GET /api/health` checks database connectivity. With the configured starter database it reports `status: ok`, `database: connected`, and `transit: not-connected`; it does not claim a live transit feed.
 
-## Team workflow
-
-The private repository collaborators are `varunsayana`, `IvanI2006`, `jadon-montgomery`, and `alethearocks`. Repository invitations must be accepted. They also have write access to the private GitHub project so they can claim draft work.
-
-There are exactly four drafts per Sunday-to-Sunday work window: **October 11–18**, **October 18–25**, and **October 25–November 1, 2026**, using America/New_York. Assign yourself on the project before starting, use a feature branch and pull request, and coordinate dependencies in the draft's Background section. Convert the draft to a repository issue when needed; do not duplicate it.
-
-Every draft follows Summary, Background, Requirements, Out of scope, What we'll test, Resources. Task 12 is the complete production release gate; it stays open until tasks 1–11 and the agreed app's end-to-end acceptance checks are complete.
-
 ## Backend
 
 [ArchRide Supabase dashboard](https://supabase.com/dashboard/project/yivnryjbzhampecphlgr) · Free plan · US East/North Virginia.
 
 The starter has typed browser/server Supabase clients, session-refresh support, two applied migrations, public read-only feed health, and private owner-only profiles. The full shared/private schema, Auth screens, ingestion, jobs, and admin features are scoped in the project. See [development notes](docs/DEVELOPMENT.md) for linking, migrations, type generation, and optional local Docker workflows.
-
-This is a student-built project, not affiliated with or endorsed by UGA. Live data access, reuse terms, provider limits, and prediction quality must be verified before launch. [UGA's official transit page](https://tps.uga.edu/transit/) links the [official bus tracker](https://routes.uga.edu/); it does not establish reuse rights for every underlying endpoint.
