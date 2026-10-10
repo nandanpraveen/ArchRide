@@ -33,7 +33,7 @@ pnpm test
 pnpm build
 ```
 
-`pnpm test` runs the desktop/mobile browser suite and starts its own test server on port 3100. `pnpm test:e2e` is an alias. CI runs lint, type checks, a production build, and browser tests for pushes and pull requests. Tests do not need shared Supabase secrets.
+`pnpm test` runs the desktop/mobile browser suite on port 3000. Locally it reuses your running development server or starts one when needed; CI always starts a fresh server. `pnpm test:e2e` is an alias. CI runs lint, type checks, a production build, and browser tests for pushes and pull requests. Tests do not need shared Supabase secrets.
 
 `GET /api/health` checks database connectivity. With the configured starter database it reports `status: ok`, `database: connected`, and `transit: not-connected`; it does not claim a live transit feed.
 
