@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Alert, Box, Button, Stack, Typography } from "@mui/material";
 import ArrowForwardRounded from "@mui/icons-material/ArrowForwardRounded";
 import { EmptyState } from "@/components/empty-state";
+
 export default function HomePage() {
   return (
     <Stack spacing={4}>

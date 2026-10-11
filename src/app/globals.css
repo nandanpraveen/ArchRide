@@ -51,3 +51,7 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
+
+.heading-primary {
+  @apply font-bold text-black text-4xl!;
+}
