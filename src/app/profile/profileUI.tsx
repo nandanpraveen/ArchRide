@@ -10,11 +10,12 @@ interface profileProps {
 }
 
 export default function ProfileUI({ userSignedIn, userEmail }: profileProps) {
-  const [signedIn, setSignedIn] = useState(userSignedIn);
-  const [email, setEmail] = useState(userEmail);
+  const [signedIn, setSignedIn] = useState<boolean>(userSignedIn);
+  const [email, setEmail] = useState<string>(userEmail);
   useEffect(() => {
-    console.log(signedIn, userEmail);
-  });
+    setEmail(userEmail);
+    console.log(signedIn, email);
+  }, [userEmail]);
   return (
     <Stack spacing={3}>
       <Typography component="h1" variant="h1">
@@ -25,9 +26,7 @@ export default function ProfileUI({ userSignedIn, userEmail }: profileProps) {
         <div className="flex flex-col gap-6 justify-center items-center">
           <div className="flex flex-col w-full gap-2 ">
             <p>Email</p>
-            <TextField disabled className="">
-              {userEmail}
-            </TextField>
+            <TextField defaultValue={email} disabled className="" />
           </div>
 
           <Button className="">Sign Out</Button>
