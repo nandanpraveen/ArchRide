@@ -1,0 +1,51 @@
+"use client";
+import { Alert, Button, Stack, Typography } from "@mui/material";
+import { EmptyState } from "@/components/empty-state";
+import { useEffect, useState } from "react";
+import { TextField } from "@mui/material";
+
+interface profileProps {
+  userSignedIn: boolean;
+  userEmail: string;
+}
+
+export default function ProfileUI({ userSignedIn, userEmail }: profileProps) {
+  const [signedIn, setSignedIn] = useState(userSignedIn);
+  const [email, setEmail] = useState(userEmail);
+  useEffect(() => {
+    console.log(signedIn, userEmail);
+  });
+  return (
+    <Stack spacing={3}>
+      <Typography component="h1" variant="h1">
+        Profile
+      </Typography>
+
+      {signedIn ? (
+        <div className="flex flex-col gap-6 justify-center items-center">
+          <div className="flex flex-col w-full gap-2 ">
+            <p>Email</p>
+            <TextField disabled className="">
+              {userEmail}
+            </TextField>
+          </div>
+
+          <Button className="">Sign Out</Button>
+        </div>
+      ) : (
+        <div>
+          <Alert severity="info">
+            You are browsing as a guest. Public transit information will be
+            available without an account.
+          </Alert>
+          <EmptyState
+            title="Travel your way"
+            description="Account sign-in and personal preferences are being prepared. Your class schedule and saved journeys will be private, and location sharing will always be optional."
+            action="Back to Home"
+            href="/"
+          />
+        </div>
+      )}
+    </Stack>
+  );
+}

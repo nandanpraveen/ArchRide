@@ -4,16 +4,20 @@ import { useState, useEffect } from "react";
 import { ReactFormState } from "react-dom/client";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 interface FormProps {
   formMode: "create-account" | "sign-in";
 }
 const AccountForm = ({ formMode }: FormProps) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmedPassword, setConfirmedPassword] = useState("");
+  //Variable Setup
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [emailConfirmation, setEmailConfirmation] = useState<boolean>(true); //Currently unused
+  const [email, setEmail] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmedPassword, setConfirmedPassword] = useState<string>("");
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<string>(formMode);
   const [headerMessage, SetHeaderMessage] = useState<string>(
     formMode === "create-account"
@@ -48,6 +52,11 @@ const AccountForm = ({ formMode }: FormProps) => {
         return setError(error.message);
       } else {
         setUser(data.user);
+
+        if (data.session) {
+          router.push("/");
+          router.refresh();
+        }
       }
     } else {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -59,6 +68,10 @@ const AccountForm = ({ formMode }: FormProps) => {
         return setError(error.message);
       } else {
         setUser(data.user);
+        if (data.session) {
+          router.push("/");
+          router.refresh();
+        }
       }
     }
     setLoading(false);
