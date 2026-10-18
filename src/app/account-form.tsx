@@ -1,17 +1,18 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { ReactFormState } from "react-dom/client";
 import { createClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { guestLogin } from "./sign-in/actions";
+
 interface FormProps {
   formMode: "create-account" | "sign-in";
 }
 const AccountForm = ({ formMode }: FormProps) => {
   //Variable Setup
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false); //Currently not implemented
   const [emailConfirmation, setEmailConfirmation] = useState<boolean>(true); //Currently unused
   const [email, setEmail] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -25,16 +26,26 @@ const AccountForm = ({ formMode }: FormProps) => {
       : "Let's get you signed in",
   );
 
-  const handleAccountCreation = async (e: React.MouseEvent<HTMLElement>) => {
+  const handleAccountCreation = async (
+    e: React.MouseEvent<HTMLElement>,
+    isGuest: boolean = false,
+  ) => {
     e.preventDefault();
-    if (mode === "create-account") {
-      if (confirmedPassword === password) {
-        processForm();
+    console.log("click ", isGuest);
+    if (!isGuest) {
+      console.log("non guest Login");
+      if (mode === "create-account") {
+        if (confirmedPassword === password) {
+          processForm();
+        } else {
+          setError("Passwords do not match. Please try again.");
+        }
       } else {
-        setError("Passwords do not match. Please try again.");
+        processForm();
       }
     } else {
-      processForm();
+      console.log("guest Login");
+      await guestLogin();
     }
   };
 
@@ -74,7 +85,7 @@ const AccountForm = ({ formMode }: FormProps) => {
         }
       }
     }
-    setLoading(false);
+    // setLoading(false);
   };
 
   return (
@@ -132,6 +143,15 @@ const AccountForm = ({ formMode }: FormProps) => {
                 className="text-[0.8rem] rounded-[5%] bg-amber-500 w-[30%] h-8 "
               >
                 Create
+              </button>
+              <button
+                onClick={(e: React.MouseEvent<HTMLElement>) => {
+                  handleAccountCreation(e, true);
+                }}
+                disabled={loading}
+                className="text-[0.8rem] rounded-[5%] bg-amber-500 w-[30%] h-8 "
+              >
+                Sign in as guest
               </button>
             </div>
             {mode === "create-account" ? (

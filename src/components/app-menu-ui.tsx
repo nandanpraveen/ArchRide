@@ -20,7 +20,8 @@ import AltRouteRounded from "@mui/icons-material/AltRouteRounded";
 import BookmarkRounded from "@mui/icons-material/BookmarkRounded";
 import PersonRounded from "@mui/icons-material/PersonRounded";
 import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
+import { getUser } from "@/app/get-user";
 const destinations = [
   { label: "Home", href: "/", icon: HomeRounded },
   { label: "Map", href: "/map", icon: MapRounded },
@@ -28,13 +29,14 @@ const destinations = [
   { label: "Saved", href: "/saved", icon: BookmarkRounded },
   { label: "Profile", href: "/profile", icon: PersonRounded },
 ];
-export function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const [signedIn, setSignedIn] = useState(false); //Guest profile counts as signed in
 
-  // export const signedIn = () => {
-  //   //Figure out how to connect signed in data from the form to this file.
-  // };
+interface AppMenuUIProps {
+  children: React.ReactNode;
+  signedIn: boolean;
+}
+export function AppMenuUI({ signedIn, children }: AppMenuUIProps) {
+  const pathname = usePathname();
+
   return (
     <>
       <a href="#main-content" className="skip-link">

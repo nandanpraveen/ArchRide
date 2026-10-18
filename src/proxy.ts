@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/lib/supabase/database.types";
+
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -23,9 +24,22 @@ export async function proxy(request: NextRequest) {
       },
     },
   });
-  await supabase.auth.getClaims();
+  const claims = await supabase.auth.getClaims();
+  const isUserAuthenticated = claims.data?.claims;
+  const path = request.nextUrl.pathname;
+  const isPathAuthenticated =
+    path.startsWith("/sign-in") || path.startsWith("/create-account");
+
+  if (
+    !(request.cookies.has("guest") || isUserAuthenticated) &&
+    !isPathAuthenticated
+  ) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
   return response;
 }
 export const config = {
-  matcher: ["/profile/:path*", "/saved/:path*", "/auth/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)", //AI generated guard against any of these file formats
+  ],
 };

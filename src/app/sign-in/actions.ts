@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 export async function login(formData: FormData) {
   const supabase = await createClient();
   // type-casting here for convenience
@@ -16,6 +17,12 @@ export async function login(formData: FormData) {
   }
   revalidatePath("/", "layout");
   redirect("/account");
+}
+
+export async function guestLogin() {
+  const cookieStore = await cookies();
+  cookieStore.set("guest", "1", { path: "/", httpOnly: true, sameSite: "lax" });
+  redirect("/");
 }
 export async function signup(formData: FormData) {
   const supabase = await createClient();
