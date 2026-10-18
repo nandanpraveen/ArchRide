@@ -39,7 +39,8 @@ export async function proxy(request: NextRequest) {
   return response;
 }
 export const config = {
+  //AI generated guard against any of the listed file formats
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)", //AI generated guard against any of these file formats
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)", //proxy will run on every path except the listed
   ],
 };

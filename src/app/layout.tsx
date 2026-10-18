@@ -32,12 +32,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const user = await getUser();
-  // const cookieStore = await cookies();
-  // if (cookieStore.has("guest") || user) {
-  //   redirect("/");
-  // }
-
   const user = await getUser();
   let isGuest = false;
 

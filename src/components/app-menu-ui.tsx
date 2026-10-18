@@ -44,6 +44,7 @@ export function AppMenuUI({ signedIn, children }: AppMenuUIProps) {
       </a>
       {signedIn ? (
         <AppBar
+          className="mb-10"
           position="static"
           color="transparent"
           elevation={0}
@@ -107,29 +108,31 @@ export function AppMenuUI({ signedIn, children }: AppMenuUIProps) {
         )}
         {children}
         {signedIn ? (
-          <div>
-            <Typography
-              component="footer"
-              variant="caption"
-              color="text.secondary"
-              sx={{ display: "block", mt: 8, maxWidth: "65ch" }}
-            >
-              A student-built KTP project. Not affiliated with or endorsed by
-              UGA. Transit estimates depend on available source data.
-            </Typography>
-            <Box
-              component="main"
-              id="main-content"
-              tabIndex={-1}
-              sx={{
-                flex: 1,
-                minWidth: 0,
-                px: { xs: 2.5, sm: 4 },
-                pt: { xs: 4, md: 6 },
-                pb: 16,
-              }}
-            ></Box>{" "}
-          </div>
+          //Restructure and add back in later
+          // <div>
+          //   <Typography
+          //     component="footer"
+          //     variant="caption"
+          //     color="text.secondary"
+          //     sx={{ display: "block", mt: 8, maxWidth: "65ch" }}
+          //   >
+          //     A student-built KTP project. Not affiliated with or endorsed by
+          //     UGA. Transit estimates depend on available source data.
+          //   </Typography>
+          //   <Box
+          //     component="main"
+          //     id="main-content"
+          //     tabIndex={-1}
+          //     sx={{
+          //       flex: 1,
+          //       minWidth: 0,
+          //       px: { xs: 2.5, sm: 4 },
+          //       pt: { xs: 4, md: 6 },
+          //       pb: 16,
+          //     }}
+          //   ></Box>{" "}
+          // </div>
+          <></>
         ) : (
           ""
         )}
