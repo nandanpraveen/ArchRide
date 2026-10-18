@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
 import { Providers } from "@/components/providers";
-import { AppShell } from "@/components/app-shell";
+import { AppShell } from "@/components/app-UI";
 import "./globals.css";
 const roboto = Roboto({
   variable: "--font-roboto",

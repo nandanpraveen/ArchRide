@@ -39,7 +39,7 @@ export default function ProfileUI({ userSignedIn, userEmail }: profileProps) {
           </Button>
         </div>
       ) : (
-        <div>
+        <div className=" flex flex-col gap-4">
           <Alert severity="info">
             You are browsing as a guest. Public transit information will be
             available without an account.
@@ -50,6 +50,9 @@ export default function ProfileUI({ userSignedIn, userEmail }: profileProps) {
             action="Back to Home"
             href="/"
           />
+          <Button onClick={handleSignOut} className="">
+            Sign Out
+          </Button>
         </div>
       )}
     </Stack>

@@ -26,8 +26,7 @@ export function EmptyState({
         </Typography>
         <Typography color="text.secondary" sx={{ maxWidth: "60ch" }}>
           {description}
-        </Typography>
-        ``{" "}
+        </Typography>{" "}
         <Button component={Link} href={href} variant="contained">
           {action}
         </Button>
