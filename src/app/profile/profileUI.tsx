@@ -3,6 +3,7 @@ import { Alert, Button, Stack, Typography } from "@mui/material";
 import { EmptyState } from "@/components/empty-state";
 import { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
+import { signOut } from "./actions";
 
 interface profileProps {
   userSignedIn: boolean;
@@ -14,8 +15,12 @@ export default function ProfileUI({ userSignedIn, userEmail }: profileProps) {
   const [email, setEmail] = useState<string>(userEmail);
   useEffect(() => {
     setEmail(userEmail);
-    console.log(signedIn, email);
   }, [userEmail]);
+
+  const handleSignOut = (e: React.MouseEvent) => {
+    e.preventDefault();
+    signOut();
+  };
   return (
     <Stack spacing={3}>
       <Typography component="h1" variant="h1">
@@ -29,7 +34,9 @@ export default function ProfileUI({ userSignedIn, userEmail }: profileProps) {
             <TextField defaultValue={email} disabled className="" />
           </div>
 
-          <Button className="">Sign Out</Button>
+          <Button onClick={handleSignOut} className="">
+            Sign Out
+          </Button>
         </div>
       ) : (
         <div>
