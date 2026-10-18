@@ -1,0 +1,28 @@
+name: Central UGA transit ingestion
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+permissions:
+  contents: read
+concurrency:
+  group: uga-transit-ingestion
+  cancel-in-progress: false
+jobs:
+  ingest:
+    # Enable only after migration, source/quotas review, and secrets setup in the runbook.
+    if: vars.TRANSIT_INGESTION_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm transit:ingest
+        env:
+          TRANSIT_DATABASE_URL: ${{ secrets.TRANSIT_DATABASE_URL }}
+          TRANSIT_SOURCE_APPROVED: ${{ vars.TRANSIT_SOURCE_APPROVED }}

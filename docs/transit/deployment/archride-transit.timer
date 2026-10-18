@@ -1,0 +1,12 @@
+# Example only: confirm provider interval/quota before installing/enabling.
+# Disable GitHub Actions ingestion when using this timer.
+[Unit]
+Description=ArchRide transit polling at provider-approved interval
+
+[Timer]
+OnBootSec=60
+OnUnitInactiveSec=30
+Unit=archride-transit.service
+
+[Install]
+WantedBy=timers.target

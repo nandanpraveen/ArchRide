@@ -37,6 +37,10 @@ pnpm build
 
 `GET /api/health` checks database connectivity. With the configured starter database it reports `status: ok`, `database: connected`, and `transit: not-connected`; it does not claim a live transit feed.
 
+## Transit ingestion (Week 1)
+
+See the [implementation, source evidence, team contracts, and activation runbook](docs/transit/README.md). Run `pnpm test:transit` for isolated PostgreSQL ingestion/security tests. Hosted ingestion remains disabled until source limits and worker credentials are configured.
+
 ## Backend
 
 [ArchRide Supabase dashboard](https://supabase.com/dashboard/project/yivnryjbzhampecphlgr) · Free plan · US East/North Virginia.

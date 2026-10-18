@@ -10,7 +10,11 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "playwright test",
     "test:e2e": "playwright test",
-    "db:types": "supabase gen types --linked --lang typescript --schema public > src/lib/supabase/database.types.ts"
+    "db:types": "supabase gen types --linked --lang typescript --schema public > src/lib/supabase/database.types.ts",
+    "transit:ingest": "node --import tsx scripts/transit/ingest.ts",
+    "transit:probe": "node --import tsx scripts/transit/probe.ts",
+    "test:transit": "node --import tsx --test tests/transit/*.test.ts",
+    "db:types:local": "node --import tsx scripts/transit/generate-types.ts"
   },
   "dependencies": {
     "@emotion/cache": "11.14.0",
@@ -21,15 +25,22 @@
     "@mui/material-nextjs": "9.5.0",
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.117.3",
+    "csv-parse": "7.0.3",
+    "fflate": "0.8.3",
+    "gtfs-realtime-bindings": "2.2.0",
     "next": "16.4.0",
+    "pg": "8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "server-only": "0.0.1"
+    "server-only": "0.0.1",
+    "tsx": "4.23.15"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.10",
     "@playwright/test": "1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
+    "@types/pg": "8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

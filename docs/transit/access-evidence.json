@@ -1,0 +1,76 @@
+{
+  "checkedAt": "2026-10-17T05:18:42.506Z",
+  "environment": "Isolated PGlite PostgreSQL, not hosted Supabase",
+  "credentialsRequired": false,
+  "static": {
+    "url": "https://passio3.com/uga/passioTransit/gtfs/google_transit.zip",
+    "bytes": 203698,
+    "sha256": "a1844f83f849dd054bd706d69a39a117ba874158e430a979026ec7a690e2f6f6",
+    "counts": {
+      "transit_routes": 19,
+      "transit_stops": 161,
+      "transit_shapes": 22,
+      "transit_services": 6,
+      "transit_trips": 229,
+      "transit_stop_times": 4351,
+      "transit_frequencies": 90
+    }
+  },
+  "feeds": [
+    {
+      "feed": "vehicles",
+      "url": "https://passio3.com/uga/passioTransit/gtfs/realtime/vehiclePositions",
+      "bytes": 209,
+      "sha256": "5ce331c55908c39b6d29879781ed40e16a4597d07d09eeddbe99758c0bb2fa38",
+      "sourceTimestamp": "2026-10-17T05:18:43.000Z",
+      "entities": 2,
+      "normalizedRows": 2,
+      "rejected": 0,
+      "first": {
+        "outcome": "success",
+        "count": 2
+      },
+      "replay": {
+        "outcome": "success",
+        "count": 2
+      }
+    },
+    {
+      "feed": "arrivals",
+      "url": "https://passio3.com/uga/passioTransit/gtfs/realtime/tripUpdates",
+      "bytes": 1281,
+      "sha256": "e96ae9aa700425c328d464f84f1c355928a4ba8eb2bbc0eba9bd8189f5998c55",
+      "sourceTimestamp": "2026-10-17T05:18:43.000Z",
+      "entities": 3,
+      "normalizedRows": 38,
+      "rejected": 0,
+      "first": {
+        "outcome": "success",
+        "count": 38
+      },
+      "replay": {
+        "outcome": "success",
+        "count": 38
+      }
+    },
+    {
+      "feed": "alerts",
+      "url": "https://passio3.com/uga/passioTransit/gtfs/realtime/serviceAlerts",
+      "bytes": 234,
+      "sha256": "80951a2273da8b037aa8b481b8d5b865f5231a99d3cabc0e6f1e04e9710fb7d5",
+      "sourceTimestamp": "2026-10-17T05:18:43.000Z",
+      "entities": 1,
+      "normalizedRows": 1,
+      "rejected": 0,
+      "first": {
+        "outcome": "success",
+        "count": 1
+      },
+      "replay": {
+        "outcome": "success",
+        "count": 1
+      }
+    }
+  ],
+  "limits": "A successful read does not establish polling quotas or expand the provider email permission. No recurring upstream polling was enabled."
+}
