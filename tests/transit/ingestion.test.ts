@@ -622,3 +622,14 @@ test("omitted protobuf uncertainty/speed/bearing stay unknown and omitted stop s
   assert.equal(r.rows[0].stop_sequence, 2);
   assert.equal(r.rows[0].uncertainty_seconds, null);
 });
+
+test("Passio vehicles sharing GTFS trip/date/start retain independent arrival identities", () => {
+  const entities = ["bus-a", "bus-b"].map((vehicleId) => ({
+    id: vehicleId,
+    tripUpdate: { ...update().tripUpdate, vehicle: { id: vehicleId } },
+  }));
+  const r = normalize("arrivals", message(entities), ctx(), NOW);
+  assert.equal(r.rows.length, 4);
+  assert.equal(new Set(r.rows.map((row) => row.id)).size, 4);
+  assert.equal(new Set(r.rows.map((row) => row.instance_key)).size, 2);
+});

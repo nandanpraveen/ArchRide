@@ -2,6 +2,10 @@
 
 Use this handoff when the contributor can develop and open a PR but cannot administer the shared Supabase project. The maintainer keeps all credentials in their own authorized environment. The contributor does not need direct database access to submit this change.
 
+## Current deployment
+
+As of October 19, the shared project has the three transit migrations and authenticated Edge Function deployed. See [HOSTED_STATUS.md](HOSTED_STATUS.md) before applying anything: do not push the same schema under a different migration version. The contributor now has connector access; this document remains the recovery/alternate-deployment procedure. Do not enable the Actions worker alongside the hosted scheduler.
+
 ## Review and merge
 
 - Review branch `feature/transit-ingestion` against `main`; run CI before merging.

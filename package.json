@@ -14,7 +14,9 @@
     "transit:ingest": "node --import tsx scripts/transit/ingest.ts",
     "transit:probe": "node --import tsx scripts/transit/probe.ts",
     "test:transit": "node --import tsx --test tests/transit/*.test.ts",
-    "db:types:local": "node --import tsx scripts/transit/generate-types.ts"
+    "db:types:local": "node --import tsx scripts/transit/generate-types.ts",
+    "transit:edge:build": "node scripts/transit/build-edge.mjs",
+    "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts"
   },
   "dependencies": {
     "@emotion/cache": "11.14.0",

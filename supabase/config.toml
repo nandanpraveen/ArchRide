@@ -412,3 +412,9 @@ enabled = true
 # declarative_schema_path = "./database"
 # JSON string passed through to pg-delta SQL formatting.
 # format_options = "{\"keywordCase\":\"upper\",\"indent\":2,\"maxWidth\":80,\"commaStyle\":\"trailing\"}"
+
+[functions.transit-ingest]
+# A dedicated Vault job token is verified by the function; ordinary JWTs cannot run ingestion.
+verify_jwt = false
+entrypoint = "./functions/transit-ingest/index.ts"
+import_map = "./functions/transit-ingest/deno.json"

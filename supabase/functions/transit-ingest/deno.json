@@ -1,0 +1,8 @@
+{
+  "imports": {
+    "pg": "npm:pg@8.23.1",
+    "csv-parse/sync": "npm:csv-parse@7.0.3/sync",
+    "fflate": "npm:fflate@0.8.3",
+    "gtfs-realtime-bindings": "npm:gtfs-realtime-bindings@2.2.0"
+  }
+}

@@ -10,7 +10,11 @@ export async function localDatabase() {
   for (const file of (await readdir("supabase/migrations"))
     .filter((f) => f.endsWith(".sql"))
     .sort())
-    await engine.exec(await readFile("supabase/migrations/" + file, "utf8"));
+    await engine.exec(
+      (await readFile("supabase/migrations/" + file, "utf8")).split(
+        "-- HOSTED INFRASTRUCTURE:",
+      )[0],
+    );
   // pg and PGlite expose equivalent query/rows here, but use different generic constraints.
   const db: DB = {
     query: async <T extends Record<string, unknown>>(

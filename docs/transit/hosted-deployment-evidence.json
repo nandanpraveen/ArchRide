@@ -1,0 +1,88 @@
+{
+  "checkedAt": "2026-10-19T23:57:39.226977+00:00",
+  "project": "yivnryjbzhampecphlgr",
+  "migrations": [
+    {
+      "version": "20261010220041",
+      "name": "foundation"
+    },
+    {
+      "version": "20261010220850",
+      "name": "restrict_starter_grants"
+    },
+    {
+      "version": "20261019234255",
+      "name": "transit"
+    },
+    {
+      "version": "20261019234502",
+      "name": "transit_hosted_worker"
+    },
+    {
+      "version": "20261019235421",
+      "name": "transit_maintenance"
+    }
+  ],
+  "counts": {
+    "routes": 19,
+    "stops": 161,
+    "vehicles": 11,
+    "arrivals": 170,
+    "observations": 52
+  },
+  "workerResponses": [
+    {
+      "id": 4,
+      "status_code": 200,
+      "content": "{\"outcome\":\"success\",\"failed\":false,\"replayVerified\":true}"
+    },
+    {
+      "id": 5,
+      "status_code": 200,
+      "content": "{\"outcome\":\"success\",\"failed\":false,\"replayVerified\":false}"
+    },
+    {
+      "id": 6,
+      "status_code": 200,
+      "content": "{\"outcome\":\"overlap_skipped\",\"failed\":false}"
+    },
+    {
+      "id": 7,
+      "status_code": 200,
+      "content": "{\"outcome\":\"success\",\"failed\":false,\"replayVerified\":false}"
+    }
+  ],
+  "jobs": [
+    {
+      "jobname": "archride-static-refresh",
+      "schedule": "17 * * * *",
+      "active": true
+    },
+    {
+      "jobname": "archride-realtime-refresh",
+      "schedule": "* * * * *",
+      "active": true
+    },
+    {
+      "jobname": "archride-transit-retention",
+      "schedule": "43 * * * *",
+      "active": true
+    }
+  ],
+  "realtimeEnabled": false,
+  "databaseBytes": 14415539,
+  "workerDeployment": {
+    "id": "42ca6f27-0fb0-46ae-a017-afe67db33429",
+    "slug": "transit-ingest",
+    "name": "transit-ingest",
+    "status": "ACTIVE",
+    "version": 4,
+    "created_at": 1792453517874,
+    "updated_at": 1792454137616,
+    "verify_jwt": false,
+    "import_map": true,
+    "ezbr_sha256": "9b0035c4fc9f1a72cacb2b0ba31989e2136935d581e84bee728d23ba60ca45ad"
+  },
+  "securityAdvisorFindings": 0,
+  "authenticatedAndAnonymousSqlRoleChecks": "passed"
+}

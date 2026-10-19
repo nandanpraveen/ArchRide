@@ -226,7 +226,11 @@ function timestamp(n: unknown, now: number): string {
   );
   return new Date(v * 1000).toISOString();
 }
-function tripInfo(t: TripDescriptor | null | undefined, c: Context) {
+function tripInfo(
+  t: TripDescriptor | null | undefined,
+  c: Context,
+  vehicleId?: string | null,
+) {
   if (!t?.tripId) return null;
   const trip = c.trips.get(id(t.tripId));
   assert(trip, "unknown_trip");
@@ -235,7 +239,12 @@ function tripInfo(t: TripDescriptor | null | undefined, c: Context) {
   if (t.startTime) seconds(t.startTime);
   return {
     trip,
-    instance: [id(t.tripId), t.startDate || "", t.startTime || ""].join("|"),
+    instance: [
+      id(t.tripId),
+      t.startDate || "",
+      t.startTime || "",
+      ...(vehicleId ? ["vehicle:" + vehicleId] : []),
+    ].join("|"),
   };
 }
 const text = (
@@ -292,7 +301,7 @@ export function normalize(
             Object.hasOwn(v.position, "longitude"),
           "missing_coordinate",
         );
-        const t = tripInfo(v.trip, c),
+        const t = tripInfo(v.trip, c, v.vehicle?.id),
           raw = v.vehicle?.id || e.id;
         const route =
           t?.trip.route_id || (v.trip?.routeId ? id(v.trip.routeId) : null);
@@ -354,7 +363,7 @@ export function normalize(
       } else if (feed === "arrivals") {
         const u = e.tripUpdate;
         assert(u, "missing_trip_update");
-        const t = tripInfo(u.trip, c);
+        const t = tripInfo(u.trip, c, u.vehicle?.id);
         assert(t, "missing_trip");
         // Frequency trips need an instance start time; otherwise simultaneous runs collide.
         assert(u.trip.startDate && u.trip.startTime, "ambiguous_trip_instance");
