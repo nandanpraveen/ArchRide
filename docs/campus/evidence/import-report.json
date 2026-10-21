@@ -1,0 +1,30 @@
+{
+  "fetchedAt": "2026-10-21T04:25:36.306Z",
+  "attribution": "Campus location data: University of Georgia Office of University Architects (UGA GIS). Student-built, noncommercial; no university endorsement.",
+  "selectedPropertyNames": [
+    "Main Campus",
+    "Health Sciences Campus",
+    "Chicopee Complex",
+    "Riverbend Research Park",
+    "River's Crossing",
+    "School of Social Work"
+  ],
+  "sourceCounts": {
+    "buildings": 1996,
+    "doors": 116,
+    "properties": 29
+  },
+  "importedCounts": {
+    "buildings": 354,
+    "entrances": 86
+  },
+  "skipped": {
+    "building_outside_selected_properties": 1354,
+    "building_unnamed": 286,
+    "building_not_current": 1,
+    "building_invalid_coordinates": 1,
+    "entrance_ambiguous_building_number": 6,
+    "entrance_unmatched_building_number": 24
+  },
+  "missingSelectedProperties": []
+}

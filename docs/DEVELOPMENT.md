@@ -43,10 +43,14 @@ The starter intentionally does not contain demo buses, guessed arrival times, pr
 
 ## Transit deployment update — October 19, 2026
 
-The shared ArchRide project now includes the transit schema, authenticated `transit-ingest` Edge Function, hourly static due checks, hourly retention, and a gated realtime cron dispatcher. Migration versions match the checked-in files. Do not reapply the schema under new names. See [hosted status](transit/HOSTED_STATUS.md) for exact versions and verification. Realtime polling is disabled pending provider rate confirmation.
+The shared ArchRide project now includes the transit schema, authenticated `transit-ingest` Edge Function, hourly static due checks, hourly retention, and a configurable realtime cron dispatcher. Migration versions match the checked-in files. Do not reapply the schema under new names. See [hosted status](transit/HOSTED_STATUS.md) for exact versions and verification. Realtime was initially disabled; on October 21 the owner requested temporary activation on the existing minute schedule while provider limits remain unconfirmed. This operator authorization is not provider approval. Provider cooldown and overlap protection remain enabled.
 
 The Edge Function uses the built-in server-side database connection and a dedicated Vault job token. No shared administrator password is needed in this checkout. Generate its core with `pnpm transit:edge:build`; CI checks that the generated file matches the shared TypeScript source. Keep `src/lib/campus-data.ts` when merging the Home branch: it replaces the teammate's placeholder using the existing interface. `pnpm db:types` remains the hosted type-generation command; `pnpm db:types:local` is an isolated development aid and cannot emulate hosted cron/Vault extensions.
 
 ## Week 1 integration
 
 See `docs/integration-review.md` for the reviewed Home, Map and transit behavior and acceptance limits. Browser checks now use an isolated fixture server on port 3100; `pnpm test` never needs live provider access. Real Supabase public smoke is separate (`pnpm transit:hosted:smoke`). The integration production smoke used real hosted public data without enabling provider polling.
+
+## Home data integration — October 21, 2026
+
+Home now consumes abortable source-departure reads for a transient manual/GPS origin, separately from live-feed health. The shared public catalog contains reviewed UGA GIS building and door locations; see `docs/campus/README.md` for explicit operator refresh and source constraints. `pnpm campus:fetch --output /tmp/new-review-directory` generates review artifacts and never applies them. Apply reviewed SQL only to the linked ArchRide project. No RLS/schema changes or realtime polling activation are needed for this catalog.

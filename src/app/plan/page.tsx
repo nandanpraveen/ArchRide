@@ -46,6 +46,7 @@ function PlanContent() {
   return (
     <Stack spacing={3}>
       <Typography component="h1" variant="h1">Plan a trip</Typography>
+      {params.get("fromSource") === "current-location" && <Alert severity="info">Starting point: current location selected on Home. Its coordinates were kept only on Home; share your location again when trip planning is connected.</Alert>}
       {!current && <CircularProgress aria-label="Loading selected places" />}
       {current?.selections.map((place) => (
         <Paper key={place.label} variant="outlined" sx={{ p: 3 }}>

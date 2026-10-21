@@ -16,7 +16,8 @@
     "test:transit": "node --import tsx --test tests/transit/*.test.ts",
     "db:types:local": "node --import tsx scripts/transit/generate-types.ts",
     "transit:edge:build": "node scripts/transit/build-edge.mjs",
-    "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts"
+    "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts",
+    "campus:fetch": "node --import tsx scripts/campus/import.ts --fetch"
   },
   "dependencies": {
     "@emotion/cache": "11.14.0",

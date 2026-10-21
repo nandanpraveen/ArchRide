@@ -21,6 +21,7 @@ test("keyboard search preserves duplicate stop identities and opens the selected
   await search.press("ArrowDown");
   await search.press("ArrowDown");
   await search.press("Enter");
+  await page.getByRole("link", { name: "View destination details" }).click();
   await expect(page).toHaveURL(/map\?stop=uga-passio%3Awest$/);
   await expect(page.getByRole("region", { name: "Stop details" })).toContainText("Memorial Hall");
 });
@@ -55,6 +56,7 @@ test("search aliases and building type survive navigation", async ({ page }) => 
   await expect(page.getByText("Static data: current", { exact: true })).toBeVisible();
   await page.getByRole("combobox", { name: "Search buildings and stops" }).fill("Student Center");
   await page.getByRole("option").click();
+  await page.getByRole("link", { name: "View destination details" }).click();
   await expect(page).toHaveURL(/place=building&type=building/);
   await expect(page.getByRole("heading", { name: "Mémorial Building" })).toBeVisible();
 });
@@ -88,11 +90,11 @@ test("missing data and stale catalogs remain honest", async ({ page }) => {
   await expect(page.getByText("No stop or departure data is available.", { exact: false })).toBeVisible();
 });
 
-test("manual location fallback focuses the accessible place search", async ({ page }) => {
+test("manual location fallback opens a separate accessible origin search", async ({ page }) => {
   await mockTransit(page);
   await page.goto("/");
   await page.getByRole("button", { name: "Choose a building or stop" }).click();
-  await expect(page.getByRole("combobox", { name: "Search buildings and stops" })).toBeFocused();
+  await expect(page.getByRole("combobox", { name: "Choose your starting building or stop" })).toBeFocused();
 });
 
 test("location is opt-in and shows nearest verified stops without claiming walking distances", async ({ page, context }) => {
@@ -115,7 +117,7 @@ for (const [kind, code, message] of [["denied", 1, "Location is blocked"], ["una
     await page.getByRole("button", { name: "Use my location" }).click();
     await expect(page.getByText(message, { exact: false })).toBeVisible();
     await page.getByRole("button", { name: "Choose a building or stop" }).click();
-    await expect(page.getByRole("combobox", { name: "Search buildings and stops" })).toBeFocused();
+    await expect(page.getByRole("combobox", { name: "Choose your starting building or stop" })).toBeFocused();
   });
 }
 

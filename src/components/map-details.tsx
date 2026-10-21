@@ -158,5 +158,10 @@ export function MapPlaceDetails({ id, type, onPlace }: { id: string; type: strin
   if (type && !["building", "entrance"].includes(type)) return <Alert severity="warning">This campus location type is invalid. Choose a verified place.</Alert>;
   if (!done) return <Typography role="status">Loading campus location…</Typography>;
   if (!place) return <Alert severity="warning">This campus location is unavailable or ambiguous. Choose another verified place.</Alert>;
-  return <Stack spacing={1}><Typography component="h2" variant="h2">{place.name}</Typography><Typography>Verified campus {type === "entrance" ? "entrance" : "location"}</Typography><Button component={Link} href={`/plan?to=${encodeURIComponent(place.id)}&toType=${place.type === "entrance" ? "entrance" : "building"}`} variant="outlined">Plan to this place</Button></Stack>;
+  return <Stack spacing={1}>
+    <Typography component="h2" variant="h2">{place.name}</Typography>
+    <Typography>{place.type === "entrance" ? "Mapped entrance point. Current accessibility has not been verified." : "Published campus building reference location."}</Typography>
+    {place.id.startsWith("uga-oua:") && <Typography variant="body2">Campus location data: <a href="https://www.architects.uga.edu/maps" target="_blank" rel="noopener noreferrer">UGA Office of University Architects</a>.</Typography>}
+    <Button component={Link} href={`/plan?to=${encodeURIComponent(place.id)}&toType=${place.type === "entrance" ? "entrance" : "building"}`} variant="outlined">Plan to this place</Button>
+  </Stack>;
 }

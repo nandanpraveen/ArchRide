@@ -35,8 +35,12 @@ export async function mockTransit(page: Page, tables: Record<string, unknown[]> 
       if (value.startsWith("eq.")) rows = rows.filter((r) => String(r[key]) === value.slice(3));
       else if (value.startsWith("in.(")) { const ids = value.slice(4, -1).split(",").map((s) => s.replace(/^"|"$/g, "")); rows = rows.filter((r) => ids.includes(String(r[key]))); }
       else if (value.startsWith("gte.")) rows = rows.filter((r) => String(r[key]) >= value.slice(4));
+      else if (value.startsWith("lte.")) rows = rows.filter((r) => String(r[key]) <= value.slice(4));
       else if (value.startsWith("gt.")) rows = rows.filter((r) => String(r[key]) > value.slice(3));
     }
+    const offset = Number(url.searchParams.get("offset") || 0);
+    const limit = Number(url.searchParams.get("limit") || rows.length);
+    rows = rows.slice(offset, offset + limit);
     const headers = { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "GET,OPTIONS" };
     if (route.request().method() === "OPTIONS") { await route.fulfill({ status: 204, headers }); return; }
     await route.fulfill({ json: route.request().headers().accept?.includes("application/vnd.pgrst.object") ? rows[0] ?? null : rows, headers });

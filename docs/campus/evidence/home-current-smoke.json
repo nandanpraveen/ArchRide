@@ -1,0 +1,120 @@
+{
+  "checkedAt": "2026-10-21T18:34:48.422Z",
+  "mode": "local production build on localhost:3200 against hosted public Supabase data; read-only",
+  "sourceHealth": [
+    {
+      "id": "uga-passio:static",
+      "state": "healthy",
+      "source_timestamp": null,
+      "last_success_at": "2026-10-21T00:17:01.357+00:00",
+      "entity_count": 4878
+    },
+    {
+      "id": "uga-campus:catalog",
+      "state": "healthy",
+      "source_timestamp": null,
+      "last_success_at": "2026-10-21T04:25:36.306+00:00",
+      "entity_count": 440
+    },
+    {
+      "id": "uga-passio:vehicles",
+      "state": "healthy",
+      "source_timestamp": "2026-10-21T18:34:00+00:00",
+      "last_success_at": "2026-10-21T18:34:00.557+00:00",
+      "entity_count": 32
+    },
+    {
+      "id": "uga-passio:arrivals",
+      "state": "stale",
+      "source_timestamp": "2026-10-21T10:30:00+00:00",
+      "last_success_at": "2026-10-21T10:30:00.751+00:00",
+      "entity_count": 0
+    },
+    {
+      "id": "uga-passio:alerts",
+      "state": "healthy",
+      "source_timestamp": "2026-10-21T18:34:00+00:00",
+      "last_success_at": "2026-10-21T18:34:00.659+00:00",
+      "entity_count": 0
+    }
+  ],
+  "arrivalFeedFreshness": "stale",
+  "localHealth": {
+    "app": "ArchRide",
+    "status": "ok",
+    "database": "connected",
+    "transit": "degraded",
+    "feeds": [
+      {
+        "id": "uga-passio:static",
+        "freshness": "current",
+        "sourceTimestamp": null,
+        "lastSuccessAt": "2026-10-21T00:17:01.357+00:00",
+        "entityCount": 4878
+      },
+      {
+        "id": "uga-passio:vehicles",
+        "freshness": "current",
+        "sourceTimestamp": "2026-10-21T18:34:00+00:00",
+        "lastSuccessAt": "2026-10-21T18:34:00.557+00:00",
+        "entityCount": 32
+      },
+      {
+        "id": "uga-passio:arrivals",
+        "freshness": "stale",
+        "sourceTimestamp": "2026-10-21T10:30:00+00:00",
+        "lastSuccessAt": "2026-10-21T10:30:00.751+00:00",
+        "entityCount": 0
+      },
+      {
+        "id": "uga-passio:alerts",
+        "freshness": "current",
+        "sourceTimestamp": "2026-10-21T18:34:00+00:00",
+        "lastSuccessAt": "2026-10-21T18:34:00.659+00:00",
+        "entityCount": 0
+      }
+    ]
+  },
+  "usablePredictionCountAtRead": 246,
+  "requestedStop": {
+    "id": "uga-passio:155098",
+    "name": "Learning & Development"
+  },
+  "selectedStopUsablePredictions": 2,
+  "homeOutcome": "passed: individually source-valid departures rendered on Home alongside the stale arrival-feed warning",
+  "homeLabels": [
+    "About 0 m in a straight line \u00b7 33.95488, -83.37166",
+    "East West \u00b7 Oct 21, 2:35 PM EDT",
+    "Direction not supplied \u00b7 stop occurrence 3",
+    "Source prediction \u00b7 updated Oct 21, 2:32 PM EDT \u00b7 valid until Oct 21, 2:49 PM EDT",
+    "East West \u00b7 Oct 21, 2:53 PM EDT",
+    "Direction not supplied \u00b7 stop occurrence 3",
+    "Source prediction \u00b7 updated Oct 21, 2:32 PM EDT \u00b7 valid until Oct 21, 2:49 PM EDT",
+    "About 127 m in a straight line \u00b7 33.95489, -83.37303",
+    "No current source departures are supplied for this stop. This does not mean there are no buses or that the route is cancelled.",
+    "About 140 m in a straight line \u00b7 33.95504, -83.37317",
+    "East West \u00b7 Oct 21, 2:37 PM EDT",
+    "Direction not supplied \u00b7 stop occurrence 4",
+    "Source prediction \u00b7 updated Oct 21, 2:32 PM EDT \u00b7 valid until Oct 21, 2:49 PM EDT",
+    "Central East \u00b7 Oct 21, 2:51 PM EDT",
+    "Loop \u00b7 stop occurrence 11",
+    "Source prediction \u00b7 updated Oct 21, 2:33 PM EDT \u00b7 valid until Oct 21, 2:49 PM EDT",
+    "Central East \u00b7 Oct 21, 2:53 PM EDT",
+    "Loop \u00b7 stop occurrence 11",
+    "Source prediction \u00b7 updated Oct 21, 2:33 PM EDT \u00b7 valid until Oct 21, 2:49 PM EDT"
+  ],
+  "mapOutcome": "passed: individually source-valid departures rendered in Map stop details; this does not establish healthy overall arrival-feed status",
+  "mapLabels": [
+    "Verified boarding point \u00b7 33.95488, -83.37166",
+    "Direction not supplied",
+    "Source prediction \u00b7 stop occurrence 3 \u00b7 updated Oct 21, 2:32 PM EDT",
+    "Source prediction \u00b7 stop occurrence 3 \u00b7 updated Oct 21, 2:32 PM EDT",
+    "Saving stops becomes available when the Saved feature is connected. External walking directions use Google Maps; no continuous location history is stored by ArchRide."
+  ],
+  "pageExceptions": [],
+  "providerDirectRequests": 0,
+  "limitations": "Local production UI smoke, not a public deployment or prediction-accuracy evaluation. Provider quota/interval confirmation remains outstanding.",
+  "homeArrivalFeedLabel": "Live arrivals: stale",
+  "homeArrivalFeedWarning": "The arrival feed is stale. Only source predictions that are still valid appear below. Missing predictions do not establish that service is cancelled.",
+  "interpretation": "Overall arrival-feed health remains stale/degraded, while some individual rows have recent source update timestamps and unexpired future predictions. Those rows satisfy usableArrival independently; the UI preserves the stale feed warning."
+}

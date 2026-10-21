@@ -1,0 +1,84 @@
+{
+  "checkedAt": "2026-10-21T04:37:26.794Z",
+  "mode": "local production build on localhost:3200 against hosted public Supabase data; read-only",
+  "sourceHealth": [
+    {
+      "id": "uga-passio:static",
+      "state": "healthy",
+      "source_timestamp": null,
+      "last_success_at": "2026-10-21T00:17:01.357+00:00",
+      "entity_count": 4878
+    },
+    {
+      "id": "uga-passio:vehicles",
+      "state": "healthy",
+      "source_timestamp": "2026-10-21T04:37:00+00:00",
+      "last_success_at": "2026-10-21T04:37:00.711+00:00",
+      "entity_count": 3
+    },
+    {
+      "id": "uga-passio:arrivals",
+      "state": "healthy",
+      "source_timestamp": "2026-10-21T04:37:00+00:00",
+      "last_success_at": "2026-10-21T04:37:00.764+00:00",
+      "entity_count": 66
+    },
+    {
+      "id": "uga-passio:alerts",
+      "state": "healthy",
+      "source_timestamp": "2026-10-21T04:37:00+00:00",
+      "last_success_at": "2026-10-21T04:37:00.804+00:00",
+      "entity_count": 0
+    },
+    {
+      "id": "uga-campus:catalog",
+      "state": "healthy",
+      "source_timestamp": null,
+      "last_success_at": "2026-10-21T04:25:36.306+00:00",
+      "entity_count": 440
+    }
+  ],
+  "usablePredictionCountAtRead": 62,
+  "requestedStop": {
+    "id": "uga-passio:155112",
+    "name": "Myers/Snelling Southbound"
+  },
+  "selectedStopUsablePredictions": 2,
+  "homeOutcome": "passed: actual current source departure rendered on Home for manual stop origin",
+  "homeLabels": [
+    "About 0 m in a straight line · 33.94628, -83.37630",
+    "Milledge Night · Oct 21, 12:37 AM EDT",
+    "Direction not supplied · stop occurrence 10",
+    "Source prediction · updated Oct 21, 12:35 AM EDT · valid until Oct 21, 12:52 AM EDT",
+    "Campus Housing Night · Oct 21, 12:56 AM EDT",
+    "Direction not supplied · stop occurrence 24",
+    "Source prediction · updated Oct 21, 12:35 AM EDT · valid until Oct 21, 12:52 AM EDT",
+    "About 8 m in a straight line · 33.94629, -83.37622",
+    "No current source departures are supplied for this stop. This does not mean there are no buses or that the route is cancelled.",
+    "About 92 m in a straight line · 33.94547, -83.37650",
+    "Campus Housing Night · Oct 21, 12:44 AM EDT",
+    "Direction not supplied · stop occurrence 10",
+    "Source prediction · updated Oct 21, 12:35 AM EDT · valid until Oct 21, 12:52 AM EDT",
+    "Campus Housing Night · Oct 21, 12:56 AM EDT",
+    "Direction not supplied · stop occurrence 10",
+    "Source prediction · updated Oct 21, 12:35 AM EDT · valid until Oct 21, 12:52 AM EDT"
+  ],
+  "mapOutcome": "passed: same stop renders current source departures in Map details",
+  "mapLabels": [
+    "Verified boarding point · 33.94628, -83.37630",
+    "Direction not supplied",
+    "Direction not supplied",
+    "Direction not supplied",
+    "Direction not supplied",
+    "Direction not supplied",
+    "Direction not supplied",
+    "Direction not supplied",
+    "Direction not supplied",
+    "Source prediction · stop occurrence 10 · updated Oct 21, 12:35 AM EDT",
+    "Source prediction · stop occurrence 24 · updated Oct 21, 12:35 AM EDT",
+    "Saving stops becomes available when the Saved feature is connected. External walking directions use Google Maps; no continuous location history is stored by ArchRide."
+  ],
+  "pageExceptions": [],
+  "providerDirectRequests": 0,
+  "limitations": "Local production UI smoke, not a public deployment or prediction-accuracy evaluation. Provider quota/interval confirmation remains outstanding."
+}

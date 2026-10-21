@@ -1,0 +1,196 @@
+import { test, expect, type Page } from "@playwright/test";
+import { mockTransit, transitFixtures } from "./transit-fixtures";
+
+async function manualOrigin(page: Page, name = "Student Center") {
+  await page.getByRole("button", { name: "Choose a building or stop" }).click();
+  const origin = page.getByRole("combobox", { name: "Choose your starting building or stop" });
+  await origin.fill(name);
+  await page.getByRole("option").first().click();
+  await origin.press("Escape");
+}
+
+test("manual origin shows real source departures and keeps origin/destination identity in Plan", async ({ page }, testInfo) => {
+  await mockTransit(page);
+  await page.goto("/");
+  await manualOrigin(page);
+  await expect(page.getByText("Starting point: Mémorial Building", { exact: true })).toBeVisible();
+  const nearby = page.getByRole("list", { name: "Nearby stops" });
+  await expect(nearby).toContainText("Campus Loop");
+  await expect(nearby).toContainText("Northbound Loop · direction 0 · stop occurrence 1");
+  await expect(nearby).toContainText("Source prediction · updated");
+  await expect(nearby).toContainText("About 0 m in a straight line");
+  await expect(nearby.getByText(/Source prediction · updated/)).toHaveCount(1);
+  await page.getByRole("combobox", { name: "Search buildings and stops" }).fill("Science Center");
+  await page.getByRole("option").click();
+  await expect(page.getByText("No journey recommendation is available yet.", { exact: false })).toBeVisible();
+  await page.setViewportSize({ width: 320, height: 700 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  await page.screenshot({ path: testInfo.outputPath("home-nearby-320.png"), fullPage: true });
+  await page.getByRole("link", { name: "Review trip in Plan" }).click();
+  await expect(page).toHaveURL(/from=building&fromType=building&to=uga-passio%3Asouth&toType=stop$/);
+  await expect(page.getByRole("heading", { name: "Starting point: Mémorial Building" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Destination: Science Center" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Trip recommendations are not available yet" })).toBeVisible();
+});
+
+test("GPS origin is opt-in and coordinates never enter URLs or stored state", async ({ page, context }) => {
+  await context.grantPermissions(["geolocation"]);
+  await context.setGeolocation({ latitude: 33.948, longitude: -83.377 });
+  await mockTransit(page);
+  await page.goto("/");
+  await expect(page.getByRole("list", { name: "Nearby stops" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Use my location" }).click();
+  await expect(page.getByRole("list", { name: "Nearby stops" })).toContainText("Source prediction");
+  await page.getByRole("combobox", { name: "Search buildings and stops" }).fill("Science");
+  await page.getByRole("option").click();
+  const plan = page.getByRole("link", { name: "Review trip in Plan" });
+  await expect(plan).toHaveAttribute("href", /fromSource=current-location/);
+  expect(await plan.getAttribute("href")).not.toMatch(/33\.948|83\.377|latitude|longitude/);
+  expect(await page.evaluate(() => JSON.stringify({ ...localStorage, ...sessionStorage }))).not.toMatch(/33\.948|83\.377/);
+  await plan.click();
+  await expect(page.getByText("Current location", { exact: false })).toBeVisible();
+  expect(page.url()).not.toMatch(/33\.948|83\.377/);
+});
+
+test("source departure validity expires without navigation or a successful refresh", async ({ page }) => {
+  const tables = transitFixtures();
+  tables.transit_arrivals = [{ ...tables.transit_arrivals[0], valid_until: new Date(Date.now() + 30_000).toISOString() }];
+  await mockTransit(page, tables);
+  await page.goto("/");
+  await manualOrigin(page);
+  const nearby = page.getByRole("list", { name: "Nearby stops" });
+  await expect(nearby).toContainText("Source prediction");
+  await page.clock.install();
+  await page.clock.fastForward(31_000);
+  await expect(nearby.getByText(/Source prediction · updated/)).toHaveCount(0);
+  await expect(nearby).toContainText("No current source departures are supplied");
+});
+
+test("partial ingestion refreshes source departures without changing the last successful feed clock", async ({ page }) => {
+  const tables = transitFixtures();
+  await page.clock.install();
+  let snapshotReads = 0;
+  let departureReads = 0;
+  await mockTransit(page, tables, async (route) => {
+    const url = new URL(route.request().url());
+    if (url.pathname.endsWith("feed_status") && url.searchParams.get("select") === "*") snapshotReads++;
+    if (url.pathname.endsWith("transit_arrivals") && url.searchParams.get("stop_id") === "eq.uga-passio:east") departureReads++;
+    return false;
+  });
+  await page.goto("/");
+  await manualOrigin(page);
+  const nearby = page.getByRole("list", { name: "Nearby stops" });
+  await expect(nearby).toContainText("Northbound Loop · direction 0 · stop occurrence 1");
+  const initialSnapshots = snapshotReads;
+  const initialDepartures = departureReads;
+  const partialAt = new Date(Date.now() + 60_000).toISOString();
+  tables.feed_status = tables.feed_status.map((feed) => feed.id.endsWith(":arrivals")
+    ? { ...feed, state: "stale", updated_at: partialAt, last_attempt_at: partialAt }
+    : feed);
+  tables.transit_arrivals = [{
+    ...tables.transit_arrivals[0], id: "partial-valid-update", stop_sequence: 3,
+    update_timestamp: partialAt,
+  }];
+  await page.clock.fastForward(61_000);
+  await expect.poll(() => snapshotReads).toBeGreaterThan(initialSnapshots);
+  await expect(nearby).toContainText("Northbound Loop · direction 0 · stop occurrence 3");
+  await expect(nearby).not.toContainText("stop occurrence 1");
+  expect(departureReads).toBeGreaterThan(initialDepartures);
+});
+
+test("fresh empty predictions and stale source state never claim route cancellation", async ({ page }) => {
+  const tables = transitFixtures();
+  tables.transit_arrivals = [];
+  await mockTransit(page, tables);
+  await page.goto("/");
+  await manualOrigin(page);
+  await expect(page.getByText("Live arrivals: current", { exact: true })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Nearby stops" })).toContainText("This does not mean there are no buses or that the route is cancelled.");
+  tables.feed_status = tables.feed_status.map((feed) => feed.id.endsWith(":arrivals") ? { ...feed, state: "error", source_timestamp: "2020-01-01T00:00:00Z" } : feed);
+  await page.reload();
+  await manualOrigin(page);
+  await expect(page.getByText("Live arrivals: stale", { exact: true })).toBeVisible();
+  await expect(page.getByText("The arrival feed is stale.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Nearby stops" })).not.toContainText("Source prediction");
+});
+
+test("one stop departure failure leaves other stops available and can be retried", async ({ page }) => {
+  const tables = transitFixtures();
+  tables.transit_arrivals.push({ ...tables.transit_arrivals[0], id: "west-good", stop_id: "uga-passio:west" });
+  let broken = true;
+  await mockTransit(page, tables, async (route) => {
+    const url = new URL(route.request().url());
+    if (broken && url.pathname.endsWith("transit_arrivals") && url.searchParams.get("stop_id") === "eq.uga-passio:east") {
+      await route.fulfill({ status: 500, json: { message: "unavailable" }, headers: { "access-control-allow-origin": "*" } });
+      return true;
+    }
+    return false;
+  });
+  await page.goto("/");
+  await manualOrigin(page);
+  const nearby = page.getByRole("list", { name: "Nearby stops" });
+  await expect(nearby).toContainText("Some departure details for this stop could not load");
+  await expect(nearby.getByText(/Source prediction · updated/)).toHaveCount(1);
+  broken = false;
+  await page.getByRole("button", { name: "Refresh departures" }).click();
+  await expect(nearby.getByText(/Source prediction · updated/)).toHaveCount(2);
+  await expect(nearby).not.toContainText("Some departure details");
+});
+
+test("optional feed failures preserve Home search and nearby catalog browsing", async ({ page }) => {
+  await mockTransit(page, transitFixtures(), async (route) => {
+    if (new URL(route.request().url()).pathname.endsWith("transit_alerts")) {
+      await route.fulfill({ status: 403, json: { message: "unavailable" }, headers: { "access-control-allow-origin": "*" } });
+      return true;
+    }
+    return false;
+  });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Retry alerts" })).toBeVisible();
+  await expect(page.getByText("Static data: current", { exact: true })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Service alerts" })).toContainText("Source notices could not refresh");
+  await manualOrigin(page);
+  await expect(page.getByRole("list", { name: "Nearby stops" })).toContainText("Campus Loop");
+});
+
+test("switching manual origins ignores an older delayed departure response", async ({ page }) => {
+  const tables = transitFixtures();
+  const north = { ...tables.transit_stops[0], id: "uga-passio:north", source_id_raw: "north", name: "North Campus", latitude: 33.98 };
+  tables.transit_stops.push(north);
+  tables.transit_arrivals = [{ ...tables.transit_arrivals[0], id: "late-old", stop_id: "uga-passio:south" }];
+  let held = false;
+  let release: () => void = () => {};
+  const delayed = new Promise<void>((resolve) => { release = resolve; });
+  await mockTransit(page, tables, async (route) => {
+    const url = new URL(route.request().url());
+    if (!held && url.pathname.endsWith("transit_arrivals") && url.searchParams.get("stop_id") === "eq.uga-passio:south") {
+      held = true;
+      await delayed;
+    }
+    return false;
+  });
+  await page.goto("/");
+  await manualOrigin(page);
+  await expect.poll(() => held).toBe(true);
+  await manualOrigin(page, "North Campus");
+  await expect(page.getByRole("list", { name: "Nearby stops" })).toContainText("North Campus");
+  await expect(page.getByRole("list", { name: "Nearby stops" })).not.toContainText("Science Center");
+  release();
+  await expect(page.getByRole("list", { name: "Nearby stops" })).not.toContainText("Source prediction");
+  await expect(page.getByText("Starting point: North Campus", { exact: true })).toBeVisible();
+});
+
+test("a delayed GPS result cannot replace a manually selected origin", async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, "geolocation", { value: { getCurrentPosition: (success: (position: unknown) => void) => {
+      (window as unknown as { finishGPS: () => void }).finishGPS = () => success({ coords: { latitude: 40.7, longitude: -74 } });
+    } } });
+  });
+  await mockTransit(page);
+  await page.goto("/");
+  await page.getByRole("button", { name: "Use my location" }).click();
+  await manualOrigin(page);
+  await page.evaluate(() => (window as unknown as { finishGPS: () => void }).finishGPS());
+  await expect(page.getByText("Starting point: Mémorial Building", { exact: true })).toBeVisible();
+  await expect(page.getByText("far from the available campus stops", { exact: false })).toHaveCount(0);
+});

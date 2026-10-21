@@ -1,0 +1,216 @@
+{
+  "fetchedAt": "2026-10-21T04:25:36.306Z",
+  "authorityChain": [
+    "https://www.architects.uga.edu/",
+    "https://www.arcgis.com/sharing/rest/content/items/10832e7927124404a7119df52872af84/data?f=json",
+    "https://www.arcgis.com/sharing/rest/content/items/02b6c7cef78a49e3b417dd8c310e672e/data?f=json",
+    "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer",
+    "https://services2.arcgis.com/PYn6bWCjT6bhw1z3/arcgis/rest/services/UGA_Property/FeatureServer/0"
+  ],
+  "serviceItem": {
+    "id": "73ddcfa0d3ab467cbc26b65a95a507aa",
+    "owner": "Adam.Ghafourian@uga.edu",
+    "ownerId": "12ae7cfe5a4d48e8a58aa1bf8c21fa2d",
+    "orgId": "PYn6bWCjT6bhw1z3",
+    "created": 1699635248000,
+    "modified": 1699999316000,
+    "guid": null,
+    "name": null,
+    "title": "UGA Campus Map Base Data Service",
+    "type": "Map Service",
+    "typeKeywords": [
+      "ArcGIS Server",
+      "Data",
+      "Dynamic",
+      "Map Service",
+      "Multilayer",
+      "Service"
+    ],
+    "description": null,
+    "tags": [
+      "base data"
+    ],
+    "snippet": "UGA Base GIS Data",
+    "thumbnail": "thumbnail/ago_downloaded.png",
+    "documentation": null,
+    "extent": [
+      [
+        2509453.8522,
+        1418174.9105
+      ],
+      [
+        2563050.4499,
+        1444753.0355
+      ]
+    ],
+    "categories": [],
+    "spatialReference": "102667",
+    "accessInformation": null,
+    "classification": null,
+    "licenseInfo": null,
+    "culture": "en-us",
+    "properties": null,
+    "advancedSettings": null,
+    "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer",
+    "proxyFilter": null,
+    "access": "public",
+    "size": 79,
+    "subInfo": 0,
+    "appCategories": [],
+    "industries": [],
+    "languages": [],
+    "largeThumbnail": null,
+    "banner": null,
+    "screenshots": [],
+    "listed": false,
+    "commentsEnabled": true,
+    "numComments": 0,
+    "numRatings": 0,
+    "avgRating": 0,
+    "numViews": 1290,
+    "scoreCompleteness": 40,
+    "groupDesignations": null,
+    "apiToken1ExpirationDate": -1,
+    "apiToken2ExpirationDate": -1,
+    "lastViewed": 1792432800000
+  },
+  "propertyItem": {
+    "id": "79cd581d037142968b5d86d965430764",
+    "owner": "Adam.Ghafourian@uga.edu",
+    "ownerId": "12ae7cfe5a4d48e8a58aa1bf8c21fa2d",
+    "orgId": "PYn6bWCjT6bhw1z3",
+    "created": 1651163904000,
+    "modified": 1779370502000,
+    "guid": null,
+    "name": null,
+    "title": "UGA Property",
+    "type": "Feature Service",
+    "typeKeywords": [
+      "ArcGIS Server",
+      "Data",
+      "Feature Access",
+      "Feature Service",
+      "Metadata",
+      "Service",
+      "Singlelayer",
+      "Hosted Service"
+    ],
+    "description": "These polygon features represent the locations of the parcel boundaries of UGA owned or leased properties throughout Georgia.",
+    "tags": [
+      "UGA",
+      "OUA"
+    ],
+    "snippet": "This data was developed for the purpose of documenting and maintaining the assets of the University of Georgia.",
+    "thumbnail": "thumbnail/ago_downloaded.png",
+    "documentation": null,
+    "extent": [
+      [
+        2001280.684766,
+        275628.6678
+      ],
+      [
+        3324741.064766,
+        1811219.0878
+      ]
+    ],
+    "categories": [],
+    "spatialReference": "102100",
+    "accessInformation": null,
+    "classification": null,
+    "licenseInfo": null,
+    "culture": "en-us",
+    "properties": null,
+    "advancedSettings": null,
+    "url": "https://services2.arcgis.com/PYn6bWCjT6bhw1z3/arcgis/rest/services/UGA_Property/FeatureServer",
+    "proxyFilter": null,
+    "access": "public",
+    "size": 532480,
+    "subInfo": 0,
+    "appCategories": [],
+    "industries": [],
+    "languages": [],
+    "largeThumbnail": null,
+    "banner": null,
+    "screenshots": [],
+    "listed": false,
+    "commentsEnabled": true,
+    "numComments": 0,
+    "numRatings": 0,
+    "avgRating": 0,
+    "numViews": 47806,
+    "scoreCompleteness": 68,
+    "groupDesignations": null,
+    "apiToken1ExpirationDate": -1,
+    "apiToken2ExpirationDate": -1,
+    "lastViewed": 1792551600000
+  },
+  "useEvidence": {
+    "ugaSharing": "https://www.architects.uga.edu/maps",
+    "esriTerms": "https://doc.arcgis.com/en/arcgis-online/reference/access-use-constraints.htm",
+    "inference": "Public UGA-owned service items have no special terms. Esri guidance describes typical personal/noncommercial reuse and no special limitations when item terms are absent. Use here is an attributed noncommercial student project; no Creative Commons or public-domain license is asserted.",
+    "limits": "No numeric quota, refresh interval or availability guarantee is published. Explicit bounded operator refresh only; no visitor/provider polling. Review changed item terms before importing again."
+  },
+  "requests": [
+    {
+      "url": "https://www.arcgis.com/sharing/rest/content/items/73ddcfa0d3ab467cbc26b65a95a507aa?f=json",
+      "bytes": 1224,
+      "sha256": "e88473ec07f75bf1a35f67a3fcbc8b890498e42a9018e3697ac4df9f9a5d32a0"
+    },
+    {
+      "url": "https://www.arcgis.com/sharing/rest/content/items/79cd581d037142968b5d86d965430764?f=json",
+      "bytes": 1487,
+      "sha256": "487c0650c2ed4eb4d4d95ab12420ca5713890fb799d4355420aa9ba3bd71f137"
+    },
+    {
+      "url": "https://services2.arcgis.com/PYn6bWCjT6bhw1z3/arcgis/rest/services/UGA_Property/FeatureServer/0/query?where=NAME+IN+%28%27Main+Campus%27%2C%27Health+Sciences+Campus%27%2C%27Chicopee+Complex%27%2C%27Riverbend+Research+Park%27%2C%27River%27%27s+Crossing%27%2C%27School+of+Social+Work%27%29&returnCountOnly=true&f=json",
+      "bytes": 12,
+      "sha256": "f2715110bf46132c4555c9aa8eafcb4d7c58740623ed89681655c25fbd69581f"
+    },
+    {
+      "url": "https://services2.arcgis.com/PYn6bWCjT6bhw1z3/arcgis/rest/services/UGA_Property/FeatureServer/0/query?where=NAME+IN+%28%27Main+Campus%27%2C%27Health+Sciences+Campus%27%2C%27Chicopee+Complex%27%2C%27Riverbend+Research+Park%27%2C%27River%27%27s+Crossing%27%2C%27School+of+Social+Work%27%29&outFields=FID%2CNAME%2CGlobalID%2CLASTUPDATE&returnGeometry=true&outSR=4326&resultOffset=0&resultRecordCount=500&orderByFields=FID+ASC&f=json",
+      "bytes": 91726,
+      "sha256": "dada592886b01e4203f8133eca723390a1aa1e649ea54641acf7393214ceaf0c",
+      "featureCount": 29
+    },
+    {
+      "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/7/query?where=1%3D1&returnCountOnly=true&f=json",
+      "bytes": 14,
+      "sha256": "fec21738b3845716bad1a60504902267d783c0ed31c498398007bf45cf0257c3"
+    },
+    {
+      "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/7/query?where=1%3D1&outFields=OBJECTID%2CGlobalID%2CNAME%2CNUMBER%2CADDRESS%2CX_DD%2CY_DD%2CSUBTYPE%2CLASTUPDATE&returnGeometry=false&resultOffset=0&resultRecordCount=500&orderByFields=OBJECTID+ASC&f=json",
+      "bytes": 116667,
+      "sha256": "78861b60ef1a5877348ff89be84b4010ee22f6152533d342479e719f3a964ff2",
+      "featureCount": 500
+    },
+    {
+      "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/7/query?where=1%3D1&outFields=OBJECTID%2CGlobalID%2CNAME%2CNUMBER%2CADDRESS%2CX_DD%2CY_DD%2CSUBTYPE%2CLASTUPDATE&returnGeometry=false&resultOffset=500&resultRecordCount=500&orderByFields=OBJECTID+ASC&f=json",
+      "bytes": 112563,
+      "sha256": "c9509450ba48e8a4303bbc78000e47b015e56e690bc4c417021e565546923539",
+      "featureCount": 500
+    },
+    {
+      "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/7/query?where=1%3D1&outFields=OBJECTID%2CGlobalID%2CNAME%2CNUMBER%2CADDRESS%2CX_DD%2CY_DD%2CSUBTYPE%2CLASTUPDATE&returnGeometry=false&resultOffset=1000&resultRecordCount=500&orderByFields=OBJECTID+ASC&f=json",
+      "bytes": 112805,
+      "sha256": "0b730ccf0f10b7d461858d431cd9ceb135b815c453e8127cebc082ee7f48fab0",
+      "featureCount": 500
+    },
+    {
+      "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/7/query?where=1%3D1&outFields=OBJECTID%2CGlobalID%2CNAME%2CNUMBER%2CADDRESS%2CX_DD%2CY_DD%2CSUBTYPE%2CLASTUPDATE&returnGeometry=false&resultOffset=1500&resultRecordCount=500&orderByFields=OBJECTID+ASC&f=json",
+      "bytes": 115946,
+      "sha256": "22003a1b6a0d91310e15e915971fd9f4e6b30537a6cb199b8999b46aca156223",
+      "featureCount": 496
+    },
+    {
+      "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/1/query?where=1%3D1&returnCountOnly=true&f=json",
+      "bytes": 13,
+      "sha256": "7a95ba152f3c2171ba267091cc187e2b8e1587ccbf5ff6a9d561f081556b1c14"
+    },
+    {
+      "url": "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/1/query?where=1%3D1&outFields=OBJECTID%2CGlobalID%2CBUILDING%2CAutoDoor%2COPENTYPE%2CLASTUPDATE&returnGeometry=true&outSR=4326&resultOffset=0&resultRecordCount=500&orderByFields=OBJECTID+ASC&f=json",
+      "bytes": 25792,
+      "sha256": "74f754341592d848eb4e764159d5d67a02c31ca81342c4feb1e07d055cc5c84d",
+      "featureCount": 116
+    }
+  ]
+}

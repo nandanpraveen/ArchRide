@@ -53,7 +53,7 @@ function MapContent() {
   const queryWords = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
   const matches = (name: string) => queryWords.every((word) => name.toLocaleLowerCase().includes(word));
   const staticHealth = data?.health.find((h) => h.id.endsWith(":static"));
-  const realtimeHealth = data?.health.filter((h) => !h.id.endsWith(":static"));
+  const realtimeHealth = data?.health.filter((h) => h.id.startsWith("uga-passio:") && !h.id.endsWith(":static"));
   const revision = data?.health.map((h) => `${h.id}:${h.updated_at}`).join("|") || "";
   const shownPlace = placeId && place?.id === placeId ? place : undefined;
   return <Stack spacing={3}>
@@ -62,6 +62,7 @@ function MapContent() {
     {status === "loading" && <Typography role="status">Loading transit data…</Typography>}
     {status === "unavailable" && <Alert severity="warning" action={<Button onClick={retry} color="inherit">Retry data</Button>}>{reason}{data && " Showing the last loaded snapshot; it may be stale."}</Alert>}
     {data && <>
+      {data.errors && Object.entries(data.errors).filter(([part]) => part !== "routes" && part !== "stops").map(([part]) => <Alert key={part} severity="warning">{part === "health" ? "Source status" : part[0].toUpperCase() + part.slice(1)} could not refresh. Other loaded campus information is still available; retained information may be stale.</Alert>)}
       <Typography variant="body2">UGA / Passio · {staticHealth?.last_success_at ? `Campus catalog ${feedFreshness(staticHealth)} · updated ${transitTime(staticHealth.last_success_at)}` : "Campus catalog update time unavailable"}</Typography>
       {(!realtimeHealth?.length || realtimeHealth.some((h) => feedFreshness(h) !== "current")) && <Alert severity="info">Live transit information is stale or unavailable. Old bus positions are labeled stale; missing buses do not mean a route is cancelled.</Alert>}
       {activeTransitAlerts(data.alerts).filter((alert) => {

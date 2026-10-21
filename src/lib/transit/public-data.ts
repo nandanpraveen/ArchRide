@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Tables } from "@/lib/supabase/database.types";
 import { publicTransitClient } from "@/lib/supabase/public";
 import type { FeedHealth, Route, Stop, Vehicle } from "./contracts";
@@ -13,9 +13,10 @@ export type PublicTransitData = {
   vehicles: Vehicle[];
   health: FeedHealth[];
   alerts: Tables<"transit_alerts">[];
+  errors?: Partial<Record<"routes" | "stops" | "vehicles" | "health" | "alerts", string>>;
 };
 
-export async function loadPublicTransit(signal: AbortSignal): Promise<PublicTransitData> {
+export async function loadPublicTransit(signal: AbortSignal, previous?: PublicTransitData | null): Promise<PublicTransitData> {
   signal = AbortSignal.any([signal, AbortSignal.timeout(10_000)]);
   const db = publicTransitClient();
   if (!db) throw new Error("Campus transit data is not configured.");
@@ -23,25 +24,30 @@ export async function loadPublicTransit(signal: AbortSignal): Promise<PublicTran
     db.from("transit_routes").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
     db.from("transit_stops").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
     db.from("transit_vehicles").select("*").order("id").limit(1000).abortSignal(signal),
-    db.from("feed_status").select("*").like("id", "uga-passio:%").limit(1000).abortSignal(signal),
+    db.from("feed_status").select("*").in("id", ["uga-passio:static", "uga-passio:vehicles", "uga-passio:arrivals", "uga-passio:alerts", "uga-campus:catalog"]).limit(1000).abortSignal(signal),
     db.from("transit_alerts").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
   ]);
-  if ([routes, stops, vehicles, health, alerts].some((result) => result.error)) {
-    throw new Error("Campus transit data is temporarily unavailable. Please try again.");
-  }
-  if ([routes, stops, vehicles, health, alerts].some((result) => result.data?.length === 1000)) {
-    throw new Error("The transit catalog exceeds the supported display limit.");
+  const errors: NonNullable<PublicTransitData["errors"]> = {};
+  const results = { routes, stops, vehicles, health, alerts };
+  for (const [name, result] of Object.entries(results)) {
+    if (result.error || result.data?.length === 1000) {
+      errors[name as keyof typeof errors] = result.data?.length === 1000
+        ? "The catalog exceeds the supported display limit."
+        : "This part of the transit snapshot is temporarily unavailable.";
+    }
   }
   return {
-    routes: routes.data ?? [],
-    stops: stops.data ?? [],
-    vehicles: vehicles.data ?? [],
-    health: health.data ?? [],
-    alerts: alerts.data ?? [],
+    routes: errors.routes ? previous?.routes ?? [] : routes.data ?? [],
+    stops: errors.stops ? previous?.stops ?? [] : stops.data ?? [],
+    vehicles: errors.vehicles ? previous?.vehicles ?? [] : vehicles.data ?? [],
+    health: errors.health ? previous?.health ?? [] : health.data ?? [],
+    alerts: errors.alerts ? previous?.alerts ?? [] : alerts.data ?? [],
+    errors,
   };
 }
 
 export function usePublicTransit() {
+  const previousRef = useRef<PublicTransitData | null>(null);
   const [state, setState] = useState<{
     status: "loading" | "ok" | "unavailable";
     data: PublicTransitData | null;
@@ -53,14 +59,20 @@ export function usePublicTransit() {
   useEffect(() => {
     let controller: AbortController | null = null;
     let disposed = false;
+    let previous = previousRef.current;
     async function refresh() {
       if (document.hidden || disposed) return;
       controller?.abort();
       const request = new AbortController();
       controller = request;
       try {
-        const data = await loadPublicTransit(request.signal);
-        if (!disposed && !request.signal.aborted) setState({ status: "ok", data, reason: null });
+        const data = await loadPublicTransit(request.signal, previous);
+        if (!disposed && !request.signal.aborted) {
+          previous = data;
+          previousRef.current = data;
+          const catalogFailed = data.errors?.routes || data.errors?.stops;
+          setState({ status: catalogFailed ? "unavailable" : "ok", data, reason: catalogFailed ? "The campus transit catalog is temporarily unavailable. Last loaded information may be stale." : null });
+        }
       } catch (error) {
         if (!disposed && !request.signal.aborted) {
           setState((previous) => ({

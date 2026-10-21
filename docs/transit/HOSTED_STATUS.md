@@ -1,3 +1,13 @@
+# Current operator update — October 21, 2026
+
+The October 19 record below is historical. Home/Map have since been integrated, and the reviewed hosted campus catalog now contains 354 buildings and 86 mapped automatic-door points alongside 161 transit stops; see [Home data integration](../home-data-integration.md).
+
+The user requested temporary realtime operation at the existing one-minute dispatcher cadence while provider interval/quota confirmation remains outstanding. [Activation evidence](../campus/evidence/live-polling-status.json) verifies enabled configuration, active minute cron, a 30-second configured minimum to tolerate scheduling jitter, and two successful automatic runs at 04:36 and 04:37 UTC. The three realtime feeds were healthy at that check; this is user-directed temporary operation, not provider approval. The tested worker source was deployed, and unauthenticated invocation still returned HTTP 401.
+
+The [04:37 UTC production-build UI smoke](../campus/evidence/home-live-smoke.json) rendered actual source-valid departures on Home and Map. The [18:33 UTC polling follow-up](../campus/evidence/live-polling-followup.json) later recorded stable configuration and partial arrival-feed rejection. The [18:34 UTC UI smoke](../campus/evidence/home-current-smoke.json) confirmed stale overall arrival-feed health alongside some individually source-valid, unexpired predictions; it does not claim the overall feed is current. These local-production checks are not a public production deployment or an accuracy evaluation.
+
+HTTP 429 cooldown/backoff, non-overlap protection and retention remain in force. See the [rate-limit review](RATE_LIMIT_REVIEW.md) for current controls, evidence gaps and follow-up. The afternoon review made no code, polling configuration or provider-contact changes. The earlier disabled-polling statements below describe the October 19 acceptance snapshot and are superseded by this dated update.
+
 # Hosted acceptance record — October 19, 2026
 
 Project: ArchRide (`yivnryjbzhampecphlgr`). Work remains on `feature/transit-ingestion`; no direct commit or merge to `main` is required for review.
