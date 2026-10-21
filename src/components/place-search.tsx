@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, TextField, Typography } from "@mui/material";
 import { searchPlaces, type Place } from "@/lib/campus-data";
 
 type Status = "idle" | "loading" | "ok" | "unavailable" | "error";
@@ -17,9 +17,12 @@ export function PlaceSearch() {
   const [input, setInput] = useState("");
   const [options, setOptions] = useState<Place[]>([]);
   const [status, setStatus] = useState<Status>("idle");
+  const [reason, setReason] = useState("");
+  const [revision, setRevision] = useState(0);
 
   function handleInput(value: string) {
     setInput(value);
+    setOptions([]);
     if (value.trim()) {
       setStatus("loading");
     } else {
@@ -42,6 +45,7 @@ export function PlaceSearch() {
           } else {
             setOptions([]);
             setStatus("unavailable");
+            setReason(result.reason);
           }
         })
         .catch(() => {
@@ -54,13 +58,13 @@ export function PlaceSearch() {
       clearTimeout(timer);
       controller.abort();
     };
-  }, [input]);
+  }, [input, revision]);
 
   const emptyText =
     status === "loading"
       ? "Searching…"
       : status === "unavailable"
-        ? "Campus location data is not connected yet, so search is unavailable."
+        ? reason
         : status === "error"
           ? "Search failed. Change your search to try again."
           : status === "ok"
@@ -68,17 +72,22 @@ export function PlaceSearch() {
             : "Type a building, entrance, or stop name.";
 
   return (
+    <Box>
     <Autocomplete
+      id="campus-place-search"
       options={options}
       filterOptions={(x) => x}
       inputValue={input}
       onInputChange={(_, value) => handleInput(value)}
       getOptionLabel={(option) => option.name}
-      isOptionEqualToValue={(a, b) => a.id === b.id}
+      getOptionKey={(option) => `${option.type}:${option.id}`}
+      isOptionEqualToValue={(a, b) => a.id === b.id && a.type === b.type}
       loading={status === "loading"}
-      noOptionsText={emptyText}
+      noOptionsText={<Box>{emptyText}{(status === "unavailable" || status === "error") && <Button onMouseDown={(event) => event.preventDefault()} onClick={() => { setStatus("loading"); setRevision((value) => value + 1); }}>Retry search</Button>}</Box>}
       onChange={(_, place) => {
-        if (place) router.push(`/plan?to=${encodeURIComponent(place.id)}`);
+        if (place) router.push(place.type === "stop"
+          ? `/map?stop=${encodeURIComponent(place.id)}`
+          : `/map?place=${encodeURIComponent(place.id)}&type=${place.type}`);
       }}
       renderOption={(props, option) => {
         const { key, ...rest } = props;
@@ -103,5 +112,6 @@ export function PlaceSearch() {
         />
       )}
     />
+    </Box>
   );
 }

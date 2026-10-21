@@ -4,6 +4,19 @@ export type Stop = Tables<"transit_stops">;
 export type Vehicle = Tables<"transit_vehicles">;
 export type Arrival = Tables<"transit_arrivals">;
 export type FeedHealth = Tables<"feed_status">;
+export function activeTransitAlerts(alerts: Tables<"transit_alerts">[], now = Date.now()) {
+  return alerts.filter((alert) => {
+    if (!alert.active || !Array.isArray(alert.active_periods)) return false;
+    if (!alert.active_periods.length) return true;
+    return alert.active_periods.some((period) => {
+      if (!period || typeof period !== "object" || Array.isArray(period)) return false;
+      const { start, end } = period;
+      if (start != null && (typeof start !== "number" || !Number.isFinite(start))) return false;
+      if (end != null && (typeof end !== "number" || !Number.isFinite(end))) return false;
+      return (start == null || start * 1000 <= now) && (end == null || now < end * 1000);
+    });
+  });
+}
 export const REALTIME_STALE_SECONDS = 180;
 export const STATIC_STALE_SECONDS = 48 * 60 * 60;
 export type Freshness = "current" | "stale" | "unavailable";

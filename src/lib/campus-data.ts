@@ -1,5 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Database } from "./supabase/database.types";
+import { publicTransitClient } from "./supabase/public";
 
 // Drop-in implementation of the contract already used on task-1-home.
 export type PlaceType = "building" | "entrance" | "stop";
@@ -46,17 +45,13 @@ export async function searchPlaces(
   signal?: AbortSignal,
 ): Promise<SearchResult> {
   if (!query.trim()) return { status: "ok", places: [], updatedAt: null };
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL,
-    key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key)
+  const db = publicTransitClient();
+  if (!db)
     return {
       status: "unavailable",
       reason: "Campus location data is not connected yet.",
     };
-  const db = createClient<Database>(url, key, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-  const abort = signal || new AbortController().signal;
+  const abort = signal ? AbortSignal.any([signal, AbortSignal.timeout(10_000)]) : AbortSignal.timeout(10_000);
   try {
     const [stops, buildings, entrances, health] = await Promise.all([
       db

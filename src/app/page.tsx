@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
-import { Alert, Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import ArrowForwardRounded from "@mui/icons-material/ArrowForwardRounded";
 import { EmptyState } from "@/components/empty-state";
 import { PlaceSearch } from "@/components/place-search";
-   import { LocationCard } from "@/components/location-card";
-      import { HomeStatus } from "@/components/home-status";
+import { LocationCard } from "@/components/location-card";
+import { HomeStatus } from "@/components/home-status";
+import { usePublicTransit } from "@/lib/transit/public-data";
 
 const shortcuts = [
   { href: "/map", label: "Explore the campus map" },
@@ -14,6 +15,7 @@ const shortcuts = [
 ];
 
 export default function HomePage() {
+  const transit = usePublicTransit();
   return (
     <Stack spacing={4}>
       <Box>
@@ -29,12 +31,8 @@ export default function HomePage() {
         </Typography>
       </Box>
       <PlaceSearch />
-      <LocationCard />
-      <HomeStatus />
-      <Alert severity="info">
-        Transit data is not connected yet. Live positions and arrival estimates
-        are unavailable.
-      </Alert>
+      <LocationCard stops={transit.data?.stops ?? []} />
+      <HomeStatus transit={transit} />
       <EmptyState
         title="Your next trip starts here"
         description="Choose a campus destination to compare a direct bus journey with walking. Recommendations will appear when verified campus and transit data are available."
