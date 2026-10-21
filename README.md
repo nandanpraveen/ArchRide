@@ -40,7 +40,7 @@ pnpm build
 
 ## Transit ingestion (Week 1)
 
-See the [implementation, source evidence, team contracts, and activation runbook](docs/transit/README.md). Run `pnpm test:transit` for isolated PostgreSQL ingestion/security tests. The hosted ingestion function, static refresh, and retention jobs are deployed. Realtime refresh is temporarily enabled at the owner's request on the existing minute schedule; provider limits remain unconfirmed. Existing provider cooldowns remain enforced. See the runbook for verification and the rate-limiting follow-up.
+See the [implementation, source evidence, team contracts, and activation runbook](docs/transit/README.md). Run `pnpm test:transit` for isolated PostgreSQL ingestion/security tests. The hosted ingestion function, static refresh, and retention jobs are deployed. Realtime refresh is temporarily enabled at the owner's request on the existing minute schedule; provider limits remain unconfirmed. Existing provider cooldowns remain enforced. See the runbook for current operator status.
 
 ## Backend
 

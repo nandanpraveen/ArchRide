@@ -6,7 +6,7 @@ The user requested temporary realtime operation at the existing one-minute dispa
 
 The [04:37 UTC production-build UI smoke](../campus/evidence/home-live-smoke.json) rendered actual source-valid departures on Home and Map. The [18:33 UTC polling follow-up](../campus/evidence/live-polling-followup.json) later recorded stable configuration and partial arrival-feed rejection. The [18:34 UTC UI smoke](../campus/evidence/home-current-smoke.json) confirmed stale overall arrival-feed health alongside some individually source-valid, unexpired predictions; it does not claim the overall feed is current. These local-production checks are not a public production deployment or an accuracy evaluation.
 
-HTTP 429 cooldown/backoff, non-overlap protection and retention remain in force. See the [rate-limit review](RATE_LIMIT_REVIEW.md) for current controls, evidence gaps and follow-up. The afternoon review made no code, polling configuration or provider-contact changes. The earlier disabled-polling statements below describe the October 19 acceptance snapshot and are superseded by this dated update.
+HTTP 429 cooldown/backoff, non-overlap protection and retention remain in force. The afternoon review made no code, polling configuration or provider-contact changes. The earlier disabled-polling statements below describe the October 19 acceptance snapshot and are superseded by this dated update.
 
 # Hosted acceptance record — October 19, 2026
 
