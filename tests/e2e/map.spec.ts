@@ -1,0 +1,73 @@
+import { test, expect } from "@playwright/test";
+import { mockTransit, transitFixtures } from "./transit-fixtures";
+
+test("route selection preserves repeated boarding occurrences and source direction", async ({ page }) => {
+  await mockTransit(page);
+  await page.goto("/map?route=uga-passio%3Ar");
+  const details = page.getByRole("region", { name: "Route details" });
+  await expect(details.getByRole("heading", { name: "Campus Loop" })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Ordered stop occurrences" }).getByRole("button")).toHaveCount(3);
+  await expect(page.getByRole("list", { name: "Ordered stop occurrences" })).toContainText("1. Memorial Hall");
+  await expect(page.getByRole("list", { name: "Ordered stop occurrences" })).toContainText("3. Memorial Hall");
+  await page.getByRole("list", { name: "Ordered stop occurrences" }).getByRole("button").nth(1).click();
+  await expect(page).toHaveURL(/stop=uga-passio%3Awest/);
+});
+
+test("stop detail filters stale and cancelled predictions and preserves planning context", async ({ page }) => {
+  await mockTransit(page);
+  await page.goto("/map?stop=uga-passio%3Aeast");
+  const details = page.getByRole("region", { name: "Stop details" });
+  await expect(details).toContainText("Northbound Loop");
+  await expect(details.getByText("Source prediction", { exact: false })).toHaveCount(1);
+  await expect(details.getByRole("link", { name: "Walking directions" })).toHaveAttribute("href", /destination=33.948,-83.377&travelmode=walking/);
+  await details.getByRole("link", { name: "Plan to this stop" }).click();
+  await expect(page.getByRole("heading", { name: "Destination: Memorial Hall" })).toBeVisible();
+  await expect(page.getByText("Trip recommendations are not available yet")).toBeVisible();
+});
+
+test("a stale bus is labeled by source observation time and missing predictions are not cancellations", async ({ page }) => {
+  const data = transitFixtures();
+  data.transit_arrivals = [];
+  await mockTransit(page, data);
+  await page.goto("/map?vehicle=uga-passio%3Av");
+  await expect(page.getByRole("region", { name: "Bus details" })).toContainText("stale position");
+  await page.getByRole("link", { name: "Open reported stop" }).click();
+  await expect(page.getByText("No current source arrivals are available.", { exact: false })).toBeVisible();
+});
+
+test("WebGL failure keeps the accessible directory and stop details usable", async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, ...args: Parameters<typeof original>) {
+      if (String(args[0]).includes("webgl")) return null;
+      return original.apply(this, args);
+    } as typeof original;
+  });
+  await mockTransit(page);
+  await page.goto("/map?stop=uga-passio%3Aeast");
+  await expect(page.getByText("The map could not load.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("list", { name: "Routes", exact: true })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Stop details" })).toContainText("Memorial Hall");
+  await expect(page.getByRole("button", { name: "Retry map" })).toBeVisible();
+});
+
+test("invalid route, stop and place direct links fail honestly", async ({ page }) => {
+  await mockTransit(page);
+  await page.goto("/map?route=unknown&stop=unknown&place=unknown&type=building");
+  await expect(page.getByText("This route is not available in the current catalog.")).toBeVisible();
+  await expect(page.getByText("This stop is not available in the current catalog.")).toBeVisible();
+  await expect(page.getByText("This campus location is unavailable or ambiguous.", { exact: false })).toBeVisible();
+});
+
+test("directory filtering, Back and mobile layout work without map tiles", async ({ page }) => {
+  await mockTransit(page);
+  await page.setViewportSize({ width: 320, height: 700 });
+  await page.goto("/map");
+  await page.getByRole("textbox", { name: "Search route and stop directory" }).fill("Science");
+  await expect(page.getByRole("list", { name: "Boarding stops" }).getByRole("link")).toHaveCount(1);
+  await page.getByRole("list", { name: "Boarding stops" }).getByRole("link").click();
+  await expect(page).toHaveURL(/stop=uga-passio%3Asouth/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/map$/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
