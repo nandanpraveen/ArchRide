@@ -37,8 +37,12 @@ pnpm build
 
 `GET /api/health` checks database connectivity. With the configured starter database it reports `status: ok`, `database: connected`, and `transit: not-connected`; it does not claim a live transit feed.
 
+## Transit ingestion (Week 1)
+
+See the [implementation, source evidence, team contracts, and activation runbook](docs/transit/README.md). Run `pnpm test:transit` for isolated PostgreSQL ingestion/security tests. The hosted ingestion function, static refresh, and retention jobs are deployed. Recurring realtime polling awaits confirmed provider limits; see the runbook for current status.
+
 ## Backend
 
 [ArchRide Supabase dashboard](https://supabase.com/dashboard/project/yivnryjbzhampecphlgr) · Free plan · US East/North Virginia.
 
-The starter has typed browser/server Supabase clients, session-refresh support, two applied migrations, public read-only feed health, and private owner-only profiles. The full shared/private schema, Auth screens, ingestion, jobs, and admin features are scoped in the project. See [development notes](docs/DEVELOPMENT.md) for linking, migrations, type generation, and optional local Docker workflows.
+The backend has typed browser/server Supabase clients, session-refresh support, private owner-only profiles, and deployed shared transit tables with public read-only access. A protected Edge Function performs central ingestion; hosted cron handles static refresh and retention. The full shared/private schema, Auth screens, ingestion, jobs, and admin features are scoped in the project. See [development notes](docs/DEVELOPMENT.md) for linking, migrations, type generation, and optional local Docker workflows.

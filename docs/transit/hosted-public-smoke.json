@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-10-19T23:56:53.286Z",
+  "project": "yivnryjbzhampecphlgr",
+  "publicRoutes": 19,
+  "publicStops": 161,
+  "deniedWriteAndPrivateReadStatuses": [
+    401,
+    401,
+    401,
+    401,
+    401,
+    401
+  ],
+  "homeSearch": "passed",
+  "unauthenticatedWorkerStatus": 401
+}
