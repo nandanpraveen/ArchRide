@@ -33,9 +33,9 @@ export function seconds(value: string): number | null {
   assert(m < 60 && s < 60 && h < 168, "invalid_time");
   return h * 3600 + m * 60 + s;
 }
-function integer(raw: string, nullable = true): number | null {
-  if (raw === "" && nullable) return null;
-  assert(/^\d+$/.test(raw), "invalid_integer");
+function integer(raw: string | undefined, nullable = true): number | null {
+  if ((raw === undefined || raw === "") && nullable) return null;
+  assert(raw !== undefined && /^\d+$/.test(raw), "invalid_integer");
   return Number(raw);
 }
 function coordinate(raw: string | number | undefined, max: number) {

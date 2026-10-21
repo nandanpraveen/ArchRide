@@ -31,8 +31,8 @@ function seconds(value) {
   return h * 3600 + m * 60 + s;
 }
 function integer(raw, nullable = true) {
-  if (raw === "" && nullable) return null;
-  assert(/^\d+$/.test(raw), "invalid_integer");
+  if ((raw === void 0 || raw === "") && nullable) return null;
+  assert(raw !== void 0 && /^\d+$/.test(raw), "invalid_integer");
   return Number(raw);
 }
 function coordinate(raw, max) {

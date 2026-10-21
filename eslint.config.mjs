@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Copied vendor worker; lint the application code rather than its minified bundle.
+    "public/maplibre-gl-worker.mjs",
   ]),
 ]);
 

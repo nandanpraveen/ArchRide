@@ -45,6 +45,31 @@ test("static preserves repeated stops, zero coordinates, frequencies and >24h se
   assert.equal(seconds(""), null);
   assert.throws(() => seconds("25:60:00"));
 });
+test("static accepts omitted optional numeric columns while requiring stop sequences", () => {
+  const c = staticCatalog(
+    archive({
+      "stops.txt":
+        "stop_id,stop_name,stop_lat,stop_lon\na,Test East,0,0\nb,Test West,33.95,-83.37\n",
+      "trips.txt": "route_id,service_id,trip_id\nr,s,t\n",
+      "stop_times.txt":
+        "trip_id,arrival_time,departure_time,stop_id,stop_sequence\nt,24:01:00,24:01:00,a,1\nt,,,b,2\n",
+    }),
+  );
+  assert.equal(c.transit_stops[0].location_type, 0);
+  assert.equal(c.transit_trips[0].direction_id, null);
+  assert.equal(c.transit_stop_times[0].pickup_type, null);
+  assert.equal(c.transit_stop_times[0].drop_off_type, null);
+  assert.throws(
+    () =>
+      staticCatalog(
+        archive({
+          "stop_times.txt":
+            "trip_id,arrival_time,departure_time,stop_id\nt,24:01:00,24:01:00,a\n",
+        }),
+      ),
+    /invalid_integer/,
+  );
+});
 test("invalid static foreign references, coordinates, duplicate occurrences and timezone fail atomically", () => {
   for (const overrides of [
     { "stops.txt": "stop_id,stop_name,stop_lat,stop_lon\na,A,91,0\n" },
