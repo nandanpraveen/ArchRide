@@ -3,10 +3,10 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/lib/supabase/database.types";
 
 export async function proxy(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request });
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-  let response = NextResponse.next({ request });
-  if (!url || !key) return response;
+  if (!url || !key) return supabaseResponse;
   const supabase = createServerClient<Database>(url, key, {
     cookies: {
       getAll: () => request.cookies.getAll(),
@@ -14,12 +14,12 @@ export async function proxy(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) =>
           request.cookies.set(name, value),
         );
-        response = NextResponse.next({ request });
+        supabaseResponse = NextResponse.next({ request });
         cookiesToSet.forEach(({ name, value, options }) =>
-          response.cookies.set(name, value, options),
+          supabaseResponse.cookies.set(name, value, options),
         );
         Object.entries(headers).forEach(([name, value]) =>
-          response.headers.set(name, value),
+          supabaseResponse.headers.set(name, value),
         );
       },
     },
@@ -36,7 +36,7 @@ export async function proxy(request: NextRequest) {
   ) {
     return NextResponse.redirect(new URL("/sign-in", request.url));
   }
-  return response;
+  return supabaseResponse;
 }
 export const config = {
   //AI generated guard against any of the listed file formats

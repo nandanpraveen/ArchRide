@@ -32,6 +32,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  //Recomputed on each render
   const user = await getUser();
   let isGuest = false;
 

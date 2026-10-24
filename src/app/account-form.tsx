@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useState, useEffect } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/browser-client";
 import { User } from "@supabase/supabase-js";
 import { redirect, useRouter } from "next/navigation";
 import { guestLogin } from "./sign-in/actions";
@@ -15,18 +15,25 @@ const AccountForm = ({ formMode }: FormProps) => {
   const [loading, setLoading] = useState<boolean>(false); //Currently not implemented
   const [emailConfirmation, setEmailConfirmation] = useState<boolean>(true); //Currently unused
   const [email, setEmail] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmedPassword, setConfirmedPassword] = useState<string>("");
   const [user, setUser] = useState<User | null>(null);
   const [mode, setMode] = useState<string>(formMode);
+  const accountCreationMessage =
+    "Just one more step, and you'll be on your way!";
+  const signUpMessage = "Let's get you signed in";
+
   const [headerMessage, SetHeaderMessage] = useState<string>(
-    formMode === "create-account"
-      ? "Just one more step, and you'll be on your way!"
-      : "Let's get you signed in",
+    formMode === "create-account" ? accountCreationMessage : signUpMessage,
   );
 
-  const handleAccountCreation = async (
+  const goToHomePage = () => {
+    router.push("/");
+    router.refresh();
+  };
+
+  const handleFormSubmission = async (
     e: React.MouseEvent<HTMLElement>,
     isGuest: boolean = false,
   ) => {
@@ -34,16 +41,21 @@ const AccountForm = ({ formMode }: FormProps) => {
     console.log("click ", isGuest);
     if (!isGuest) {
       console.log("non guest Login");
+
+      //Account creation
       if (mode === "create-account") {
         if (confirmedPassword === password) {
           processForm();
         } else {
-          setError("Passwords do not match. Please try again.");
+          setMessage("Passwords do not match. Please try again.");
         }
+        //Sign in
       } else {
         processForm();
       }
-    } else {
+    }
+    //Guest
+    else {
       console.log("guest Login");
       await guestLogin();
     }
@@ -51,38 +63,42 @@ const AccountForm = ({ formMode }: FormProps) => {
 
   const processForm = async () => {
     const supabase = createClient();
-    setError("");
-    setLoading(true);
+    setMessage("");
+    // setLoading(true);
     if (mode === "create-account") {
       const { data, error } = await supabase.auth.signUp({
-        email,
+        email: email.toLowerCase(),
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+        },
       });
 
       if (error) {
-        return setError(error.message);
+        //Failed account creation
+        return setMessage(error.message);
       } else {
+        //Successful account creation
         setUser(data.user);
-
         if (data.session) {
-          router.push("/");
-          router.refresh();
+          goToHomePage();
+        } else {
+          setMessage("Please check your email for confirmation");
         }
       }
     } else {
+      //Sign in mode is active
+
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: email.toLowerCase(),
         password,
       });
 
       if (error) {
-        return setError(error.message);
+        return setMessage(error.message);
       } else {
         setUser(data.user);
-        if (data.session) {
-          router.push("/");
-          router.refresh();
-        }
+        goToHomePage();
       }
     }
     // setLoading(false);
@@ -94,7 +110,7 @@ const AccountForm = ({ formMode }: FormProps) => {
         <h1 className="heading-primary flex justify-center text-center items-center w-full h-full bg-amber-700">
           {headerMessage}
         </h1>
-        {<h2>{error !== "" ? error : ""}</h2>}
+        {<h2>{message !== "" ? message : ""}</h2>}
         <div className="flex justify-center items-center w-full h-full bg-white">
           <form className="flex gap-6 items-center justify-center flex-col w-[60%] h-full bg-amber-600">
             <div className="flex gap-3 items-center w-[90%]">
@@ -138,7 +154,7 @@ const AccountForm = ({ formMode }: FormProps) => {
             )}
             <div className="bg-black w-[60%] flex gap-3 items-center justify-center">
               <button
-                onClick={handleAccountCreation}
+                onClick={handleFormSubmission}
                 disabled={loading}
                 className="text-[0.8rem] rounded-[5%] bg-amber-500 w-[30%] h-8 "
               >
@@ -146,7 +162,7 @@ const AccountForm = ({ formMode }: FormProps) => {
               </button>
               <button
                 onClick={(e: React.MouseEvent<HTMLElement>) => {
-                  handleAccountCreation(e, true);
+                  handleFormSubmission(e, true);
                 }}
                 disabled={loading}
                 className="text-[0.8rem] rounded-[5%] bg-amber-500 w-[30%] h-8 "

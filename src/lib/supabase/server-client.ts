@@ -15,7 +15,9 @@ export async function createClient() {
             cookieStore.set(name, value, options),
           );
         } catch {
-          /* Server Components cannot write cookies; src/proxy.ts refreshes sessions. */
+          // setAll can be called from a Server Component where cookies
+          // can't be set. This is safe to ignore if middleware is
+          // refreshing sessions (it is).
         }
       },
     },
