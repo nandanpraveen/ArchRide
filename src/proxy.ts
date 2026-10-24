@@ -28,7 +28,9 @@ export async function proxy(request: NextRequest) {
   const isUserAuthenticated = claims.data?.claims;
   const path = request.nextUrl.pathname;
   const isPathAuthenticated =
-    path.startsWith("/sign-in") || path.startsWith("/create-account");
+    path.startsWith("/sign-in") ||
+    path.startsWith("/create-account") ||
+    path.startsWith("/auth");
 
   if (
     !(request.cookies.has("guest") || isUserAuthenticated) &&

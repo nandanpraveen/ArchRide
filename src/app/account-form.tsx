@@ -38,9 +38,9 @@ const AccountForm = ({ formMode }: FormProps) => {
     isGuest: boolean = false,
   ) => {
     e.preventDefault();
-    console.log("click ", isGuest);
+    //console.log("click ", isGuest);
     if (!isGuest) {
-      console.log("non guest Login");
+      //console.log("non guest Login");
 
       //Account creation
       if (mode === "create-account") {
@@ -56,7 +56,7 @@ const AccountForm = ({ formMode }: FormProps) => {
     }
     //Guest
     else {
-      console.log("guest Login");
+      //console.log("guest Login");
       await guestLogin();
     }
   };
@@ -70,7 +70,7 @@ const AccountForm = ({ formMode }: FormProps) => {
         email: email.toLowerCase(),
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/confirm`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 

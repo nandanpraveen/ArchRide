@@ -20,8 +20,7 @@ import AltRouteRounded from "@mui/icons-material/AltRouteRounded";
 import BookmarkRounded from "@mui/icons-material/BookmarkRounded";
 import PersonRounded from "@mui/icons-material/PersonRounded";
 import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
-import { ReactNode, useState } from "react";
-import { getUser } from "@/app/get-user";
+
 const destinations = [
   { label: "Home", href: "/", icon: HomeRounded },
   { label: "Map", href: "/map", icon: MapRounded },
