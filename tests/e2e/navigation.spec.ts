@@ -1,4 +1,8 @@
 import { expect, test } from "@playwright/test";
+test.beforeEach(async ({ page }) => {
+  await page.route("**/rest/v1/**", (route) => route.fulfill({ json: [] }));
+  await page.route("https://tile.openstreetmap.org/**", (route) => route.abort());
+});
 test("a guest can visit all five destinations without invented arrivals", async ({
   page,
 }) => {
@@ -6,9 +10,7 @@ test("a guest can visit all five destinations without invented arrivals", async 
   await expect(
     page.getByRole("heading", { name: "Where are you headed?" }),
   ).toBeVisible();
-  await expect(page.getByRole("main").getByRole("alert")).toContainText(
-    "Transit data is not connected yet",
-  );
+  await expect(page.getByRole("main")).toContainText("Public transit browsing works without an account");
   const navigation = page
     .getByRole("navigation", { name: "Primary navigation" })
     .filter({ visible: true });

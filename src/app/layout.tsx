@@ -1,12 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
 import { Providers } from "@/components/providers";
-import { AppMenuUI } from "@/components/app-menu-ui";
+import { AppShell } from "@/components/app-shell";
 import "./globals.css";
-import { getUser } from "./get-user";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
@@ -26,28 +22,16 @@ export const viewport: Viewport = {
   viewportFit: "cover",
   themeColor: "#a51c30",
 };
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  //Recomputed on each render
-  const user = await getUser();
-  let isGuest = false;
-
-  if (!user) {
-    const cookieStore = await cookies();
-    if (cookieStore.has("guest")) {
-      isGuest = cookieStore.get("guest")?.value === "1";
-    }
-  }
-
   return (
     <html lang="en" className={roboto.variable}>
       <body>
         <Providers>
-          <AppMenuUI signedIn={user !== null || isGuest}>{children}</AppMenuUI>
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

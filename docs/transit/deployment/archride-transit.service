@@ -1,0 +1,16 @@
+[Unit]
+Description=ArchRide central UGA transit ingestion
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=archride
+WorkingDirectory=/opt/archride
+EnvironmentFile=/etc/archride/transit.env
+ExecStart=/usr/bin/node --import tsx scripts/transit/ingest.ts
+TimeoutStartSec=480
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true

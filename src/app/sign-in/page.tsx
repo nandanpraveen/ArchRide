@@ -1,16 +1,8 @@
-import React from "react";
+import { redirect } from "next/navigation";
 import AccountForm from "../account-form";
 import { getUser } from "../get-user";
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-const page = async () => {
-  const user = await getUser();
-  const cookieStore = await cookies();
-  if (cookieStore.has("guest") || user) {
-    redirect("/");
-  }
 
-  return <AccountForm formMode={"sign-in"}></AccountForm>;
-};
-
-export default page;
+export default async function SignInPage() {
+  if (await getUser()) redirect("/profile");
+  return <AccountForm formMode="sign-in" />;
+}

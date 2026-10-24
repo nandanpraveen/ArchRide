@@ -39,4 +39,30 @@ Never modify an already-applied migration to change a hosted schema. Add a migra
 - `/api/health` checks the public `feed_status` table and returns 503 for missing configuration/unreachable data. A healthy database response still says `transit: not-connected` until task 2 is implemented.
 - `tests/e2e/` checks guest navigation and keyboard skip links on mobile and desktop. Add feature-specific domain/security tests as real features are added.
 
-The starter intentionally does not contain demo buses, guessed arrival times, production ingestion jobs, a finished login form, or a deployed production app. Those are owned by the twelve project drafts.
+The app uses source-provided transit data and exposes incomplete planning/personalized features honestly. A public production deployment remains a separate project task; hosted backend ingestion and the Auth integration are described below.
+
+## Transit deployment update — October 19, 2026
+
+The shared ArchRide project now includes the transit schema, authenticated `transit-ingest` Edge Function, hourly static due checks, hourly retention, and a configurable realtime cron dispatcher. Migration versions match the checked-in files. Do not reapply the schema under new names. See [hosted status](transit/HOSTED_STATUS.md) for exact versions and verification. Realtime was initially disabled; on October 21 the owner requested temporary activation on the existing minute schedule while provider limits remain unconfirmed. This operator authorization is not provider approval. Provider cooldown and overlap protection remain enabled.
+
+The Edge Function uses the built-in server-side database connection and a dedicated Vault job token. No shared administrator password is needed in this checkout. Generate its core with `pnpm transit:edge:build`; CI checks that the generated file matches the shared TypeScript source. Keep `src/lib/campus-data.ts` when merging the Home branch: it replaces the teammate's placeholder using the existing interface. `pnpm db:types` remains the hosted type-generation command; `pnpm db:types:local` is an isolated development aid and cannot emulate hosted cron/Vault extensions.
+
+## Week 1 integration
+
+See `docs/integration-review.md` for the reviewed Home, Map and transit behavior and acceptance limits. Browser checks now use an isolated fixture server on port 3100; `pnpm test` never needs live provider access. Real Supabase public smoke is separate (`pnpm transit:hosted:smoke`). The integration production smoke used real hosted public data without enabling provider polling.
+
+## Home data integration — October 21, 2026
+
+Home now consumes abortable source-departure reads for a transient manual/GPS origin, separately from live-feed health. The shared public catalog contains reviewed UGA GIS building and door locations; see `docs/campus/README.md` for explicit operator refresh and source constraints. `pnpm campus:fetch --output /tmp/new-review-directory` generates review artifacts and never applies them. Apply reviewed SQL only to the linked ArchRide project. No RLS/schema changes or realtime polling activation are needed for this catalog.
+
+## Authentication integration — October 24, 2026
+
+PR #4 integrates email sign-up/sign-in, PKCE email confirmation, resend, password recovery/reset, server-validated Profile identity and sign-out. The shared Material shell, main landmark and public Home/Map/Plan/Saved browsing remain available without a guest cookie or Auth account. Private operations must continue to validate identity and use ownership RLS. No schema migration or new secret is required to pull this contribution.
+
+After pulling main, run `pnpm install --frozen-lockfile` with Node 24 and pnpm 12.5.1. Next.js and its ESLint configuration are pinned to the patched 16.4.3 release. Keep the existing public project URL/publishable key in ignored `.env.local`; never distribute administrator credentials.
+
+For each actual app origin, configure its exact `/auth/callback` and `/auth/callback?next=/reset-password` return URLs in Supabase Auth's redirect allowlist. Local development normally uses `http://localhost:3000`; loopback or alternate ports are distinct origins. Do not add broad production wildcards or assume that a new preview host is authorized. Confirmation links must be opened in the browser that initiated the PKCE request. Missing, expired or reused links lead to a recovery page, and callback destinations are checked against the app origin.
+
+The hosted project's public Auth settings were checked: email sign-up is enabled, email confirmation is required, and anonymous Auth accounts are disabled. Automated Auth tests use a local protocol fixture and send no email. They exercise cookies, server verification, confirmation exchanges, sign-out and recovery independently of SMTP delivery; actual email delivery and each deployment's redirect allowlist must be checked for that environment. The existing security advisor also reports leaked-password protection disabled; Supabase makes that feature available on Pro and above, so it was not enabled by changing the project's Free plan.
+
+The full Week 1 database/profile/preferences issue remains open: preference persistence/theme application, later-feature private tables, account deletion and their ownership/deletion acceptance tests were not supplied by this PR. Merging the authentication contribution does not mark those requirements complete.

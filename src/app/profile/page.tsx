@@ -1,10 +1,7 @@
 import ProfileUI from "./profileUI";
-import { getUser } from "../get-user";
-import { User } from "@supabase/supabase-js";
+import { getAccount } from "../get-user";
 
-export default async function ProfilePage() {
-  const user = await getUser();
-  return (
-    <ProfileUI userSignedIn={user !== null} userEmail={user?.email ?? ""} />
-  );
+export default async function ProfilePage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const [{ user, unavailable }, params] = await Promise.all([getAccount(), searchParams]);
+  return <ProfileUI userSignedIn={!!user} userEmail={user?.email ?? ""} unavailable={unavailable} signOutFailed={params.error === "sign-out"} />;
 }

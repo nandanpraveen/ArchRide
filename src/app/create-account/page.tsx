@@ -1,8 +1,8 @@
-import React from "react";
+import { redirect } from "next/navigation";
 import AccountForm from "../account-form";
+import { getUser } from "../get-user";
 
-const page = () => {
-  return <AccountForm formMode={"create-account"}></AccountForm>;
-};
-
-export default page;
+export default async function CreateAccountPage() {
+  if (await getUser()) redirect("/profile");
+  return <AccountForm formMode="create-account" />;
+}

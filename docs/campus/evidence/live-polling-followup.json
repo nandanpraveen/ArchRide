@@ -1,0 +1,153 @@
+{
+  "activation_basis": "Temporary user-directed activation; provider quota and caching terms remain unconfirmed",
+  "checked_at": "2026-10-21T18:33:56.008732+00:00",
+  "config": {
+    "configured_interval_floor_seconds": 30,
+    "realtime_enabled": true,
+    "worker_token_configured": true,
+    "worker_url_matches_project": true
+  },
+  "feeds": [
+    {
+      "entity_count": 4878,
+      "error_code": null,
+      "id": "uga-passio:static",
+      "last_attempt_at": "2026-10-21T00:17:01.357+00:00",
+      "last_success_at": "2026-10-21T00:17:01.357+00:00",
+      "next_attempt_at": null,
+      "source_timestamp": null,
+      "state": "healthy"
+    },
+    {
+      "entity_count": 32,
+      "error_code": null,
+      "id": "uga-passio:vehicles",
+      "last_attempt_at": "2026-10-21T18:33:00.836+00:00",
+      "last_success_at": "2026-10-21T18:33:00.836+00:00",
+      "next_attempt_at": null,
+      "source_timestamp": "2026-10-21T18:33:00+00:00",
+      "state": "healthy"
+    },
+    {
+      "entity_count": 0,
+      "error_code": "partial_rejection",
+      "id": "uga-passio:arrivals",
+      "last_attempt_at": "2026-10-21T18:33:00.961+00:00",
+      "last_success_at": "2026-10-21T10:30:00.751+00:00",
+      "next_attempt_at": null,
+      "source_timestamp": "2026-10-21T10:30:00+00:00",
+      "state": "stale"
+    },
+    {
+      "entity_count": 0,
+      "error_code": null,
+      "id": "uga-passio:alerts",
+      "last_attempt_at": "2026-10-21T18:33:01.028+00:00",
+      "last_success_at": "2026-10-21T18:33:01.028+00:00",
+      "next_attempt_at": null,
+      "source_timestamp": "2026-10-21T18:33:01+00:00",
+      "state": "healthy"
+    }
+  ],
+  "jobs": [
+    {
+      "active": true,
+      "name": "archride-static-refresh",
+      "schedule": "17 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-realtime-refresh",
+      "schedule": "* * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-transit-retention",
+      "schedule": "43 * * * *"
+    }
+  ],
+  "project_ref": "yivnryjbzhampecphlgr",
+  "recent_dispatches": [
+    {
+      "end_time": "2026-10-21T18:33:00.035911+00:00",
+      "start_time": "2026-10-21T18:33:00.024757+00:00",
+      "status": "succeeded"
+    },
+    {
+      "end_time": "2026-10-21T18:32:00.18376+00:00",
+      "start_time": "2026-10-21T18:32:00.128794+00:00",
+      "status": "succeeded"
+    },
+    {
+      "end_time": "2026-10-21T18:31:00.032539+00:00",
+      "start_time": "2026-10-21T18:31:00.018371+00:00",
+      "status": "succeeded"
+    }
+  ],
+  "recent_ingestion": [
+    {
+      "entity_count": 0,
+      "error_code": null,
+      "feed_id": "uga-passio:alerts",
+      "finished_at": "2026-10-21T18:33:01.028661+00:00",
+      "outcome": "success"
+    },
+    {
+      "entity_count": 241,
+      "error_code": "partial_rejection",
+      "feed_id": "uga-passio:arrivals",
+      "finished_at": "2026-10-21T18:33:00.961498+00:00",
+      "outcome": "failed"
+    },
+    {
+      "entity_count": 32,
+      "error_code": null,
+      "feed_id": "uga-passio:vehicles",
+      "finished_at": "2026-10-21T18:33:00.837313+00:00",
+      "outcome": "success"
+    },
+    {
+      "entity_count": 0,
+      "error_code": null,
+      "feed_id": "uga-passio:alerts",
+      "finished_at": "2026-10-21T18:32:00.938584+00:00",
+      "outcome": "success"
+    },
+    {
+      "entity_count": 255,
+      "error_code": "partial_rejection",
+      "feed_id": "uga-passio:arrivals",
+      "finished_at": "2026-10-21T18:32:00.76772+00:00",
+      "outcome": "failed"
+    },
+    {
+      "entity_count": 32,
+      "error_code": null,
+      "feed_id": "uga-passio:vehicles",
+      "finished_at": "2026-10-21T18:32:00.72937+00:00",
+      "outcome": "success"
+    },
+    {
+      "entity_count": 0,
+      "error_code": null,
+      "feed_id": "uga-passio:alerts",
+      "finished_at": "2026-10-21T18:31:07.259692+00:00",
+      "outcome": "success"
+    },
+    {
+      "entity_count": 249,
+      "error_code": "partial_rejection",
+      "feed_id": "uga-passio:arrivals",
+      "finished_at": "2026-10-21T18:31:07.213907+00:00",
+      "outcome": "failed"
+    },
+    {
+      "entity_count": 32,
+      "error_code": null,
+      "feed_id": "uga-passio:vehicles",
+      "finished_at": "2026-10-21T18:31:07.179326+00:00",
+      "outcome": "success"
+    }
+  ],
+  "worker_unauthenticated_status": 401
+}

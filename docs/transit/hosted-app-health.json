@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-10-19T23:57:17.045Z",
+  "httpStatus": 200,
+  "app": "ArchRide",
+  "status": "ok",
+  "database": "connected",
+  "transit": "connected",
+  "feeds": [
+    {
+      "id": "uga-passio:static",
+      "freshness": "current",
+      "sourceTimestamp": null,
+      "lastSuccessAt": "2026-10-19T23:45:31.018+00:00",
+      "entityCount": 4878
+    },
+    {
+      "id": "uga-passio:vehicles",
+      "freshness": "current",
+      "sourceTimestamp": "2026-10-19T23:54:36+00:00",
+      "lastSuccessAt": "2026-10-19T23:54:36.735+00:00",
+      "entityCount": 10
+    },
+    {
+      "id": "uga-passio:arrivals",
+      "freshness": "current",
+      "sourceTimestamp": "2026-10-19T23:54:36+00:00",
+      "lastSuccessAt": "2026-10-19T23:54:36.926+00:00",
+      "entityCount": 170
+    },
+    {
+      "id": "uga-passio:alerts",
+      "freshness": "current",
+      "sourceTimestamp": "2026-10-19T23:54:37+00:00",
+      "lastSuccessAt": "2026-10-19T23:54:37.015+00:00",
+      "entityCount": 0
+    }
+  ]
+}
