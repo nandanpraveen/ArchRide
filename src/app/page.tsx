@@ -6,6 +6,7 @@ import { EmptyState } from "@/components/empty-state";
 import { PlaceSearch } from "@/components/place-search";
 import { LocationCard } from "@/components/location-card";
 import { HomeStatus } from "@/components/home-status";
+  import { HomeFavorites } from "@/components/home-favorites";
 import { usePublicTransit } from "@/lib/transit/public-data";
 
 const shortcuts = [
@@ -32,6 +33,7 @@ export default function HomePage() {
       </Box>
       <PlaceSearch />
       <LocationCard stops={transit.data?.stops ?? []} />
+        <HomeFavorites />
       <HomeStatus transit={transit} />
       <EmptyState
         title="Your next trip starts here"

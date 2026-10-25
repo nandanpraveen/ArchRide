@@ -21,7 +21,6 @@ export function HomeStatus({ transit }: { transit: ReturnType<typeof usePublicTr
   const sections = [
     { title: "Campus stops and departures", body: data?.stops.length ? `${data.stops.length} verified stops are available. Choose a stop on the map for serving routes and any current source arrivals.` : "No stop or departure data is available. Retry data or use the map directory when the catalog returns." },
     { title: "Next trip", body: "Choose a destination to view its details. Trip recommendations need verified walking paths and current transit arrivals; planning is not available yet." },
-    { title: "Favorites", body: "Your favorite places will appear here once saved places are connected." },
     { title: "Next class", body: "Your next class will appear here once your schedule is connected." },
   ];
   return <Stack spacing={3}>
