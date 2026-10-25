@@ -3,6 +3,8 @@ import { mockTransit } from "./transit-fixtures";
 test("deadline form keeps campus timezone and explains unsupported future trips", async ({
   page,
 }) => {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send("Emulation.setCPUThrottlingRate", { rate: 4 });
   await mockTransit(page);
   await page.goto("/plan");
   await expect(

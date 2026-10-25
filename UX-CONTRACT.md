@@ -7,7 +7,7 @@ Authority: [week 2 task 6](docs/backlog/06.md). Visual controls follow [DESIGN.m
 | Arrival state and labels | `src/lib/transit/estimates.ts`, `ArrivalStatus` | Valid, stale, missing, cancelled, passed; controlled-clock unit and browser tests |
 | Deadline interpretation | `src/lib/transit/deadlines.ts` | Full destination arrival, buffer, estimate label; no boarding-only assessment |
 | Campus date input | `DeadlineSearch`, `campusDeadline` | Native datetime input deliberately accepts platform geometry; interpreted in America/New_York, never the device timezone. DST gaps rejected; ambiguous hour requires an explicit first (EDT) or second (EST) occurrence. |
-| Form feedback | Material TextField, Alert, Button | App-owned validation with noValidate, persistent values, inline correction, first-field focus |
+| Form feedback | Material TextField, Alert, Button | App-owned validation with noValidate, persistent values, inline correction, first-field focus; inputs and submit stay disabled until handlers are ready |
 | Future service | `service-times.ts` | Calendar bounds, exceptions, repeated stop occurrence, GTFS >24h times. Unknown frequency templates unsupported. |
 
 Home and Map use one source interpretation. Countdown requires a current prediction and a connected feed, reevaluated each second. Expired, absent, cancelled, passed or disconnected predictions have **null** countdown. Zero is never a fallback. Fetching the same source revision does not refresh validity. Partial feed ingestion does not establish route cancellation.
