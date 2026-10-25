@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Alert, Button, List, ListItem, ListItemButton, ListItemText, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import type { Arrival, Route, Stop } from "@/lib/transit/contracts";
+import { ArrivalStatus, useArrivalClock } from "./arrival-status";
 import { usableArrival } from "@/lib/transit/contracts";
 import { mapCoordinates, mapPath, transitTime } from "@/lib/transit/map-data";
 import { publicTransitClient } from "@/lib/transit/public-data";
@@ -89,7 +90,8 @@ function MapTripDetails({ trip, stops, onGeometry, onStop }: {
   </Stack>;
 }
 
-export function MapStopDetails({ stop, routes, revision }: { stop: Stop; routes: Route[]; revision: string }) {
+export function MapStopDetails({ stop, routes, revision, connected = true }: { stop: Stop; routes: Route[]; revision: string; connected?: boolean }) {
+  const clock = useArrivalClock();
   const [details, setDetails] = useState<{ arrivals: Arrival[]; trips: Tables<"transit_trips">[] } | null>(null);
   const [error, setError] = useState(false);
   useEffect(() => {
@@ -123,7 +125,7 @@ export function MapStopDetails({ stop, routes, revision }: { stop: Stop; routes:
       <Typography component="h3" variant="h3">Serving routes and directions</Typography>
       {serving.length ? <List>{serving.map((trip) => <ListItem key={`${trip.route_id}:${trip.direction_id}:${trip.headsign}`} disablePadding><ListItemButton component={Link} href={`/map?route=${encodeURIComponent(trip.route_id)}&trip=${encodeURIComponent(trip.id)}&stop=${encodeURIComponent(stop.id)}`} sx={{ minHeight: 48 }}><ListItemText primary={routes.find((r) => r.id === trip.route_id)?.long_name || "Route unavailable"} secondary={trip.headsign || "Direction not supplied"} /></ListItemButton></ListItem>)}</List> : <Typography>No current serving route information is available.</Typography>}
       <Typography component="h3" variant="h3">Next source arrivals</Typography>
-      {details.arrivals.filter((a) => usableArrival(a)).length ? <List>{details.arrivals.filter((a) => usableArrival(a)).map((arrival) => <ListItem key={arrival.id}><ListItemText primary={`${routes.find((r) => r.id === arrival.route_id)?.long_name || "Route unavailable"} · ${transitTime(arrival.arrival_at!)}`} secondary={`Source prediction · stop occurrence ${arrival.stop_sequence} · updated ${transitTime(arrival.update_timestamp)}`} /></ListItem>)}</List> : <Typography>No current source arrivals are available. Missing predictions do not mean this stop or route is cancelled.</Typography>}
+      {details.arrivals.filter((a) => usableArrival(a, clock)).length ? <List>{details.arrivals.filter((a) => usableArrival(a, clock)).map((arrival) => <ListItem key={arrival.id} sx={{ display: "block" }}><ListItemText primary={`${routes.find((r) => r.id === arrival.route_id)?.long_name || "Route unavailable"} · ${transitTime(arrival.arrival_at!)}`} secondary={`Stop occurrence ${arrival.stop_sequence}`} /><ArrivalStatus arrival={arrival} connected={connected} /></ListItem>)}</List> : <Typography>No current source arrivals are available. Missing predictions do not mean this stop or route is cancelled.</Typography>}
     </>}
     <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
       <Button component={Link} href={`/plan?to=${encodeURIComponent(stop.id)}`} variant="contained">Plan to this stop</Button>

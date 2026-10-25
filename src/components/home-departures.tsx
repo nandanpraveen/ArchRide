@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrivalStatus } from "./arrival-status";
 import { useEffect, useState } from "react";
 import { Alert, Box, Button, List, ListItem, Stack, Typography } from "@mui/material";
 import { feedFreshness, usableArrival } from "@/lib/transit/contracts";
@@ -74,7 +75,7 @@ export function HomeDepartures({ origin, transit }: {
                   {arrivals.map((arrival) => <Box key={arrival.id} sx={{ pl: 0 }}>
                       <Typography>{transit.data?.routes.find((route) => route.id === arrival.route_id)?.long_name || transit.data?.routes.find((route) => route.id === arrival.route_id)?.short_name || "Route unavailable"} · {transitTime(arrival.arrival_at!)}</Typography>
                       <Typography variant="body2" color="text.secondary">{arrival.headsign || "Direction not supplied"}{arrival.direction_id !== null ? ` · direction ${arrival.direction_id}` : ""} · stop occurrence {arrival.stop_sequence}</Typography>
-                      <Typography variant="body2" color="text.secondary">Source prediction · updated {transitTime(arrival.update_timestamp)} · valid until {transitTime(arrival.valid_until)}</Typography>
+                      <ArrivalStatus arrival={arrival} connected={liveState === "current"} />
                     </Box>)}
                   <Button component={Link} href={`/map?stop=${encodeURIComponent(stop.id)}`} sx={{ alignSelf: "flex-start" }}>View {stop.name} details</Button>
                 </Stack>

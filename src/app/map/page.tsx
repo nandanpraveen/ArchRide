@@ -88,7 +88,7 @@ function MapContent() {
         {data.routes.map((r) => <MenuItem key={r.id} value={r.id}>{r.long_name || r.short_name}</MenuItem>)}
       </TextField>
       {route && <MapRouteDetails key={route.id} route={route} stops={data.stops} tripId={tripId} onTrip={selectTrip} onGeometry={handleGeometry} onStop={selectStop} />}
-      {stop && <MapStopDetails key={stop.id} stop={stop} routes={data.routes} revision={revision} />}
+      {stop && <MapStopDetails key={stop.id} stop={stop} routes={data.routes} revision={revision} connected={!data.errors?.health && data.health.some(h => h.id.endsWith(":arrivals") && feedFreshness(h) === "current")} />}
       {vehicle && <Stack component="section" aria-label="Bus details" spacing={1}>
         <Typography component="h2" variant="h2">Bus {vehicle.source_id_raw}</Typography>
         <Typography>{data.routes.find((r) => r.id === vehicle.route_id)?.long_name || "Route unavailable"} · {vehicleFreshness(vehicle)} position · observed {transitTime(vehicle.position_timestamp)}</Typography>
