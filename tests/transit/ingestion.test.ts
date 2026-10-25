@@ -428,6 +428,8 @@ test("retention bounds history and predictions without deleting latest state", a
       normalize("vehicles", message([vehicle()]), ctx(), NOW),
       now,
     );
+    // Source fixtures have a fixed date; retention compares receipt age with the database clock.
+    await db.query("update public.transit_vehicles set received_at=now()");
     await db.query(
       "update public.transit_observations set received_at=now()-interval '8 days'",
     );

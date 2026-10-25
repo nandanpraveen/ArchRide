@@ -7,6 +7,15 @@ export async function createClient() {
   const cookieStore = await cookies();
   const { url, key } = getSupabaseEnv();
   return createServerClient<Database>(url, key, {
+    global: {
+      fetch: (input, init) => fetch(input, {
+        ...init,
+        signal: init?.signal
+          ? AbortSignal.any([init.signal, AbortSignal.timeout(10_000)])
+          : AbortSignal.timeout(10_000),
+        cache: "no-store",
+      }),
+    },
     cookies: {
       getAll: () => cookieStore.getAll(),
       setAll(cookiesToSet) {

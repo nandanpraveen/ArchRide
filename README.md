@@ -34,7 +34,7 @@ pnpm test
 pnpm build
 ```
 
-`pnpm test` runs the desktop/mobile browser suite against an isolated fixture server on port 3100; it does not reuse a developer server or need shared secrets/provider access. `pnpm test:transit` exercises public read contracts, ingestion, catalog import and PostgreSQL security. CI also checks lint, types, the generated worker bundle and production build.
+`pnpm test` runs the desktop/mobile browser suite against an isolated app server on port 3100 and a local Auth protocol fixture on port 3101. It does not reuse a developer server, send email, or need shared secrets/provider access. `pnpm test:transit` exercises public read contracts, ingestion, catalog import, auth redirect safety and PostgreSQL security. CI also checks lint, types, the generated worker bundle and production build.
 
 `GET /api/health` checks database connectivity and source-clock freshness separately. The database can be healthy while realtime transit is degraded; source predictions remain unavailable when stale or absent.
 
@@ -46,7 +46,7 @@ See the [implementation, source evidence, team contracts, and activation runbook
 
 [ArchRide Supabase dashboard](https://supabase.com/dashboard/project/yivnryjbzhampecphlgr) · Free plan · US East/North Virginia.
 
-The backend has typed browser/server Supabase clients, session-refresh support, private owner-only profiles, and deployed shared transit tables with public read-only access. A protected Edge Function performs central ingestion; hosted cron handles static refresh and retention. The full shared/private schema, Auth screens, ingestion, jobs, and admin features are scoped in the project. See [development notes](docs/DEVELOPMENT.md) for linking, migrations, type generation, and optional local Docker workflows.
+The backend has typed browser/server Supabase clients, session refresh, email sign-up/sign-in, confirmation/resend, password recovery, sign-out and a server-verified account email in Profile. Public browsing stays available without an account. Existing profiles remain owner-only; the wider preference/private-feature schema and account deletion remain project acceptance work. A protected Edge Function performs central ingestion; hosted cron handles static refresh and retention. See [development notes](docs/DEVELOPMENT.md) for linking, migrations, type generation, auth configuration and optional local Docker workflows.
 
 ## Campus places and Home data
 

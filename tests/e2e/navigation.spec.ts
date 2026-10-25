@@ -10,7 +10,7 @@ test("a guest can visit all five destinations without invented arrivals", async 
   await expect(
     page.getByRole("heading", { name: "Where are you headed?" }),
   ).toBeVisible();
-  await expect(page.getByRole("main")).toContainText("You're browsing as a guest");
+  await expect(page.getByRole("main")).toContainText("Public transit browsing works without an account");
   const navigation = page
     .getByRole("navigation", { name: "Primary navigation" })
     .filter({ visible: true });
