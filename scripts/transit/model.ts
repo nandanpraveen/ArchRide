@@ -262,6 +262,7 @@ export type Realtime = {
   affected: Row[];
   events: Row[];
   rejected: number;
+  rejectionReasons?: Record<string, number>;
   entityCount: number;
 };
 export function normalize(
@@ -498,6 +499,8 @@ export function normalize(
     } catch (err) {
       if (!(err instanceof FeedError)) throw err;
       result.rejected++;
+      result.rejectionReasons ??= {};
+      result.rejectionReasons[err.code] = (result.rejectionReasons[err.code] ?? 0) + 1;
     }
   }
   assert(

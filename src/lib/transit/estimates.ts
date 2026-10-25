@@ -1,3 +1,4 @@
+import { FRESH_SECONDS } from "./policy";
 import type { Arrival } from "./contracts";
 
 /** Shared contract for Home, Map, task-5 candidates and task-9/10 reminders. */
@@ -11,7 +12,7 @@ export type ArrivalEstimate = {
   reason: string;
   countdownMinutes: number | null;
 };
-export const ESTIMATE_MAX_AGE_MS = 180_000;
+export const ESTIMATE_MAX_AGE_MS = FRESH_SECONDS.arrivals * 1000;
 const time = (value: string | null) => (value ? Date.parse(value) : NaN);
 export function arrivalEstimate(
   row: Arrival | null,

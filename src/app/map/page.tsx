@@ -1,11 +1,12 @@
 "use client";
+import { FRESH_SECONDS } from "@/lib/transit/policy";
 
 import { Suspense, useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Alert, Box, Button, CircularProgress, List, ListItem, ListItemButton, ListItemText, MenuItem, Stack, TextField, Typography } from "@mui/material";
-import { activeTransitAlerts, feedFreshness, freshness, vehicleFreshness } from "@/lib/transit/contracts";
+import { activeTransitAlerts, arrivalFeedConnected, feedFreshness, freshness, vehicleFreshness } from "@/lib/transit/contracts";
 import { mapCoordinates, routeColor, transitTime } from "@/lib/transit/map-data";
 import { usePublicTransit } from "@/lib/transit/public-data";
 import { MapPlaceDetails, MapRouteDetails, MapStopDetails, type MapPlace, type RouteGeometry } from "@/components/map-details";
@@ -54,7 +55,7 @@ function MapContent() {
   const matches = (name: string) => queryWords.every((word) => name.toLocaleLowerCase().includes(word));
   const staticHealth = data?.health.find((h) => h.id.endsWith(":static"));
   const realtimeHealth = data?.health.filter((h) => h.id.startsWith("uga-passio:") && !h.id.endsWith(":static"));
-  const revision = data?.health.map((h) => `${h.id}:${h.updated_at}`).join("|") || "";
+  const revision = data?.health.filter(h => h.id.endsWith(":arrivals") || h.id.endsWith(":static")).map((h) => `${h.id}:${h.updated_at}`).join("|") || "";
   const shownPlace = placeId && place?.id === placeId ? place : undefined;
   return <Stack spacing={3}>
     <Typography component="h1" variant="h1">Campus map</Typography>
@@ -70,7 +71,7 @@ function MapContent() {
         const selectors = alert.informed_entities;
         if (!Array.isArray(selectors) || !selectors.length) return true;
         return selectors.some((s) => s && typeof s === "object" && !Array.isArray(s) && ((!s.routeId && !s.stopId && !s.trip) || (route && s.routeId === route.source_id_raw) || (stop && s.stopId === stop.source_id_raw)));
-      }).map((alert) => <Alert key={alert.id} severity="warning"><strong>{alert.header || "Transit alert"}</strong> {alert.description} · {freshness(alert.source_timestamp)} source alert · updated {transitTime(alert.source_timestamp)}</Alert>)}
+      }).map((alert) => <Alert key={alert.id} severity="warning"><strong>{alert.header || "Transit alert"}</strong> {alert.description} · {freshness(alert.source_timestamp, FRESH_SECONDS.alerts)} source alert · updated {transitTime(alert.source_timestamp)}</Alert>)}
     </>}
     {tilesFailed && <Alert severity="warning" action={<Button color="inherit" onClick={() => { setTilesFailed(false); setMapKey((key) => key + 1); }}>Retry map</Button>}>The map could not load. Use the route and stop lists below, or try again.</Alert>}
     <Box sx={{ position: "relative", height: "min(60dvh, 560px)", minHeight: 320, borderRadius: 2, overflow: "hidden", border: 1, borderColor: "divider" }}>
@@ -88,7 +89,7 @@ function MapContent() {
         {data.routes.map((r) => <MenuItem key={r.id} value={r.id}>{r.long_name || r.short_name}</MenuItem>)}
       </TextField>
       {route && <MapRouteDetails key={route.id} route={route} stops={data.stops} tripId={tripId} onTrip={selectTrip} onGeometry={handleGeometry} onStop={selectStop} />}
-      {stop && <MapStopDetails key={stop.id} stop={stop} routes={data.routes} revision={revision} connected={!data.errors?.health && data.health.some(h => h.id.endsWith(":arrivals") && feedFreshness(h) === "current")} />}
+      {stop && <MapStopDetails key={stop.id} stop={stop} routes={data.routes} revision={revision} connected={!data.errors?.health && arrivalFeedConnected(data.health.find(h => h.id.endsWith(":arrivals")))} />}
       {vehicle && <Stack component="section" aria-label="Bus details" spacing={1}>
         <Typography component="h2" variant="h2">Bus {vehicle.source_id_raw}</Typography>
         <Typography>{data.routes.find((r) => r.id === vehicle.route_id)?.long_name || "Route unavailable"} · {vehicleFreshness(vehicle)} position · observed {transitTime(vehicle.position_timestamp)}</Typography>

@@ -6,12 +6,14 @@ export async function fetchFeed(
     fetch?: typeof fetch;
     sleep?: (ms: number) => Promise<unknown>;
     maxBytes?: number;
+    attempts?: 1 | 3;
   } = {},
 ) {
   const get = options.fetch || fetch,
     wait = options.sleep || sleep,
     max = options.maxBytes || 5_000_000;
-  for (let attempt = 0; attempt < 3; attempt++) {
+  const attempts = options.attempts ?? 3;
+  for (let attempt = 0; attempt < attempts; attempt++) {
     let response: Response;
     try {
       response = await get(url, {
@@ -22,7 +24,7 @@ export async function fetchFeed(
         },
       });
     } catch {
-      if (attempt === 2) throw new FeedError("network_or_timeout");
+      if (attempt === attempts - 1) throw new FeedError("network_or_timeout");
       await wait(500 * 2 ** attempt);
       continue;
     }
@@ -35,7 +37,7 @@ export async function fetchFeed(
           : Date.parse(retry) - Date.now()
         : 500 * 2 ** attempt;
       // Never shorten a provider's requested backoff: fail and wait until next scheduled run.
-      if (delay > 30_000 || attempt === 2)
+      if (delay > 30_000 || attempt === attempts - 1)
         throw new FeedError(
           response.status === 429 ? "rate_limited" : "upstream_5xx",
           new Date(

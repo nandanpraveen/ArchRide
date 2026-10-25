@@ -32,7 +32,7 @@ Deno.serve(async (request: Request) => {
     if (!allowed.rows[0]?.allowed)
       return Response.json({ error: "unauthorized" }, { status: 401 });
     const payload = await request.json().catch(() => null);
-    if (!payload || !["all", "static"].includes(payload.mode))
+    if (!payload || !["all", "static", "scheduled"].includes(payload.mode))
       return Response.json({ error: "invalid_mode" }, { status: 400 });
     const result = await runIngestion(
       db,

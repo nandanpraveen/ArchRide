@@ -1,3 +1,4 @@
+import { FRESH_SECONDS } from "../../src/lib/transit/policy";
 /** Evidence-only evaluation. Positive error means the source predicted too early. */
 export type Prediction = {
   id: string;
@@ -58,7 +59,8 @@ export function evaluate(
     }
     if (
       !(stamp(p.valid_until) > stamp(p.received_at)) ||
-      stamp(p.received_at) - stamp(p.update_timestamp) > 180_000 ||
+      stamp(p.received_at) - stamp(p.update_timestamp) >
+        FRESH_SECONDS.arrivals * 1000 ||
       stamp(p.update_timestamp) > stamp(p.received_at) + 120_000
     ) {
       stale++;
