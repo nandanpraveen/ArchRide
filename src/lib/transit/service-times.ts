@@ -53,6 +53,7 @@ export function scheduledJourney(input: {
   id: string;
   date: string;
   service: Service;
+  trip: Pick<Tables<"transit_trips">, "id" | "service_id" | "active">;
   boarding: StopTime;
   alighting: StopTime;
   walkToSeconds: number;
@@ -64,6 +65,9 @@ export function scheduledJourney(input: {
   const { boarding: b, alighting: a } = input;
   if (
     !input.verifiedWalking ||
+    !input.trip.active ||
+    input.trip.service_id !== input.service.id ||
+    input.trip.id !== b.trip_id ||
     input.frequencyTemplate ||
     !operatesOn(input.service, input.date) ||
     b.trip_id !== a.trip_id ||

@@ -64,6 +64,8 @@ export function assessDeadline(
       !Number.isFinite(Date.parse(support.estimate.sourceTime ?? "")) ||
       now - Date.parse(support.estimate.sourceTime ?? "") >
         ESTIMATE_MAX_AGE_MS ||
+      now - Date.parse(support.estimate.sourceTime ?? "") < -120_000 ||
+      !(Date.parse(support.estimate.arrivalAt ?? "") >= now) ||
       !(Date.parse(support.estimate.validUntil ?? "") > now) ||
       !(departure <= Date.parse(support.estimate.validUntil ?? "")))
   )

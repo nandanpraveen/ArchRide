@@ -235,6 +235,7 @@ test("published schedules honor calendars, exceptions, midnight and repeated loo
   const { operatesOn, serviceInstant, scheduledJourney } =
     await import("../../src/lib/transit/service-times");
   const service = {
+    id: "service",
     calendar: { start_date: "20260101", end_date: "20261231", sunday: "1" },
     exceptions: [{ date: "20261108", exception_type: "2" }],
   } as unknown as import("../../src/lib/supabase/database.types").Tables<"transit_services">;
@@ -255,6 +256,7 @@ test("published schedules honor calendars, exceptions, midnight and repeated loo
     id: "j",
     date: "20261101",
     service,
+    trip: { id: "trip", service_id: "service", active: true },
     boarding: stop,
     alighting: { ...stop, stop_sequence: 3, arrival_seconds: 36600 },
     walkToSeconds: 120,
@@ -269,4 +271,15 @@ test("published schedules honor calendars, exceptions, midnight and repeated loo
   assert.equal(result.departureAt, "2026-11-01T14:57:00.000Z");
   assert.equal(scheduledJourney({ ...input, frequencyTemplate: true }), null);
   assert.equal(scheduledJourney({ ...input, alighting: stop }), null);
+  assert.equal(
+    scheduledJourney({
+      ...input,
+      trip: { ...input.trip, service_id: "wrong-service" },
+    }),
+    null,
+  );
+  assert.equal(
+    scheduledJourney({ ...input, trip: { ...input.trip, active: false } }),
+    null,
+  );
 });
