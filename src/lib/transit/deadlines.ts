@@ -136,7 +136,15 @@ export function campusDeadline(
   });
   const matches = [-4, -5]
     .map((offset) => anchor - offset * 3_600_000)
-    .filter((value) => formatter.format(value).replace(" ", "T") === local)
+    .filter((value) => {
+      const parts = Object.fromEntries(
+        formatter.formatToParts(value).map((part) => [part.type, part.value]),
+      );
+      return (
+        `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}` ===
+        local
+      );
+    })
     .sort();
   if (!matches.length || (matches.length > 1 && !choice)) return null;
   return new Date(

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useSyncExternalStore } from "react";
 import {
   Alert,
   Button,
@@ -20,12 +20,16 @@ import {
   type JourneyCandidate,
 } from "@/lib/transit/deadlines";
 import { useArrivalClock } from "./arrival-status";
+const subscribe = () => () => {};
+const clientSnapshot = () => true;
+const serverSnapshot = () => false;
 /** Task 5 supplies complete verified candidates; task 6 owns deadline interpretation. */
 export function DeadlineSearch({
   candidates = [],
 }: {
   candidates?: JourneyCandidate[];
 }) {
+  const ready = useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
   const [local, setLocal] = useState("");
   const [buffer, setBuffer] = useState("5");
   const [submitted, setSubmitted] = useState(false);
@@ -83,6 +87,7 @@ export function DeadlineSearch({
           Arrive by
         </Typography>
         <TextField
+          disabled={!ready}
           inputRef={first}
           label="Campus arrival deadline"
           type="datetime-local"
@@ -127,6 +132,7 @@ export function DeadlineSearch({
           </FormControl>
         )}
         <TextField
+          disabled={!ready}
           inputRef={bufferRef}
           error={submitted && bufferInvalid}
           helperText={
@@ -144,6 +150,7 @@ export function DeadlineSearch({
           slotProps={{ htmlInput: { min: 0, step: 1 } }}
         />
         <Button
+          disabled={!ready}
           type="submit"
           variant="contained"
           sx={{ alignSelf: "flex-start" }}
