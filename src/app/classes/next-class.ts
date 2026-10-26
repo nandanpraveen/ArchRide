@@ -1,11 +1,10 @@
 import { DateTime } from "ts-luxon";
 
-type ClassEntry = {
-  id: string;
-  label: string;
+export type ClassEntry = {
+  id: number;
+  title: string;
   weekdays: number[];
-  startTime: string;
-  comment: string;
+  startsAt: string;
   enabled: boolean;
 };
 
