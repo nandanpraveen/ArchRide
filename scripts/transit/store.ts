@@ -112,22 +112,30 @@ export async function saveStatic(db: DB, c: Catalog, now = new Date()) {
     );
   });
 }
-export async function loadContext(db: DB): Promise<Context> {
+export async function loadContext(
+  db: DB,
+  tripIds?: string[],
+): Promise<Context> {
   const c: Catalog = {};
   for (const table of ["transit_routes", "transit_stops", "transit_trips"])
     c[table] = (
       await db.query<Row>(
-        `select * from public.${table} where source_id=$1 and active`,
-        [SOURCE],
+        `select ${table === "transit_trips" ? "id,route_id" : "id"} from public.${table} where source_id=$1 and active${table === "transit_trips" && tripIds ? " and id=any($2::text[])" : ""}`,
+        table === "transit_trips" && tripIds ? [SOURCE, tripIds] : [SOURCE],
       )
     ).rows;
   c.transit_stop_times = (
     await db.query<Row>(
-      "select s.* from public.transit_stop_times s join public.transit_trips t on t.id=s.trip_id where t.source_id=$1 and t.active",
-      [SOURCE],
+      `select s.id,s.stop_id from public.transit_stop_times s join public.transit_trips t on t.id=s.trip_id where t.source_id=$1 and t.active${tripIds ? " and t.id=any($2::text[])" : ""}`,
+      tripIds ? [SOURCE, tripIds] : [SOURCE],
     )
   ).rows;
-  assert(c.transit_trips.length, "static_not_configured");
+  assert(
+    c.transit_routes.length &&
+      c.transit_stops.length &&
+      (tripIds !== undefined || c.transit_trips.length),
+    "static_not_configured",
+  );
   return context(c);
 }
 export async function health(

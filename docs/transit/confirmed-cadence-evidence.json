@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-10-25T22:16:07.377Z",
+  "workerVersion": 7,
+  "feeds": {
+    "vehicles": {
+      "samples": 33,
+      "minimumSpacingSeconds": 10.008,
+      "maximumSpacingSeconds": 10.165,
+      "rejectedEntities": 0
+    },
+    "arrivals": {
+      "samples": 11,
+      "minimumSpacingSeconds": 30.008,
+      "maximumSpacingSeconds": 30.407,
+      "rejectedEntities": 0
+    },
+    "alerts": {
+      "samples": 2,
+      "minimumSpacingSeconds": 120.654,
+      "maximumSpacingSeconds": 120.654,
+      "rejectedEntities": 0
+    }
+  }
+}

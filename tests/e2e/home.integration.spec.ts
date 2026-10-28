@@ -85,7 +85,7 @@ test("partial ingestion refreshes source departures without changing the last su
   const initialDepartures = departureReads;
   const partialAt = new Date(Date.now() + 60_000).toISOString();
   tables.feed_status = tables.feed_status.map((feed) => feed.id.endsWith(":arrivals")
-    ? { ...feed, state: "stale", updated_at: partialAt, last_attempt_at: partialAt }
+    ? { ...feed, state: "stale", error_code: "partial_rejection", updated_at: partialAt, last_attempt_at: partialAt }
     : feed);
   tables.transit_arrivals = [{
     ...tables.transit_arrivals[0], id: "partial-valid-update", stop_sequence: 3,
@@ -94,6 +94,7 @@ test("partial ingestion refreshes source departures without changing the last su
   await page.clock.fastForward(61_000);
   await expect.poll(() => snapshotReads).toBeGreaterThan(initialSnapshots);
   await expect(nearby).toContainText("Northbound Loop · direction 0 · stop occurrence 3");
+  await expect(nearby).toContainText("Source prediction · updated");
   await expect(nearby).not.toContainText("stop occurrence 1");
   expect(departureReads).toBeGreaterThan(initialDepartures);
 });

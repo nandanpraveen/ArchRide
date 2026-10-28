@@ -3,7 +3,7 @@ test.beforeEach(async ({ page }) => {
   await page.route("**/rest/v1/**", (route) => route.fulfill({ json: [] }));
   await page.route("https://tile.openstreetmap.org/**", (route) => route.abort());
 });
-test("a guest can visit all five destinations without invented arrivals", async ({
+test("a guest can visit all destinations without invented arrivals", async ({
   page,
 }) => {
   await page.goto("/");
@@ -17,6 +17,7 @@ test("a guest can visit all five destinations without invented arrivals", async 
   for (const [label, heading] of [
     ["Map", "Campus map"],
     ["Plan", "Plan a trip"],
+    ["Classes", "Classes"],
     ["Saved", "Saved journeys"],
     ["Profile", "Profile"],
     ["Home", "Where are you headed?"],

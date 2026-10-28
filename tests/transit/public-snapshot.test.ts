@@ -21,12 +21,14 @@ test("independent public catalog failures retain useful data and search covers p
     transit_entrances: [],
   };
   const requestedOffsets: number[] = [];
+  const requestedTables: string[] = [];
   globalThis.fetch = async (input, init) => {
     const url = new URL(String(input));
     assert.equal(url.hostname, "snapshot.example.test");
     assert.equal(init?.method, "GET");
     init?.signal?.throwIfAborted();
     const table = url.pathname.split("/").at(-1)!;
+    requestedTables.push(table);
     if (failed.has(table)) return Response.json({ message: "unavailable" }, { status: 403 });
     let rows = tables[table] ?? [];
     for (const [key, value] of url.searchParams) {
@@ -41,6 +43,11 @@ test("independent public catalog failures retain useful data and search covers p
     const first = await loadPublicTransit(new AbortController().signal);
     assert.equal(first.stops[0].id, "stop");
     assert.deepEqual(first.errors, {});
+    requestedTables.length = 0;
+    const live = await loadPublicTransit(new AbortController().signal, first, {catalog:false,alerts:false});
+    assert.deepEqual([...requestedTables].sort(),["feed_status","transit_vehicles"]);
+    assert.equal(live.routes,first.routes);
+    assert.equal(live.alerts,first.alerts);
     failed = new Set(["transit_alerts", "transit_vehicles"]);
     const partial = await loadPublicTransit(new AbortController().signal, first);
     assert.equal(partial.stops[0].id, "stop");

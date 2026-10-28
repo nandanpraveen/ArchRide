@@ -1,0 +1,59 @@
+{
+  "generatedAt": "2026-10-25T21:32:56.680983+00:00",
+  "retentionDays": 7,
+  "collectionStarted": "2026-10-25T21:31:00.715604+00:00",
+  "latestCapture": "2026-10-25T21:32:02.53354+00:00",
+  "counts": {
+    "predictions": 189,
+    "matched": 0,
+    "independentEvents": 0,
+    "stale": 0,
+    "missing": 0,
+    "pending": 189,
+    "unmatched": 0,
+    "ambiguous": 0
+  },
+  "errorSeconds": {
+    "p10": null,
+    "median": null,
+    "p90": null,
+    "bias": null,
+    "meanAbsolute": null
+  },
+  "staleOrMissingRate": 0,
+  "observationCoverage": 0,
+  "sourceAttempts": [
+    {
+      "feed_id": "uga-passio:alerts",
+      "outcome": "success",
+      "attempts": 6778
+    },
+    {
+      "feed_id": "uga-passio:arrivals",
+      "outcome": "failed",
+      "attempts": 2752
+    },
+    {
+      "feed_id": "uga-passio:arrivals",
+      "outcome": "success",
+      "attempts": 4026
+    },
+    {
+      "feed_id": "uga-passio:static",
+      "outcome": "success",
+      "attempts": 6
+    },
+    {
+      "feed_id": "uga-passio:vehicles",
+      "outcome": "success",
+      "attempts": 6778
+    }
+  ],
+  "cadenceSeconds": {
+    "median": 59.983934,
+    "p90": 61.0227268
+  },
+  "routes": [],
+  "campusHours": [],
+  "calibrationEnabled": false
+}

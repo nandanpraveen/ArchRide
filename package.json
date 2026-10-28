@@ -17,7 +17,8 @@
     "db:types:local": "node --import tsx scripts/transit/generate-types.ts",
     "transit:edge:build": "node scripts/transit/build-edge.mjs",
     "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts",
-    "campus:fetch": "node --import tsx scripts/campus/import.ts --fetch"
+    "campus:fetch": "node --import tsx scripts/campus/import.ts --fetch",
+    "transit:evaluate": "node --import tsx scripts/transit/evaluate.ts"
   },
   "dependencies": {
     "@emotion/cache": "11.14.0",
@@ -26,23 +27,18 @@
     "@mui/icons-material": "9.5.0",
     "@mui/material": "9.5.0",
     "@mui/material-nextjs": "9.5.0",
-    "@mui/x-data-grid": "9.16.0",
-    "@mui/x-date-pickers": "9.16.0",
     "@supabase/ssr": "0.12.7",
     "@supabase/supabase-js": "2.117.3",
     "csv-parse": "7.0.3",
-    "dayjs": "1.11.23",
     "fflate": "0.8.3",
     "gtfs-realtime-bindings": "2.2.0",
-    "luxon": "3.7.2",
-    "maplibre-gl": "6.15.0",
     "next": "16.4.3",
     "pg": "8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "server-only": "0.0.1",
-    "ts-luxon": "6.4.0",
-    "tsx": "4.23.15"
+    "tsx": "4.23.15",
+    "maplibre-gl": "6.15.0"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.10",

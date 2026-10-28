@@ -1,5 +1,7 @@
 # Development notes
 
+> **October 25 provider update:** [Confirmed Passio polling/cache policy](transit/CONFIRMED_POLICY.md) supersedes the temporary minute schedule and unknown-limit notes below. The current dispatcher runs every 10 seconds with independent 10/30/120-second feed gates and persisted backoff.
+
 ## Environment
 
 Use Node.js 24 and pnpm 12.5.1 (pinned in `package.json`). The bootstrap machine already has Node, pnpm, Git, GitHub CLI, Supabase CLI, installed packages, and Playwright Chromium.
@@ -66,3 +68,12 @@ For each actual app origin, configure its exact `/auth/callback` and `/auth/call
 The hosted project's public Auth settings were checked: email sign-up is enabled, email confirmation is required, and anonymous Auth accounts are disabled. Automated Auth tests use a local protocol fixture and send no email. They exercise cookies, server verification, confirmation exchanges, sign-out and recovery independently of SMTP delivery; actual email delivery and each deployment's redirect allowlist must be checked for that environment. The existing security advisor also reports leaked-password protection disabled; Supabase makes that feature available on Pro and above, so it was not enabled by changing the project's Free plan.
 
 The full Week 1 database/profile/preferences issue remains open: preference persistence/theme application, later-feature private tables, account deletion and their ownership/deletion acceptance tests were not supplied by this PR. Merging the authentication contribution does not mark those requirements complete.
+
+### Week 2 arrival and reliability integration
+
+See [arrival reliability handoff](week-2-arrival-reliability.md) and the root
+[shared arrival/deadline contract](../UX-CONTRACT.md). Trusted aggregate reporting:
+`TRANSIT_DATABASE_URL=… pnpm transit:evaluate`. Do not put privileged credentials
+in public variables. Task 5 must supply complete verified journey candidates to
+`DeadlineSearch`; the Plan fallback intentionally reports insufficient data until
+that producer is connected. No calibrated accuracy claim is currently supported.
