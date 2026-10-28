@@ -1,3 +1,5 @@
+> **October 25 update:** Passio confirmed vehicles 10s, trip updates 30s, alerts 120s and indefinite caching permission. [Current policy, deployment and remaining dependency](CONFIRMED_POLICY.md) supersedes provisional cadence/approval instructions below.
+
 # Current operator update — October 21, 2026
 
 The October 19 record below is historical. Home/Map have since been integrated, and the reviewed hosted campus catalog now contains 354 buildings and 86 mapped automatic-door points alongside 161 transit stops; see [Home data integration](../home-data-integration.md).

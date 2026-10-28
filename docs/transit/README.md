@@ -1,3 +1,5 @@
+> **October 25 update:** Passio confirmed vehicles 10s, trip updates 30s, alerts 120s and indefinite caching permission. [Current policy, deployment and remaining dependency](CONFIRMED_POLICY.md) supersedes provisional cadence/approval instructions below.
+
 # Week 1 transit handoff
 
 Owner: `varunsayana`. GitHub Project draft: https://github.com/users/nandanpraveen/projects/1?pane=issue&itemId=268072403

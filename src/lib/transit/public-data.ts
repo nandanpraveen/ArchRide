@@ -16,16 +16,16 @@ export type PublicTransitData = {
   errors?: Partial<Record<"routes" | "stops" | "vehicles" | "health" | "alerts", string>>;
 };
 
-export async function loadPublicTransit(signal: AbortSignal, previous?: PublicTransitData | null): Promise<PublicTransitData> {
+export async function loadPublicTransit(signal: AbortSignal, previous?: PublicTransitData | null, refresh = {catalog:true, alerts:true}): Promise<PublicTransitData> {
   signal = AbortSignal.any([signal, AbortSignal.timeout(10_000)]);
   const db = publicTransitClient();
   if (!db) throw new Error("Campus transit data is not configured.");
   const [routes, stops, vehicles, health, alerts] = await Promise.all([
-    db.from("transit_routes").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
-    db.from("transit_stops").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
+    !refresh.catalog && previous ? Promise.resolve({data:previous.routes,error:previous.errors?.routes}) : db.from("transit_routes").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
+    !refresh.catalog && previous ? Promise.resolve({data:previous.stops,error:previous.errors?.stops}) : db.from("transit_stops").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
     db.from("transit_vehicles").select("*").order("id").limit(1000).abortSignal(signal),
     db.from("feed_status").select("*").in("id", ["uga-passio:static", "uga-passio:vehicles", "uga-passio:arrivals", "uga-passio:alerts", "uga-campus:catalog"]).limit(1000).abortSignal(signal),
-    db.from("transit_alerts").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
+    !refresh.alerts && previous ? Promise.resolve({data:previous.alerts,error:previous.errors?.alerts}) : db.from("transit_alerts").select("*").eq("active", true).order("id").limit(1000).abortSignal(signal),
   ]);
   const errors: NonNullable<PublicTransitData["errors"]> = {};
   const results = { routes, stops, vehicles, health, alerts };
@@ -60,14 +60,18 @@ export function usePublicTransit() {
     let controller: AbortController | null = null;
     let disposed = false;
     let previous = previousRef.current;
-    async function refresh() {
+    let catalogReadAt = 0, alertsReadAt = 0;
+    async function refresh(force = false) {
       if (document.hidden || disposed) return;
       controller?.abort();
       const request = new AbortController();
       controller = request;
       try {
-        const data = await loadPublicTransit(request.signal, previous);
+        const parts = {catalog:force || Date.now()-catalogReadAt >= 300_000, alerts:force || Date.now()-alertsReadAt >= 120_000};
+        const data = await loadPublicTransit(request.signal, previous, parts);
         if (!disposed && !request.signal.aborted) {
+          if(parts.catalog) catalogReadAt=Date.now();
+          if(parts.alerts) alertsReadAt=Date.now();
           previous = data;
           previousRef.current = data;
           const catalogFailed = data.errors?.routes || data.errors?.stops;
@@ -85,11 +89,11 @@ export function usePublicTransit() {
     }
     function visibilityChanged() {
       if (document.hidden) controller?.abort();
-      else void refresh();
+      else void refresh(true);
     }
-    void refresh();
+    void refresh(true);
     // Browsers read the centrally imported snapshot; they never poll the provider.
-    const interval = window.setInterval(() => void refresh(), 60_000);
+    const interval = window.setInterval(() => void refresh(), 10_000);
     document.addEventListener("visibilitychange", visibilityChanged);
     return () => {
       disposed = true;

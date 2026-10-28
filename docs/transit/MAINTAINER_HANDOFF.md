@@ -1,3 +1,5 @@
+> **October 25 update:** Passio confirmed vehicles 10s, trip updates 30s, alerts 120s and indefinite caching permission. [Current policy, deployment and remaining dependency](CONFIRMED_POLICY.md) supersedes provisional cadence/approval instructions below.
+
 # Maintainer deployment handoff
 
 Use this handoff when the contributor can develop and open a PR but cannot administer the shared Supabase project. The maintainer keeps all credentials in their own authorized environment. The contributor does not need direct database access to submit this change.

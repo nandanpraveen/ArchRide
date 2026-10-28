@@ -2,7 +2,7 @@
 with eligible as (
  select p.*, case
    when relationship <> 'SCHEDULED' or arrival_at is null then 'missing'
-   when valid_until <= received_at or received_at-update_timestamp > interval '180 seconds'
+   when valid_until <= received_at or received_at-update_timestamp > interval '90 seconds'
      or update_timestamp-received_at > interval '120 seconds' then 'stale'
    else 'eligible' end as state
  from archride_private.arrival_predictions p
@@ -29,7 +29,7 @@ with eligible as (
  from matched where state='eligible' and events=1 group by 1 having count(distinct observation_id)>=30
 )
 select json_build_object(
- 'generatedAt',now(), 'retentionDays',7,
+ 'generatedAt',now(), 'freshnessSeconds',90, 'retentionDays',(select prediction_hours/24.0 from public.transit_retention where id),
  'collectionStarted',(select min(captured_at) from matched),
  'latestCapture',(select max(captured_at) from matched),
  'counts',(select json_build_object('predictions',count(*),

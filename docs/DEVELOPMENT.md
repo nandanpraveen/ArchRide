@@ -1,5 +1,7 @@
 # Development notes
 
+> **October 25 provider update:** [Confirmed Passio polling/cache policy](transit/CONFIRMED_POLICY.md) supersedes the temporary minute schedule and unknown-limit notes below. The current dispatcher runs every 10 seconds with independent 10/30/120-second feed gates and persisted backoff.
+
 ## Environment
 
 Use Node.js 24 and pnpm 12.5.1 (pinned in `package.json`). The bootstrap machine already has Node, pnpm, Git, GitHub CLI, Supabase CLI, installed packages, and Playwright Chromium.

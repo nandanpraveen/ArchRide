@@ -1,3 +1,4 @@
+import { FRESH_SECONDS } from "./policy";
 import { arrivalEstimate, ESTIMATE_MAX_AGE_MS } from "./estimates";
 import type { Tables } from "@/lib/supabase/database.types";
 export type Route = Tables<"transit_routes">;
@@ -37,15 +38,22 @@ export function feedFreshness(feed: FeedHealth, now = Date.now()): Freshness {
   if (feed.state !== "healthy") return "stale";
   return feed.id.endsWith(":static")
     ? freshness(feed.last_success_at, STATIC_STALE_SECONDS, now)
-    : freshness(feed.source_timestamp, REALTIME_STALE_SECONDS, now);
+    : freshness(feed.source_timestamp, feed.id.endsWith(":vehicles") ? FRESH_SECONDS.vehicles : feed.id.endsWith(":alerts") ? FRESH_SECONDS.alerts : FRESH_SECONDS.arrivals, now);
 }
 // Consumers must assess the observation clock, not the time the HTTP response was fetched.
 export function vehicleFreshness(
   vehicle: Vehicle,
   now = Date.now(),
 ): Freshness {
-  return freshness(vehicle.position_timestamp, REALTIME_STALE_SECONDS, now);
+  return freshness(vehicle.position_timestamp, FRESH_SECONDS.vehicles, now);
 }
 export function usableArrival(arrival: Arrival, now = Date.now()): boolean {
   return arrivalEstimate(arrival, now).state === "valid";
+}
+
+// A partial snapshot can carry valid individual predictions while overall health stays stale.
+export function arrivalFeedConnected(feed: FeedHealth | undefined, now = Date.now()): boolean {
+  if (!feed) return false;
+  return feedFreshness(feed, now) === "current" ||
+    (feed.error_code === "partial_rejection" && freshness(feed.last_attempt_at, FRESH_SECONDS.arrivals, now) === "current");
 }

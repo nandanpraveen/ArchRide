@@ -1,3 +1,5 @@
+> **October 25 follow-up:** [Passio policy is now confirmed](transit/CONFIRMED_POLICY.md). Current arrival freshness is 90 seconds, and prediction history defaults to 24 hours. Historical measurements below describe the earlier run. Task 5 is assigned to Ivan (`IvanI2006`); its planner is still absent from the shared repo.
+
 # Week 2: arrival interpretation and reliability handoff
 
 Assignment: [project draft](https://github.com/users/nandanpraveen/projects/1/views/1?pane=issue&itemId=268072450), [requirements](backlog/06.md). Branch: `feature/arrival-reliability`.

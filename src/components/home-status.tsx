@@ -1,4 +1,5 @@
 "use client";
+import { FRESH_SECONDS } from "@/lib/transit/policy";
 
 import Link from "next/link";
 import { useEffect, useState, useSyncExternalStore } from "react";
@@ -62,7 +63,7 @@ export function HomeStatus({ transit }: { transit: ReturnType<typeof usePublicTr
     <Box component="section" aria-label="Service alerts">
       <Typography component="h2" variant="h3" sx={{ mb: 1 }}>Alerts</Typography>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Alert feed: {errors?.health || errors?.alerts ? "unavailable" : alertsFeed ? feedFreshness(alertsFeed, clock) : "unavailable"}. Source notices below retain their original update times and route or stop descriptions.</Typography>
-      {alerts.length ? alerts.map((alert) => <Alert key={alert.id} severity="warning" sx={{ mb: 1 }}><strong>{alert.header || "Transit alert"}</strong> {alert.description} · {freshness(alert.source_timestamp, undefined, clock)} source notice · updated {transitTime(alert.source_timestamp)}</Alert>) : <Typography color="text.secondary">{errors?.alerts ? "Source notices could not refresh. Check the official tracker for current service information." : "No active source notices are in the loaded snapshot. This does not guarantee normal service."}</Typography>}
+      {alerts.length ? alerts.map((alert) => <Alert key={alert.id} severity="warning" sx={{ mb: 1 }}><strong>{alert.header || "Transit alert"}</strong> {alert.description} · {freshness(alert.source_timestamp, FRESH_SECONDS.alerts, clock)} source notice · updated {transitTime(alert.source_timestamp)}</Alert>) : <Typography color="text.secondary">{errors?.alerts ? "Source notices could not refresh. Check the official tracker for current service information." : "No active source notices are in the loaded snapshot. This does not guarantee normal service."}</Typography>}
     </Box>
     <Alert severity="info" role="status" action={<Button component={Link} href="/profile" color="inherit">Profile</Button>}>Public transit browsing works without an account. Open Profile to sign in or review your account. Saved journeys and class features are being connected by their feature owners.</Alert>
   </Stack>;
