@@ -34,7 +34,6 @@ export function HomeStatus({ transit }: { transit: ReturnType<typeof usePublicTr
   const alerts = activeTransitAlerts(data?.alerts ?? [], clock);
   const sections = [
     { title: "Campus catalog", body: data?.stops.length ? `${data.stops.length} verified stops are available. Choose a starting point for nearby stops and source departures, or browse boarding details on the map.` : "No stop or departure data is available. Retry data or use the map directory when the catalog returns." },
-    { title: "Favorites", body: "Your favorite places will appear here once saved places are connected. Open Saved to check availability." },
     { title: "Next class", body: "Your next class will appear here once your schedule is connected." },
   ];
   const arrivalState = errors?.health ? "unavailable" : arrivals ? feedFreshness(arrivals, clock) : "unavailable";
@@ -57,7 +56,6 @@ export function HomeStatus({ transit }: { transit: ReturnType<typeof usePublicTr
         <Typography component="h2" variant="h3" sx={{ mb: 1 }}>{title}</Typography>
         <Typography color="text.secondary">{body}</Typography>
         {title === "Campus catalog" && <Button component={Link} href="/map">Browse boarding stops</Button>}
-        {title === "Favorites" && <Button component={Link} href="/saved">Open favorites and saved journeys</Button>}
       </Paper>)}
     </Box>
     <Box component="section" aria-label="Service alerts">

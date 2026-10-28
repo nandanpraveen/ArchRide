@@ -8,6 +8,7 @@ import { PlaceSearch } from "@/components/place-search";
 import { LocationCard } from "@/components/location-card";
 import { HomeStatus } from "@/components/home-status";
 import { HomeDepartures } from "@/components/home-departures";
+import { HomeFavorites } from "@/components/home-favorites";
 import { homePlaceHref, homePlanHref, type HomeOrigin } from "@/components/home-journey";
 import type { Place } from "@/lib/campus-data";
 import { usePublicTransit } from "@/lib/transit/public-data";
@@ -38,6 +39,7 @@ export default function HomePage() {
     </Box>
     <LocationCard origin={origin} onOrigin={setOrigin} />
     <HomeDepartures origin={origin} transit={transit} />
+    <HomeFavorites />
     <Box component="section" aria-label="Next trip">
       <Typography component="h2" variant="h2" sx={{ mb: 1 }}>Your next trip</Typography>
       <Typography color="text.secondary">{origin && destination ? "Your starting point and destination are selected. " : "Choose a starting point and destination. "}Trip recommendations need a connected walking and journey-planning service; available departures alone do not establish that you can catch a bus.</Typography>
