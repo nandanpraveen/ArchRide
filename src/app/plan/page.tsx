@@ -1,69 +1,125 @@
 "use client";
-import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { Alert, Button, CircularProgress, Paper, Stack, Typography } from "@mui/material";
-import { EmptyState } from "@/components/empty-state";
-import { publicTransitClient } from "@/lib/transit/public-data";
 
-type Selection = { label: string; name: string; href: string };
-function PlanContent() {
-  const params = useSearchParams();
-  const query = params.toString();
-  const [result, setResult] = useState<{ query: string; selections: Selection[]; error: boolean } | null>(null);
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]);
-    async function load() {
-      const search = new URLSearchParams(query);
-      const db = publicTransitClient();
-      let error = false;
-      const selections: Selection[] = [];
-      for (const [key, label] of [["from", "Starting point"], ["to", "Destination"]]) {
-        const id = search.get(key);
-        if (!id) continue;
-        const type = search.get(`${key}Type`) ?? "stop";
-        if (!db || !["stop", "building", "entrance"].includes(type)) {
-          error = true;
-          continue;
-        }
-        try {
-          const table = type === "building" ? "transit_buildings" : type === "entrance" ? "transit_entrances" : "transit_stops";
-          const response = await db.from(table).select("id,name").eq("id", id).abortSignal(signal).maybeSingle();
-          if (response.error || !response.data) error = true;
-          else selections.push({
-            label, name: response.data.name,
-            href: type === "stop" ? `/map?stop=${encodeURIComponent(id)}` : `/map?place=${encodeURIComponent(id)}&type=${type}`,
-          });
-        } catch { error = true; }
-      }
-      if (!controller.signal.aborted) setResult({ query, selections, error });
-    }
-    void load();
-    return () => controller.abort();
-  }, [query]);
-  const current = result?.query === query ? result : null;
+import { useMemo, useState } from "react";
+import {
+  Alert,
+  Card,
+  CardContent,
+  Chip,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { compareTrip, type Recommendation } from "@/lib/planner/planner";
+import { BUILDINGS, STOPS } from "@/lib/planner/fixtures";
+
+const RECOMMENDATION_LABEL: Record<Recommendation, string> = {
+  walk: "Walking looks faster",
+  bus: "The bus looks faster",
+  similar: "About the same time",
+};
+
+export default function PlanPage() {
+  const [fromId, setFromId] = useState("");
+  const [toId, setToId] = useState("");
+
+  const from = BUILDINGS.find((b) => b.id === fromId);
+  const to = BUILDINGS.find((b) => b.id === toId);
+  const sameBuilding = Boolean(from && to && from.id === to.id);
+
+  const result = useMemo(
+    () => (from && to && !sameBuilding ? compareTrip(from, to, STOPS) : null),
+    [from, to, sameBuilding],
+  );
+
   return (
     <Stack spacing={3}>
-      <Typography component="h1" variant="h1">Plan a trip</Typography>
-      {params.get("fromSource") === "current-location" && <Alert severity="info">Starting point: current location selected on Home. Its coordinates were kept only on Home; share your location again when trip planning is connected.</Alert>}
-      {!current && <CircularProgress aria-label="Loading selected places" />}
-      {current?.selections.map((place) => (
-        <Paper key={place.label} variant="outlined" sx={{ p: 3 }}>
-          <Typography component="h2" variant="h3">{place.label}: {place.name}</Typography>
-          <Button component={Link} href={place.href}>View place details</Button>
-        </Paper>
-      ))}
-      {current?.error && <Alert severity="warning">A selected place is unavailable. Choose a verified building or stop from Home or Map.</Alert>}
-      <EmptyState
-        title="Trip recommendations are not available yet"
-        description="Planning needs verified walking paths and usable transit arrivals. Your selected places are shown above; no journey times or bus recommendations are being estimated."
-        action="Explore the map"
-        href="/map"
-      />
+      <Typography component="h1" variant="h1">
+        Plan a trip
+      </Typography>
+
+      <Stack spacing={2}>
+        <TextField select label="From" value={fromId} onChange={(e) => setFromId(e.target.value)}>
+          {BUILDINGS.map((b) => (
+            <MenuItem key={b.id} value={b.id}>
+              {b.name}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField select label="To" value={toId} onChange={(e) => setToId(e.target.value)}>
+          {BUILDINGS.map((b) => (
+            <MenuItem key={b.id} value={b.id}>
+              {b.name}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Stack>
+
+      {sameBuilding && <Alert severity="info">Pick two different buildings to compare.</Alert>}
+
+      {!from || !to ? (
+        <Typography color="text.secondary">
+          Choose a starting building and a destination to compare walking and the bus.
+        </Typography>
+      ) : null}
+
+      {result && (
+        <Stack spacing={2}>
+          <Chip
+            label={`${RECOMMENDATION_LABEL[result.recommendation]}${
+              result.recommendation !== "similar" && result.bus
+                ? ` by about ${result.differenceMin} min`
+                : ""
+            }`}
+            color="primary"
+            sx={{ alignSelf: "flex-start", minHeight: 40 }}
+          />
+
+          <Card variant="outlined" sx={{ borderRadius: 3 }}>
+            <CardContent>
+              <Typography variant="h6" component="h2">
+                Walk: about {result.walk.minutes} min
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                About {result.walk.meters} m on foot
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Card variant="outlined" sx={{ borderRadius: 3 }}>
+            <CardContent>
+              {result.bus ? (
+                <>
+                  <Typography variant="h6" component="h2">
+                    Bus: about {result.bus.minutes} min
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Walk {Math.round(result.bus.walkToStopMin)} min to {result.bus.boardStop.name},
+                    wait about {Math.round(result.bus.waitMin)} min for the {result.bus.routeName},
+                    ride about {Math.round(result.bus.rideMin)} min to {result.bus.alightStop.name},
+                    then walk {Math.round(result.bus.walkFromStopMin)} min.
+                  </Typography>
+                </>
+              ) : (
+                <>
+                  <Typography variant="h6" component="h2">
+                    Bus: unavailable
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    No direct bus option was found between these buildings.
+                  </Typography>
+                </>
+              )}
+            </CardContent>
+          </Card>
+
+          <Typography variant="caption" color="text.secondary">
+            Estimates use assumed walking and bus speeds and an assumed bus frequency. Live
+            arrivals are not connected yet.
+          </Typography>
+        </Stack>
+      )}
     </Stack>
   );
-}
-export default function PlanPage() {
-  return <Suspense fallback={<CircularProgress aria-label="Loading trip planner" />}><PlanContent /></Suspense>;
 }
