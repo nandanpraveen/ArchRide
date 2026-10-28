@@ -12,16 +12,26 @@ const typeLabel: Record<Place["type"], string> = {
   stop: "Bus stop",
 };
 
-export function PlaceSearch() {
+export function PlaceSearch({
+  label = "Search buildings and stops",
+  inputId = "campus-place-search",
+  onSelect,
+}: {
+  label?: string;
+  inputId?: string;
+  onSelect?: (place: Place | null) => void;
+}) {
   const router = useRouter();
   const [input, setInput] = useState("");
   const [options, setOptions] = useState<Place[]>([]);
   const [status, setStatus] = useState<Status>("idle");
   const [reason, setReason] = useState("");
+  const [warning, setWarning] = useState("");
   const [revision, setRevision] = useState(0);
 
   function handleInput(value: string) {
     setInput(value);
+    setWarning("");
     setOptions([]);
     if (value.trim()) {
       setStatus("loading");
@@ -42,6 +52,7 @@ export function PlaceSearch() {
           if (result.status === "ok") {
             setOptions(result.places);
             setStatus("ok");
+            setWarning(result.warning ?? "");
           } else {
             setOptions([]);
             setStatus("unavailable");
@@ -74,7 +85,7 @@ export function PlaceSearch() {
   return (
     <Box>
     <Autocomplete
-      id="campus-place-search"
+      id={inputId}
       options={options}
       filterOptions={(x) => x}
       inputValue={input}
@@ -85,7 +96,8 @@ export function PlaceSearch() {
       loading={status === "loading"}
       noOptionsText={<Box>{emptyText}{(status === "unavailable" || status === "error") && <Button onMouseDown={(event) => event.preventDefault()} onClick={() => { setStatus("loading"); setRevision((value) => value + 1); }}>Retry search</Button>}</Box>}
       onChange={(_, place) => {
-        if (place) router.push(place.type === "stop"
+        if (onSelect) onSelect(place);
+        else if (place) router.push(place.type === "stop"
           ? `/map?stop=${encodeURIComponent(place.id)}`
           : `/map?place=${encodeURIComponent(place.id)}&type=${place.type}`);
       }}
@@ -107,8 +119,9 @@ export function PlaceSearch() {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Search buildings and stops"
+          label={label}
           placeholder="Where are you going?"
+          helperText={warning || undefined}
         />
       )}
     />

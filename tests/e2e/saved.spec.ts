@@ -1,4 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
+import { mockTransit } from "./transit-fixtures";
+
+test.beforeEach(async ({ page }) => {
+  await mockTransit(page);
+});
 
 const KEY = "archride:saved:v1";
 const stops = [
@@ -17,6 +22,24 @@ async function seed(page: Page, raw: string, path = "/saved") {
 }
 
 test.describe("Saved page", () => {
+  test("a map stop can be saved, opened from Home, and unsaved", async ({ page }) => {
+    await page.goto("/map?stop=uga-passio%3Aeast");
+    const details = page.getByRole("region", { name: "Stop details" });
+    await details.getByRole("button", { name: "Save stop", exact: true }).click();
+    await expect(details.getByRole("button", { name: "Saved", exact: true })).toHaveAttribute("aria-pressed", "true");
+    await page.goto("/");
+    const favorites = page.getByRole("region", { name: "Favorites", exact: true });
+    await favorites.getByRole("link", { name: "Memorial Hall", exact: true }).click();
+    await expect(page.getByRole("region", { name: "Stop details" }).getByRole("button", { name: "Saved", exact: true })).toBeVisible();
+    await page.goto("/saved");
+    await expect(page.getByRole("button", { name: "Remove Memorial Hall" })).toBeVisible();
+    await page.goto("/map?stop=uga-passio%3Aeast");
+    await details.getByRole("button", { name: "Saved", exact: true }).click();
+    await expect(details.getByRole("button", { name: "Save stop", exact: true })).toHaveAttribute("aria-pressed", "false");
+    await page.goto("/saved");
+    await expect(page.getByRole("button", { name: "Remove Memorial Hall" })).toHaveCount(0);
+  });
+
   test("empty state when nothing is saved", async ({ page }) => {
     await page.goto("/saved");
     await expect(

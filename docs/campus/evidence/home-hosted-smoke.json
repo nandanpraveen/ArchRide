@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-10-21T04:30:24.493Z",
+  "mode": "local production build against hosted public Supabase data",
+  "catalog": {
+    "buildings": 354,
+    "entrances": 86,
+    "stops": 161
+  },
+  "origin": {
+    "id": "uga-oua:building:419c278a-d6de-49a6-a29d-f45f797fee2d",
+    "name": "Zell B. Miller Learning Center"
+  },
+  "destination": {
+    "id": "uga-oua:building:01491f02-de3f-485e-a4dd-840f6b762f3d",
+    "name": "Physics Building"
+  },
+  "actualHomeNearbyDepartures": "no usable current source predictions; unavailable state verified",
+  "manualOriginAndDestination": "passed",
+  "selectedPlanContext": "passed",
+  "mapPlaceDetailsAndAttribution": "passed",
+  "narrowLayout320": "passed",
+  "sampledContrast": [
+    {
+      "sample": "Where are you headed?",
+      "ratio": 18.1
+    },
+    {
+      "sample": "Find your way across campus, with the bus and the walk in one place.",
+      "ratio": 18.1
+    },
+    {
+      "sample": "Use my location",
+      "ratio": 7.21
+    }
+  ],
+  "reducedMotionTransitionDuration": "1e-05s",
+  "pageExceptions": []
+}

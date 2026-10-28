@@ -3,7 +3,7 @@ import type { Page, Route } from "@playwright/test";
 export function transitFixtures() {
   const now = Date.now();
   const stamp = new Date(now).toISOString();
-  const feed = (kind: string) => ({ id: `uga-passio:${kind}`, state: "healthy", last_success_at: stamp, source_timestamp: stamp, updated_at: stamp, entity_count: 2, error_code: null, next_attempt_at: null });
+  const feed = (kind: string) => ({ id: `uga-passio:${kind}`, state: "healthy", last_success_at: stamp, source_timestamp: stamp, updated_at: stamp, entity_count: 2, error_code: null as string | null, next_attempt_at: null });
   const stop = (id: string, name: string, latitude: number) => ({ id: `uga-passio:${id}`, source_id: "uga-passio", source_id_raw: id, name, latitude, longitude: -83.377, location_type: 0, parent_station: null, active: true });
   const trip = { id: "uga-passio:trip", source_id: "uga-passio", source_id_raw: "trip", route_id: "uga-passio:r", service_id: "uga-passio:service", shape_id: "uga-passio:shape", direction_id: 0, headsign: "Northbound Loop", active: true };
   const arrival = { id: "arrival1", source_id: "uga-passio", trip_id: trip.id, instance_key: "test-instance", route_id: trip.route_id, stop_id: "uga-passio:east", stop_sequence: 1, arrival_at: new Date(now + 300_000).toISOString(), departure_at: null, uncertainty_seconds: null, relationship: "SCHEDULED", source_timestamp: stamp, received_at: stamp, update_timestamp: stamp, timestamp_kind: "trip", provenance: "source", valid_until: new Date(now + 180_000).toISOString() };
@@ -35,8 +35,12 @@ export async function mockTransit(page: Page, tables: Record<string, unknown[]> 
       if (value.startsWith("eq.")) rows = rows.filter((r) => String(r[key]) === value.slice(3));
       else if (value.startsWith("in.(")) { const ids = value.slice(4, -1).split(",").map((s) => s.replace(/^"|"$/g, "")); rows = rows.filter((r) => ids.includes(String(r[key]))); }
       else if (value.startsWith("gte.")) rows = rows.filter((r) => String(r[key]) >= value.slice(4));
+      else if (value.startsWith("lte.")) rows = rows.filter((r) => String(r[key]) <= value.slice(4));
       else if (value.startsWith("gt.")) rows = rows.filter((r) => String(r[key]) > value.slice(3));
     }
+    const offset = Number(url.searchParams.get("offset") || 0);
+    const limit = Number(url.searchParams.get("limit") || rows.length);
+    rows = rows.slice(offset, offset + limit);
     const headers = { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "GET,OPTIONS" };
     if (route.request().method() === "OPTIONS") { await route.fulfill({ status: 204, headers }); return; }
     await route.fulfill({ json: route.request().headers().accept?.includes("application/vnd.pgrst.object") ? rows[0] ?? null : rows, headers });

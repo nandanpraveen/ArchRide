@@ -1,0 +1,8 @@
+{
+  "recordedAt": "2026-10-25",
+  "evidence": "Project owner supplied Passio's response in this chat; original email headers have not been independently inspected.",
+  "providerReply": "Polling\nService alerts: 2 minutes\nVehicle positions: 10 seconds\nTrip updates: 30 seconds\nYes, data is allowed to be cached indefinitely",
+  "pollSeconds": { "vehicles": 10, "arrivals": 30, "alerts": 120 },
+  "indefiniteCachingPermitted": true,
+  "scope": "Confirms polling cadence and caching permission. Does not change existing attribution, non-commercial use, privacy policy, or promise source accuracy."
+}

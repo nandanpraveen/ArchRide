@@ -7,6 +7,14 @@ export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
   if (!url || !key) return response;
   const supabase = createServerClient<Database>(url, key, {
+    global: {
+      fetch: (input, init) => fetch(input, {
+        ...init,
+        signal: init?.signal
+          ? AbortSignal.any([init.signal, AbortSignal.timeout(10_000)])
+          : AbortSignal.timeout(10_000),
+      }),
+    },
     cookies: {
       getAll: () => request.cookies.getAll(),
       setAll(cookiesToSet, headers) {
@@ -23,9 +31,13 @@ export async function proxy(request: NextRequest) {
       },
     },
   });
-  await supabase.auth.getClaims();
+  try {
+    await supabase.auth.getClaims();
+  } catch {
+    // Private operations validate identity themselves; an Auth outage must not block browsing.
+  }
   return response;
 }
 export const config = {
-  matcher: ["/profile/:path*", "/saved/:path*", "/auth/:path*"],
+  matcher: ["/profile/:path*", "/saved/:path*", "/auth/:path*", "/sign-in", "/create-account", "/reset-password"],
 };

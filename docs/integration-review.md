@@ -1,5 +1,7 @@
 # Week 1 contribution integration review
 
+This records the initial merge review. The October 21 [Home data follow-up](home-data-integration.md) supersedes its empty building catalog and Home-departure limitations.
+
 Reviewed on October 20, 2026 (America/New_York), against the four Week 1 drafts in the [ArchRide project](https://github.com/users/nandanpraveen/projects/1).
 
 | Contribution | Review and integration |

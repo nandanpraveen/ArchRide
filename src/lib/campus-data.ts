@@ -12,7 +12,7 @@ export type Place = {
   longitude?: number;
 };
 export type SearchResult =
-  | { status: "ok"; places: Place[]; updatedAt: string | null }
+  | { status: "ok"; places: Place[]; updatedAt: string | null; warning?: string }
   | { status: "unavailable"; reason: string };
 const normalize = (s: string) =>
   s
@@ -40,6 +40,17 @@ export function matchPlaces(places: Place[], query: string): Place[] {
     )
     .slice(0, 30);
 }
+async function catalogRows<T>(page: (offset: number) => PromiseLike<{ data: T[] | null; error: unknown }>) {
+  const rows: T[] = [];
+  for (let offset = 0; offset < 10_000; offset += 1000) {
+    const result = await page(offset);
+    if (result.error) return { data: null, error: true };
+    rows.push(...(result.data ?? []));
+    if ((result.data?.length ?? 0) < 1000) return { data: rows, error: false };
+  }
+  return { data: null, error: true };
+}
+
 export async function searchPlaces(
   query: string,
   signal?: AbortSignal,
@@ -54,25 +65,25 @@ export async function searchPlaces(
   const abort = signal ? AbortSignal.any([signal, AbortSignal.timeout(10_000)]) : AbortSignal.timeout(10_000);
   try {
     const [stops, buildings, entrances, health] = await Promise.all([
-      db
+      catalogRows((offset) => db
         .from("transit_stops")
         .select("id,name,latitude,longitude")
         .eq("active", true)
         .order("id")
-        .limit(1000)
-        .abortSignal(abort),
-      db
+        .range(offset, offset + 999)
+        .abortSignal(abort)),
+      catalogRows((offset) => db
         .from("transit_buildings")
         .select("id,name,aliases,latitude,longitude")
         .order("id")
-        .limit(1000)
-        .abortSignal(abort),
-      db
+        .range(offset, offset + 999)
+        .abortSignal(abort)),
+      catalogRows((offset) => db
         .from("transit_entrances")
         .select("id,name,building_id,latitude,longitude")
         .order("id")
-        .limit(1000)
-        .abortSignal(abort),
+        .range(offset, offset + 999)
+        .abortSignal(abort)),
       db
         .from("feed_status")
         .select("last_success_at")
@@ -81,42 +92,36 @@ export async function searchPlaces(
         .maybeSingle(),
     ]);
     if (
-      [stops, buildings, entrances, health].some((r) => r.error) ||
-      !health.data?.last_success_at
+      [stops, buildings, entrances].every((r) => r.error)
     )
       return {
         status: "unavailable",
         reason:
           "Campus location data is temporarily unavailable. Please try again.",
       };
-    // Fail explicitly if a future catalog exceeds this contract's current bound; never silently omit matches.
-    if ([stops, buildings, entrances].some((r) => r.data?.length === 1000))
-      return {
-        status: "unavailable",
-        reason: "The campus catalog needs an updated search index.",
-      };
     const names = new Map((buildings.data || []).map((b) => [b.id, b.name]));
     const places: Place[] = [
       ...(stops.data || []).map((s) => ({
         ...s,
         type: "stop" as const,
-        locationLabel: "UGA bus stop",
+        locationLabel: `UGA bus stop · ${s.latitude.toFixed(5)}, ${s.longitude.toFixed(5)}`,
       })),
       ...(buildings.data || []).map((b) => ({
         ...b,
         type: "building" as const,
-        locationLabel: "Verified campus building",
+        locationLabel: `Verified campus building · ${b.latitude.toFixed(5)}, ${b.longitude.toFixed(5)}`,
       })),
       ...(entrances.data || []).map((e) => ({
         ...e,
         type: "entrance" as const,
-        locationLabel: names.get(e.building_id) || "Verified campus entrance",
+        locationLabel: `${names.get(e.building_id) || "Verified campus entrance"} · ${e.latitude.toFixed(5)}, ${e.longitude.toFixed(5)}`,
       })),
     ];
     return {
       status: "ok",
       places: matchPlaces(places, query),
-      updatedAt: health.data.last_success_at,
+      updatedAt: health.data?.last_success_at ?? null,
+      ...([stops, buildings, entrances].some((result) => result.error) ? { warning: "Some campus locations could not load. These search results may be incomplete." } : {}),
     };
   } catch {
     return {

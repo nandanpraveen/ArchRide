@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Alert, Button, CircularProgress, Paper, Stack, Typography } from "@mui/material";
+import { DeadlineSearch } from "@/components/deadline-search";
 import { EmptyState } from "@/components/empty-state";
 import { publicTransitClient } from "@/lib/transit/public-data";
 
@@ -46,6 +47,7 @@ function PlanContent() {
   return (
     <Stack spacing={3}>
       <Typography component="h1" variant="h1">Plan a trip</Typography>
+      {params.get("fromSource") === "current-location" && <Alert severity="info">Starting point: current location selected on Home. Its coordinates were kept only on Home; share your location again when trip planning is connected.</Alert>}
       {!current && <CircularProgress aria-label="Loading selected places" />}
       {current?.selections.map((place) => (
         <Paper key={place.label} variant="outlined" sx={{ p: 3 }}>
@@ -54,6 +56,7 @@ function PlanContent() {
         </Paper>
       ))}
       {current?.error && <Alert severity="warning">A selected place is unavailable. Choose a verified building or stop from Home or Map.</Alert>}
+      <DeadlineSearch />
       <EmptyState
         title="Trip recommendations are not available yet"
         description="Planning needs verified walking paths and usable transit arrivals. Your selected places are shown above; no journey times or bus recommendations are being estimated."

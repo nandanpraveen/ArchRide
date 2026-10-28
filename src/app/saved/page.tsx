@@ -89,7 +89,7 @@ export default function SavedPage() {
         color="text.secondary"
         sx={{ maxWidth: "65ch" }}
       >
-        You&apos;re not signed in, so saved items stay on this device only.
+        Saved items stay on this device only and are not synced to your account.
       </Typography>
 
       <Stack

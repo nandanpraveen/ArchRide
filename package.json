@@ -16,7 +16,9 @@
     "test:transit": "node --import tsx --test tests/transit/*.test.ts",
     "db:types:local": "node --import tsx scripts/transit/generate-types.ts",
     "transit:edge:build": "node scripts/transit/build-edge.mjs",
-    "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts"
+    "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts",
+    "campus:fetch": "node --import tsx scripts/campus/import.ts --fetch",
+    "transit:evaluate": "node --import tsx scripts/transit/evaluate.ts"
   },
   "dependencies": {
     "@emotion/cache": "11.14.0",
@@ -30,7 +32,7 @@
     "csv-parse": "7.0.3",
     "fflate": "0.8.3",
     "gtfs-realtime-bindings": "2.2.0",
-    "next": "16.4.0",
+    "next": "16.4.3",
     "pg": "8.23.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -47,7 +49,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.4.0",
+    "eslint-config-next": "16.4.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

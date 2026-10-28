@@ -522,18 +522,21 @@ export type Database = {
           id: boolean;
           job_days: number;
           observation_hours: number;
+          prediction_hours: number;
         };
         Insert: {
           event_days?: number;
           id?: boolean;
           job_days?: number;
           observation_hours?: number;
+          prediction_hours?: number;
         };
         Update: {
           event_days?: number;
           id?: boolean;
           job_days?: number;
           observation_hours?: number;
+          prediction_hours?: number;
         };
         Relationships: [];
       };
