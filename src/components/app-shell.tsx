@@ -17,6 +17,7 @@ import {
 import HomeRounded from "@mui/icons-material/HomeRounded";
 import MapRounded from "@mui/icons-material/MapRounded";
 import AltRouteRounded from "@mui/icons-material/AltRouteRounded";
+import School from "@mui/icons-material/School";
 import BookmarkRounded from "@mui/icons-material/BookmarkRounded";
 import PersonRounded from "@mui/icons-material/PersonRounded";
 import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
@@ -24,6 +25,7 @@ const destinations = [
   { label: "Home", href: "/", icon: HomeRounded },
   { label: "Map", href: "/map", icon: MapRounded },
   { label: "Plan", href: "/plan", icon: AltRouteRounded },
+  { label: "Classes", href: "/classes", icon: School },
   { label: "Saved", href: "/saved", icon: BookmarkRounded },
   { label: "Profile", href: "/profile", icon: PersonRounded },
 ];
