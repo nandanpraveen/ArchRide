@@ -1,3 +1,4 @@
+import { arrivalEstimate, ESTIMATE_MAX_AGE_MS } from "./estimates";
 import type { Tables } from "@/lib/supabase/database.types";
 export type Route = Tables<"transit_routes">;
 export type Stop = Tables<"transit_stops">;
@@ -17,7 +18,7 @@ export function activeTransitAlerts(alerts: Tables<"transit_alerts">[], now = Da
     });
   });
 }
-export const REALTIME_STALE_SECONDS = 180;
+export const REALTIME_STALE_SECONDS = ESTIMATE_MAX_AGE_MS / 1000;
 export const STATIC_STALE_SECONDS = 48 * 60 * 60;
 export type Freshness = "current" | "stale" | "unavailable";
 export function freshness(
@@ -46,13 +47,5 @@ export function vehicleFreshness(
   return freshness(vehicle.position_timestamp, REALTIME_STALE_SECONDS, now);
 }
 export function usableArrival(arrival: Arrival, now = Date.now()): boolean {
-  return (
-    arrival.relationship === "SCHEDULED" &&
-    arrival.provenance === "source" &&
-    !!arrival.arrival_at &&
-    Date.parse(arrival.arrival_at) >= now &&
-    Date.parse(arrival.valid_until) > now &&
-    freshness(arrival.update_timestamp, REALTIME_STALE_SECONDS, now) ===
-      "current"
-  );
+  return arrivalEstimate(arrival, now).state === "valid";
 }
