@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Alert,
   Button,
@@ -21,39 +21,48 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useState } from "react";
-import { ClassEntry } from "./next-class";
-const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-const page = () => {
+import getNextOccurrence, { ClassEntry } from "./next-class";
+import { DateTime } from "ts-luxon";
+const weekdays = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+
+const initialClasses: ClassEntry[] = [
+
+  {
+    id: 0,
+    title: "Calculus",
+  weekdays: [1,3],
+    startsAt: "9:30",
+    enabled: true,
+  },
+
+  {
+    id: 1,
+    title: "English",
+    weekdays: [1,3],
+    startsAt: "10:30" ,
+    enabled: true,
+  },
+
+  {
+    id: 2,
+    title: "Biology",
+ weekdays: [1,3],
+    startsAt: "12:30" ,
+    enabled: true,
+  },
+];
+
+const defaultTime = new Date();
+defaultTime.setHours(9);
+defaultTime.setMinutes(30);
+const Page = () => {
   const [value, setValue] = React.useState<Dayjs | null>(
     dayjs("2022-04-17T15:30"),
   );
-  const initialClasses: ClassEntry[] = [
-    {
-      id: 0,
-      title: "Calculus",
-      weekdays: [0, 3],
-      startsAt: "9:30" + " PM",
-      enabled: true,
-    },
-
-    {
-      id: 1,
-      title: "English",
-      weekdays: [0, 3],
-      startsAt: "10:30" + " PM",
-      enabled: true,
-    },
-
-    {
-      id: 2,
-      title: "Biology",
-      weekdays: [0, 3],
-      startsAt: "12:30" + " PM",
-      enabled: true,
-    },
-  ];
   const [classes, setClasses] = useState<ClassEntry[]>(initialClasses);
+  const [weekday, setWeekday] = useState(1);
 
+  
   const columns: GridColDef<(typeof initialClasses)[number]>[] = [
     { field: "id", headerName: "ID", width: 90 },
     {
@@ -85,7 +94,11 @@ const page = () => {
       headerAlign: "center",
     },
   ];
+useEffect(()=>{
 
+    getNextOccurrence(initialClasses, DateTime.now());
+    console.log("NEXT")
+  },[])
   return (
     <Stack spacing={3}>
       <Typography component="h1" variant="h1">
@@ -93,27 +106,30 @@ const page = () => {
       </Typography>
       <div className="flex">
         <div className="flex gap-3">
-          <TextField>TTT</TextField>
+          <TextField label="Class name">TTT</TextField>
           <FormControl fullWidth>
             <InputLabel id="weekday-select-label">Weekday</InputLabel>
             <Select
-              labelId="weekday-select"
-              id="weekday-select"
-              value={"Weekday"}
+              labelId="weekday-select-label"
+              id="weekday-select-label"
+              value={weekday}
+              defaultValue={1}
+              onChange={(e)=>{setWeekday(e.target.value); }}
               label="Weekday"
               // onChange={handleChange}
             >
-              <MenuItem value={"10"}>{weekdays[0]}</MenuItem>
-              <MenuItem value={20}>{weekdays[1]}</MenuItem>
-              <MenuItem value={30}>{weekdays[2]}</MenuItem>
-              <MenuItem value={10}>{weekdays[3]}</MenuItem>
-              <MenuItem value={20}>{weekdays[4]}</MenuItem>
+              <MenuItem value={1}>{weekdays[1]}</MenuItem>
+              <MenuItem value={2}>{weekdays[2]}</MenuItem>
+              <MenuItem value={3}>{weekdays[3]}</MenuItem>
+              <MenuItem value={4}>{weekdays[4]}</MenuItem>
+              <MenuItem value={5}>{weekdays[5]}</MenuItem>
             </Select>
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
               label="Time"
-              // value={value}
+               //value={value}
+                 defaultValue={dayjs(defaultTime)}
               // onChange={(newValue) => setValue(newValue)}
             />
           </LocalizationProvider>
@@ -146,4 +162,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
