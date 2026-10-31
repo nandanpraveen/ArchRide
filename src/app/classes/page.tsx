@@ -1,97 +1,495 @@
 "use client";
-
-import { useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
+import Link from "next/link";
+import { useState } from "react";
 import {
-  Alert, Button, Checkbox, FormControlLabel, FormGroup, Paper, Stack,
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography,
+  Alert,
+  Button,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
-import getNextOccurrence, { type ClassEntry } from "./next-class";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import dayjs, { Dayjs } from "dayjs";
+import EditLocationIcon from "@mui/icons-material/EditLocationAltOutlined";
+import { useMissingBuildings } from "@/lib/use-missing-building";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  type GridColDef,
+} from "@mui/x-data-grid";
+import { PlaceSearch } from "@/components/place-search";
+import type { Place } from "@/lib/campus-data";
+import {
+  describeWeekdays,
+  isValidMinutesEarly,
+  isValidStartTime,
+  MAX_MINUTES_EARLY,
+  validateClass,
+  WEEKDAY_NAMES,
+  type ClassDraft,
+  type ClassErrors,
+} from "@/lib/classes";
+import { useClasses } from "@/lib/use-classes";
+import type { ClassEntry } from "./next-class";
 
-const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-const subscribe = () => () => {};
-const clientSnapshot = () => true;
-const serverSnapshot = () => false;
+const defaultTime = () => dayjs().hour(9).minute(30);
 
-export default function ClassesPage() {
-  const ready = useSyncExternalStore(subscribe, clientSnapshot, serverSnapshot);
-  const [classes, setClasses] = useState<ClassEntry[]>([]);
+const Page = () => {
+  const {
+    classes,
+    status,
+    source,
+    accountUnavailable,
+    saveError,
+    add,
+    update,
+    remove,
+    reload,
+  } = useClasses();
   const [title, setTitle] = useState("");
-  const [days, setDays] = useState<number[]>([]);
-  const [startsAt, setStartsAt] = useState("");
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [now, setNow] = useState(Date.now);
-  const titleInput = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 30_000);
-    return () => window.clearInterval(timer);
-  }, []);
-  const next = getNextOccurrence(classes, now);
+  const [building, setBuilding] = useState<Place | null>(null);
+  const [weekday, setWeekday] = useState<number[]>([]);
+  const [time, setTime] = useState<Dayjs | null>(defaultTime);
+  const [minutesEarly, setMinutesEarly] = useState("10");
+  const [errors, setErrors] = useState<ClassErrors>({});
+  const [formKey, setFormKey] = useState(0);
+  const [pendingDelete, setPendingDelete] = useState<ClassEntry | null>(null);
+  const [undo, setUndo] = useState<ClassDraft | null>(null);
+  const [changing, setChanging] = useState<ClassEntry | null>(null);
+  const [newPlace, setNewPlace] = useState<Place | null>(null);
+  const newBuilding = newPlace?.type === "building" ? newPlace : null;
+  const missing = useMissingBuildings(classes.map((item) => item.buildingId));
 
-  function clearDraft() {
-    setTitle(""); setDays([]); setStartsAt(""); setEditingId(null); setError(null);
-  }
+  // With `multiple`, MUI types the value as number[] or a comma-separated string.
+  const handleWeekdayChange = (value: string | number[]) => {
+    setWeekday(
+      typeof value === "string" ? value.split(",").map(Number) : value,
+    );
+  };
 
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!title.trim() || title.trim().length > 80 || !days.length
-      || !/^([01]\d|2[0-3]):[0-5]\d$/.test(startsAt)) {
-      setError("Enter a class name of 1–80 characters, choose at least one weekday, and enter a valid start time.");
-      titleInput.current?.focus();
+  const handleBuilding = (place: Place | null) => {
+    if (place && place.type !== "building") {
+      setBuilding(null);
+      setErrors((current) => ({
+        ...current,
+        buildingId: "Choose a campus building, not a stop or entrance.",
+      }));
       return;
     }
-    setClasses((current) => editingId === null
-      ? [...current, { id: Math.max(-1, ...current.map((entry) => entry.id)) + 1, title: title.trim(), weekdays: days, startsAt, enabled: true }]
-      : current.map((entry) => entry.id === editingId ? { ...entry, title: title.trim(), weekdays: days, startsAt } : entry));
-    clearDraft();
+    setBuilding(place);
+    setErrors((current) => ({ ...current, buildingId: undefined }));
+  };
+
+  async function handleAdd() {
+    const draft: ClassDraft = {
+      title,
+      weekdays: weekday,
+      startsAt: time && time.isValid() ? time.format("HH:mm") : "",
+      enabled: true,
+      buildingId: building?.id ?? "",
+      buildingName: building?.name ?? "",
+      minutesEarly:
+        minutesEarly.trim() === "" ? Number.NaN : Number(minutesEarly),
+      reminderEnabled: false,
+    };
+    const found = validateClass(draft);
+    setErrors(found);
+    if (Object.keys(found).length) return;
+    if (await add(draft)) {
+      setTitle("");
+      setBuilding(null);
+      setWeekday([]);
+      setTime(defaultTime());
+      setMinutesEarly("10");
+      setFormKey((value) => value + 1);
+    }
+  }
+  function closeChange() {
+    setChanging(null);
+    setNewPlace(null);
   }
 
-  function edit(entry: ClassEntry) {
-    setEditingId(entry.id); setTitle(entry.title); setDays(entry.weekdays); setStartsAt(entry.startsAt); setError(null);
-    titleInput.current?.focus();
+  async function saveBuilding() {
+    if (!changing || !newBuilding) return;
+    const { id, ...draft } = changing;
+    const saved = await update(id, {
+      ...draft,
+      buildingId: newBuilding.id,
+      buildingName: newBuilding.name,
+    });
+    if (saved) closeChange();
+  }
+  async function confirmDelete() {
+    if (!pendingDelete) return;
+    const { id, ...draft } = pendingDelete;
+    setPendingDelete(null);
+    if (await remove(id)) setUndo(draft);
   }
 
-  return <Stack spacing={3}>
-    <Typography component="h1" variant="h1">Classes</Typography>
-    <Alert severity="info">This draft schedule lasts until you reload or leave this page. Schedule saving, reminders, and trips to class are not connected yet. All class times use America/New_York.</Alert>
-    <Paper component="form" onSubmit={submit} noValidate variant="outlined" sx={{ p: 3 }}>
-      <Stack spacing={2}>
-        <Typography component="h2" variant="h2">{editingId === null ? "Add a class" : "Edit class"}</Typography>
-        {error && <Alert severity="error">{error}</Alert>}
-        <TextField label="Class name" disabled={!ready} inputRef={titleInput} value={title} onChange={(event) => setTitle(event.target.value)} required slotProps={{ htmlInput: { maxLength: 80 } }} />
-        <Stack component="fieldset" sx={{ border: 0, p: 0, m: 0 }}>
-          <Typography component="legend">Class weekdays</Typography>
-          <FormGroup row>
-            {weekdays.map((day, index) => <FormControlLabel key={day} label={day} control={<Checkbox disabled={!ready} checked={days.includes(index)} onChange={(_, checked) => setDays((current) => checked ? [...current, index] : current.filter((value) => value !== index))} />} />)}
-          </FormGroup>
+  async function undoDelete() {
+    if (undo) await add(undo);
+    setUndo(null);
+  }
+
+  async function processRowUpdate(newRow: ClassEntry) {
+    const { id, ...draft } = newRow;
+    if (!(await update(id, draft))) throw new Error("Class was not saved.");
+    return newRow;
+  }
+
+  const columns: GridColDef<ClassEntry>[] = [
+    {
+      field: "title",
+      headerName: "Class",
+      minWidth: 140,
+      flex: 1,
+      editable: true,
+    },
+    {
+      field: "buildingName",
+      headerName: "Building",
+      minWidth: 220,
+      flex: 1,
+      renderCell: ({ row }) => (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ alignItems: "center", minWidth: 0 }}
+        >
+          <Typography variant="body2" noWrap>
+            {row.buildingName || "Building not set"}
+          </Typography>
+          {missing.has(row.buildingId) && (
+            <Chip size="small" color="warning" label="Unavailable" />
+          )}
         </Stack>
-        <TextField label="Start time" disabled={!ready} type="time" value={startsAt} onChange={(event) => setStartsAt(event.target.value)} required slotProps={{ inputLabel: { shrink: true }, htmlInput: { step: 60 } }} />
-        <Stack direction="row" spacing={1}>
-          <Button type="submit" disabled={!ready} variant="contained">{editingId === null ? "Add class" : "Save class"}</Button>
-          {editingId !== null && <Button onClick={clearDraft}>Cancel edit</Button>}
+      ),
+    },
+    {
+      field: "weekdays",
+      headerName: "Days",
+      minWidth: 150,
+      flex: 1,
+      valueFormatter: (value: number[]) => describeWeekdays(value),
+    },
+    {
+      field: "startsAt",
+      headerName: "Starts (HH:mm)",
+      minWidth: 120,
+      editable: true,
+      preProcessEditCellProps: (params) => ({
+        ...params.props,
+        error: !isValidStartTime(params.props.value),
+      }),
+    },
+    {
+      field: "minutesEarly",
+      headerName: "Early (min)",
+      type: "number",
+      minWidth: 110,
+      editable: true,
+      preProcessEditCellProps: (params) => ({
+        ...params.props,
+        error: !isValidMinutesEarly(params.props.value),
+      }),
+    },
+    {
+      field: "enabled",
+      headerName: "On",
+      type: "boolean",
+      width: 80,
+      editable: true,
+    },
+    {
+      field: "reminderEnabled",
+      headerName: "Reminder",
+      type: "boolean",
+      width: 100,
+      editable: true,
+    },
+    {
+      field: "actions",
+      type: "actions",
+      headerName: "Actions",
+      width: 120,
+      getActions: ({ row }) => [
+        <GridActionsCellItem
+          key="change-building"
+          icon={<EditLocationIcon />}
+          label={`Change building for ${row.title}`}
+          onClick={() => setChanging(row)}
+        />,
+        <GridActionsCellItem
+          key="delete"
+          icon={<DeleteIcon />}
+          label={`Delete ${row.title}`}
+          onClick={() => setPendingDelete(row)}
+        />,
+      ],
+    },
+  ];
+
+  return (
+    <Stack spacing={3}>
+      <Typography component="h1" variant="h1">
+        Class schedule
+      </Typography>
+      <Typography color="text.secondary" sx={{ maxWidth: "60ch" }}>
+        Times are campus time (Eastern), whatever timezone your phone is in.
+        Home shows your next class.
+      </Typography>
+
+      {accountUnavailable && (
+        <Alert severity="warning">
+          Account services are unavailable, so your schedule is stored on this
+          device only for now.
+        </Alert>
+      )}
+      {status === "ready" && source === "device" && !accountUnavailable && (
+        <Alert
+          severity="info"
+          action={
+            <Button
+              component={Link}
+              href="/sign-in"
+              color="inherit"
+              size="small"
+            >
+              Sign in
+            </Button>
+          }
+        >
+          You are using a guest schedule. It stays on this device only. Sign in
+          to sync it privately to your account.
+        </Alert>
+      )}
+      {status === "ready" && source === "account" && (
+        <Typography variant="body2" color="text.secondary">
+          Your schedule syncs to your account. Only you can see it.
+        </Typography>
+      )}
+
+      <Stack component="section" aria-label="Add a class" spacing={2}>
+        <Stack
+          direction="row"
+          useFlexGap
+          sx={{ flexWrap: "wrap", gap: 2, alignItems: "flex-start" }}
+        >
+          <TextField
+            label="Class name"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            error={!!errors.title}
+            helperText={errors.title}
+            sx={{ minWidth: 200 }}
+          />
+          <Stack sx={{ minWidth: 240, flex: "1 1 240px" }}>
+            <PlaceSearch
+              key={formKey}
+              label="Building"
+              inputId="class-building"
+              onSelect={handleBuilding}
+            />
+            {errors.buildingId && (
+              <FormHelperText error>{errors.buildingId}</FormHelperText>
+            )}
+          </Stack>
+          <FormControl error={!!errors.weekdays} sx={{ minWidth: 200 }}>
+            <InputLabel id="weekday-select-label">Weekdays</InputLabel>
+            <Select
+              multiple
+              labelId="weekday-select-label"
+              id="weekday-select"
+              value={weekday}
+              onChange={(e) => handleWeekdayChange(e.target.value)}
+              label="Weekdays"
+              renderValue={(selected) => describeWeekdays(selected)}
+            >
+              {WEEKDAY_NAMES.slice(1).map((name, index) => (
+                <MenuItem key={name} value={index + 1}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.weekdays && (
+              <FormHelperText>{errors.weekdays}</FormHelperText>
+            )}
+          </FormControl>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <TimePicker
+              label="Starts at"
+              value={time}
+              onChange={(newValue) => setTime(newValue)}
+              slotProps={{
+                textField: {
+                  error: !!errors.startsAt,
+                  helperText: errors.startsAt,
+                  sx: { width: 160 },
+                },
+              }}
+            />
+          </LocalizationProvider>
+          <TextField
+            label="Arrive early (min)"
+            type="number"
+            value={minutesEarly}
+            onChange={(e) => setMinutesEarly(e.target.value)}
+            error={!!errors.minutesEarly}
+            helperText={errors.minutesEarly}
+            slotProps={{
+              htmlInput: { min: 0, max: MAX_MINUTES_EARLY, step: 1 },
+            }}
+            sx={{ width: 170 }}
+          />
         </Stack>
+        <Button
+          variant="contained"
+          disabled={status !== "ready"}
+          startIcon={<AddIcon />}
+          onClick={handleAdd}
+          sx={{ alignSelf: "flex-start" }}
+        >
+          Add class
+        </Button>
       </Stack>
-    </Paper>
-    <Typography role="status">{next
-      ? `Next class: ${next.classEntry.title} · ${new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", weekday: "long", month: "short", day: "numeric", hour: "numeric", minute: "2-digit", timeZoneName: "short" }).format(Date.parse(next.startTime))}`
-      : "No upcoming classes in this draft schedule."}</Typography>
-    {classes.length ? <TableContainer component={Paper} variant="outlined">
-      <Table aria-label="Class schedule">
-        <TableHead><TableRow><TableCell>Class</TableCell><TableCell>Weekdays</TableCell><TableCell>Starts at (campus time)</TableCell><TableCell>Actions</TableCell></TableRow></TableHead>
-        <TableBody>{classes.map((entry) => <TableRow key={entry.id}>
-          <TableCell component="th" scope="row" sx={{ overflowWrap: "anywhere" }}>{entry.title}</TableCell>
-          <TableCell>{[...entry.weekdays].sort().map((day) => weekdays[day]).join(", ")}</TableCell>
-          <TableCell>{entry.startsAt}</TableCell>
-          <TableCell><Stack spacing={1}>
-            <Button aria-label={`Edit ${entry.title}`} onClick={() => edit(entry)}>Edit</Button>
-            <Button aria-label={`${entry.enabled ? "Disable" : "Enable"} ${entry.title}`} aria-pressed={entry.enabled} onClick={() => setClasses((current) => current.map((item) => item.id === entry.id ? { ...item, enabled: !item.enabled } : item))}>{entry.enabled ? "Enabled" : "Disabled"}</Button>
-            <Button aria-label={`Remove ${entry.title}`} onClick={() => {
-              setClasses((current) => current.filter((item) => item.id !== entry.id));
-              if (editingId === entry.id) clearDraft();
-            }}>Remove</Button>
-          </Stack></TableCell>
-        </TableRow>)}</TableBody>
-      </Table>
-    </TableContainer> : <Typography color="text.secondary">Add a class to preview your weekly schedule.</Typography>}
-  </Stack>;
-}
+
+      {saveError && (
+        <Alert severity="error" role="alert">
+          {saveError}
+        </Alert>
+      )}
+
+      {status === "loading" && (
+        <Stack
+          direction="row"
+          spacing={2}
+          role="status"
+          sx={{ alignItems: "center" }}
+        >
+          <CircularProgress size={24} />
+          <Typography>Loading your schedule…</Typography>
+        </Stack>
+      )}
+      {status === "error" && (
+        <Alert
+          severity="error"
+          action={
+            <Button color="inherit" size="small" onClick={reload}>
+              Try again
+            </Button>
+          }
+        >
+          Your schedule could not be loaded. Check your connection and try
+          again.
+        </Alert>
+      )}
+      {status === "ready" && classes.length === 0 && (
+        <Typography color="text.secondary">
+          No classes yet. Add your first class above.
+        </Typography>
+      )}
+      {status === "ready" &&
+        classes.some((item) => missing.has(item.buildingId)) && (
+          <Alert severity="warning">
+            A building on your schedule is no longer in campus data. Use Change
+            building on the classes marked Unavailable.
+          </Alert>
+        )}
+      {status === "ready" && classes.length > 0 && (
+        <DataGrid
+          aria-label="Weekly class schedule"
+          disableVirtualization
+          rows={classes}
+          columns={columns}
+          autoHeight
+          processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={() => {}}
+          initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
+          pageSizeOptions={[10, 25]}
+          disableRowSelectionOnClick
+        />
+      )}
+
+      <Dialog open={!!changing} onClose={closeChange} fullWidth maxWidth="sm">
+        <DialogTitle>Change building</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2 }}>
+            {changing?.title} is set to{" "}
+            {changing?.buildingName || "no building"}. Pick the building it
+            meets in now.
+          </DialogContentText>
+          <PlaceSearch
+            label="New building"
+            inputId="class-new-building"
+            onSelect={setNewPlace}
+          />
+          {newPlace && !newBuilding && (
+            <FormHelperText error>
+              Choose a campus building, not a stop or entrance.
+            </FormHelperText>
+          )}
+          {saveError && (
+            <Alert severity="error" role="alert" sx={{ mt: 2 }}>
+              {saveError}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeChange}>Cancel</Button>
+          <Button
+            variant="contained"
+            disabled={!newBuilding}
+            onClick={saveBuilding}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={!!pendingDelete} onClose={() => setPendingDelete(null)}>
+        <DialogTitle>Delete this class?</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {pendingDelete?.title} will be removed from your schedule. You can
+            undo right after.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPendingDelete(null)}>Cancel</Button>
+          <Button color="error" onClick={confirmDelete}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Snackbar
+        open={!!undo}
+        autoHideDuration={8000}
+        onClose={() => setUndo(null)}
+        message="Class deleted"
+        action={
+          <Button color="inherit" size="small" onClick={undoDelete}>
+            Undo
+          </Button>
+        }
+      />
+    </Stack>
+  );
+};
+
+export default Page;

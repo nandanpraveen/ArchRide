@@ -12,7 +12,12 @@ export type Place = {
   longitude?: number;
 };
 export type SearchResult =
-  | { status: "ok"; places: Place[]; updatedAt: string | null; warning?: string }
+  | {
+      status: "ok";
+      places: Place[];
+      updatedAt: string | null;
+      warning?: string;
+    }
   | { status: "unavailable"; reason: string };
 const normalize = (s: string) =>
   s
@@ -40,7 +45,9 @@ export function matchPlaces(places: Place[], query: string): Place[] {
     )
     .slice(0, 30);
 }
-async function catalogRows<T>(page: (offset: number) => PromiseLike<{ data: T[] | null; error: unknown }>) {
+async function catalogRows<T>(
+  page: (offset: number) => PromiseLike<{ data: T[] | null; error: unknown }>,
+) {
   const rows: T[] = [];
   for (let offset = 0; offset < 10_000; offset += 1000) {
     const result = await page(offset);
@@ -62,28 +69,36 @@ export async function searchPlaces(
       status: "unavailable",
       reason: "Campus location data is not connected yet.",
     };
-  const abort = signal ? AbortSignal.any([signal, AbortSignal.timeout(10_000)]) : AbortSignal.timeout(10_000);
+  const abort = signal
+    ? AbortSignal.any([signal, AbortSignal.timeout(10_000)])
+    : AbortSignal.timeout(10_000);
   try {
     const [stops, buildings, entrances, health] = await Promise.all([
-      catalogRows((offset) => db
-        .from("transit_stops")
-        .select("id,name,latitude,longitude")
-        .eq("active", true)
-        .order("id")
-        .range(offset, offset + 999)
-        .abortSignal(abort)),
-      catalogRows((offset) => db
-        .from("transit_buildings")
-        .select("id,name,aliases,latitude,longitude")
-        .order("id")
-        .range(offset, offset + 999)
-        .abortSignal(abort)),
-      catalogRows((offset) => db
-        .from("transit_entrances")
-        .select("id,name,building_id,latitude,longitude")
-        .order("id")
-        .range(offset, offset + 999)
-        .abortSignal(abort)),
+      catalogRows((offset) =>
+        db
+          .from("transit_stops")
+          .select("id,name,latitude,longitude")
+          .eq("active", true)
+          .order("id")
+          .range(offset, offset + 999)
+          .abortSignal(abort),
+      ),
+      catalogRows((offset) =>
+        db
+          .from("transit_buildings")
+          .select("id,name,aliases,latitude,longitude")
+          .order("id")
+          .range(offset, offset + 999)
+          .abortSignal(abort),
+      ),
+      catalogRows((offset) =>
+        db
+          .from("transit_entrances")
+          .select("id,name,building_id,latitude,longitude")
+          .order("id")
+          .range(offset, offset + 999)
+          .abortSignal(abort),
+      ),
       db
         .from("feed_status")
         .select("last_success_at")
@@ -91,9 +106,7 @@ export async function searchPlaces(
         .abortSignal(abort)
         .maybeSingle(),
     ]);
-    if (
-      [stops, buildings, entrances].every((r) => r.error)
-    )
+    if ([stops, buildings, entrances].every((r) => r.error))
       return {
         status: "unavailable",
         reason:
@@ -121,7 +134,12 @@ export async function searchPlaces(
       status: "ok",
       places: matchPlaces(places, query),
       updatedAt: health.data?.last_success_at ?? null,
-      ...([stops, buildings, entrances].some((result) => result.error) ? { warning: "Some campus locations could not load. These search results may be incomplete." } : {}),
+      ...([stops, buildings, entrances].some((result) => result.error)
+        ? {
+            warning:
+              "Some campus locations could not load. These search results may be incomplete.",
+          }
+        : {}),
     };
   } catch {
     return {
@@ -130,5 +148,30 @@ export async function searchPlaces(
         ? "Search canceled."
         : "Campus location data is temporarily unavailable. Please try again.",
     };
+  }
+}
+// Returns the building ids that no longer exist, or null when the catalog could not be checked.
+export async function findMissingBuildings(
+  ids: string[],
+  signal?: AbortSignal,
+): Promise<Set<string> | null> {
+  const unique = [...new Set(ids)];
+  if (!unique.length) return new Set();
+  const db = publicTransitClient();
+  if (!db) return null;
+  const abort = signal
+    ? AbortSignal.any([signal, AbortSignal.timeout(10_000)])
+    : AbortSignal.timeout(10_000);
+  try {
+    const { data, error } = await db
+      .from("transit_buildings")
+      .select("id")
+      .in("id", unique)
+      .abortSignal(abort);
+    if (error || !data) return null;
+    const found = new Set(data.map((row) => row.id));
+    return new Set(unique.filter((id) => !found.has(id)));
+  } catch {
+    return null;
   }
 }
