@@ -249,7 +249,7 @@ const Page = () => {
   return (
     <Stack spacing={3}>
       <Typography component="h1" variant="h1">
-        Class schedule
+        Classes
       </Typography>
       <Typography color="text.secondary" sx={{ maxWidth: "60ch" }}>
         Times are campus time (Eastern), whatever timezone your phone is in.
