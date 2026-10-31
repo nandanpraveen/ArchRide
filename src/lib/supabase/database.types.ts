@@ -14,6 +14,51 @@ export type Database = {
   };
   public: {
     Tables: {
+      classes: {
+        Row: {
+          building_id: string;
+          building_name: string;
+          minutes_early: number;
+          created_at: string;
+          enabled: boolean;
+          id: string;
+          reminder_enabled: boolean;
+          starts_at: string;
+          title: string;
+          updated_at: string;
+          user_id: string;
+          weekdays: number[];
+        };
+        Insert: {
+          building_id: string;
+          building_name?: string;
+          minutes_early?: number;
+          created_at?: string;
+          enabled?: boolean;
+          id?: string;
+          reminder_enabled?: boolean;
+          starts_at: string;
+          title: string;
+          updated_at?: string;
+          user_id?: string;
+          weekdays: number[];
+        };
+        Update: {
+          building_id?: string;
+          building_name?: string;
+          minutes_early?: number;
+          created_at?: string;
+          enabled?: boolean;
+          id?: string;
+          reminder_enabled?: boolean;
+          starts_at?: string;
+          title?: string;
+          updated_at?: string;
+          user_id?: string;
+          weekdays?: number[];
+        };
+        Relationships: [];
+      };
       feed_status: {
         Row: {
           entity_count: number;

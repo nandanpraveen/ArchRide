@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Alert, Button, CircularProgress, Paper, Stack, Typography } from "@mui/material";
+import { Accordion, AccordionSummary, AccordionDetails, Alert, Button, CircularProgress, Paper, Stack, Typography } from "@mui/material";
+import { TripComparisonPreview } from "@/components/trip-comparison-preview";
 import { DeadlineSearch } from "@/components/deadline-search";
 import { EmptyState } from "@/components/empty-state";
 import { publicTransitClient } from "@/lib/transit/public-data";
@@ -57,6 +58,10 @@ function PlanContent() {
       ))}
       {current?.error && <Alert severity="warning">A selected place is unavailable. Choose a verified building or stop from Home or Map.</Alert>}
       <DeadlineSearch />
+      <Accordion>
+        <AccordionSummary><Typography component="h2" variant="h3">Preview comparison with sample data</Typography></AccordionSummary>
+        <AccordionDetails><TripComparisonPreview /></AccordionDetails>
+      </Accordion>
       <EmptyState
         title="Trip recommendations are not available yet"
         description="Planning needs verified walking paths and usable transit arrivals. Your selected places are shown above; no journey times or bus recommendations are being estimated."

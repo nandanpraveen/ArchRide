@@ -20,6 +20,7 @@ jobs:
       - run: pnpm transit:edge:build
       - run: git diff --exit-code -- supabase/functions/transit-ingest/core.js
       - run: pnpm test:transit
+      - run: pnpm test:classes
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
