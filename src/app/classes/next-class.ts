@@ -3,20 +3,26 @@ import { DateTime } from "ts-luxon";
 const CAMPUS_ZONE = "America/New_York";
 
 export type ClassEntry = {
-  id: number;
+  id: string;
   title: string;
   weekdays: number[]; // Luxon numbering: Monday = 1 ... Sunday = 7
-  startsAt: string; // 24-hour "HH:mm"
+  startsAt: string; // 24-hour "HH:mm", campus wall-clock time
   enabled: boolean;
+  buildingId: string; // id of a verified transit_buildings row
+  buildingName: string; // saved label so the class stays readable if the building is retired
+  minutesEarly: number; // minutes to arrive early, 0-60
+  reminderEnabled: boolean; // task 10 reads this; nothing is delivered from here
 };
 
+// The reminder contract for task 10: an enabled class's next start as an ISO string in
+// America/New_York. Recompute after any edit, delete or disable; old results are obsolete.
 export type NextOccurrence = {
   classEntry: ClassEntry;
   startTime: string; // ISO, in America/New_York
 };
 
 const parseTimeString = (time: string): number[] => {
-  return time.split(":").map((part) => parseInt(part, 10));
+  return time.split(":").map((part) => parseInt(part));
 };
 
 // Returns the single soonest class start after `now`, or null if there is none.

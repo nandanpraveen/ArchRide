@@ -12,11 +12,15 @@ const entry = (overrides: Partial<ClassEntry> & Pick<ClassEntry, "id" | "title">
   weekdays: [1, 4],
   startsAt: "09:30",
   enabled: true,
+  buildingId: "test-building",
+  buildingName: "Test Building",
+  minutesEarly: 1,
+  reminderEnabled: false,
   ...overrides,
 });
 
-const calculus = entry({ id: 0, title: "Calculus", weekdays: [1, 4], startsAt: "09:30" });
-const english = entry({ id: 1, title: "English", weekdays: [2], startsAt: "11:00" });
+const calculus = entry({ id: "0", title: "Calculus", weekdays: [1, 4], startsAt: "09:30" });
+const english = entry({ id: "1", title: "English", weekdays: [2], startsAt: "11:00" });
 
 test("returns the next day this class meets", () => {
   const result = getNextOccurrence([calculus], at("2026-10-27T12:00"));
@@ -60,33 +64,33 @@ test("returns null when every class is disabled", () => {
 });
 
 test("finds a weekend class", () => {
-  const saturday = entry({ id: 2, title: "Lab", weekdays: [6], startsAt: "10:00" });
+  const saturday = entry({ id: "2", title: "Lab", weekdays: [6], startsAt: "10:00" });
   const result = getNextOccurrence([saturday], at("2026-10-27T12:00"));
   assert.equal(result?.startTime, "2026-10-31T10:00:00.000-04:00");
 });
 
 test("rolls from Sunday to Monday", () => {
-  const monday = entry({ id: 3, title: "Early", weekdays: [1], startsAt: "08:00" });
+  const monday = entry({ id: "3", title: "Early", weekdays: [1], startsAt: "08:00" });
   const result = getNextOccurrence([monday], at("2026-10-25T20:00"));
   assert.equal(result?.startTime, "2026-10-26T08:00:00.000-04:00");
 });
 
 test("handles a class at midnight", () => {
-  const midnight = entry({ id: 4, title: "Night", weekdays: [2], startsAt: "00:00" });
+  const midnight = entry({ id: "4", title: "Night", weekdays: [2], startsAt: "00:00" });
   const result = getNextOccurrence([midnight], at("2026-10-26T23:59"));
   assert.equal(result?.startTime, "2026-10-27T00:00:00.000-04:00");
 });
 
 test("with overlapping classes, returns the one that starts first", () => {
-  const first = entry({ id: 5, title: "First", weekdays: [4], startsAt: "09:30" });
-  const overlapping = entry({ id: 6, title: "Overlap", weekdays: [4], startsAt: "10:00" });
+  const first = entry({ id: "5", title: "First", weekdays: [4], startsAt: "09:30" });
+  const overlapping = entry({ id: "6", title: "Overlap", weekdays: [4], startsAt: "10:00" });
   const result = getNextOccurrence([overlapping, first], at("2026-10-29T08:00"));
   assert.equal(result?.classEntry.title, "First");
 });
 
 test("with classes at the same time, returns the first one in the list", () => {
-  const a = entry({ id: 7, title: "A", weekdays: [4], startsAt: "09:30" });
-  const b = entry({ id: 8, title: "B", weekdays: [4], startsAt: "09:30" });
+  const a = entry({ id: "7", title: "A", weekdays: [4], startsAt: "09:30" });
+  const b = entry({ id: "8", title: "B", weekdays: [4], startsAt: "09:30" });
   assert.equal(getNextOccurrence([a, b], at("2026-10-29T08:00"))?.classEntry.title, "A");
   assert.equal(getNextOccurrence([b, a], at("2026-10-29T08:00"))?.classEntry.title, "B");
 });

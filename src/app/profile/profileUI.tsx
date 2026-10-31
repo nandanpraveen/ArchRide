@@ -59,6 +59,9 @@ export default function ProfileUI({
           <Button component={Link} href="/saved">
             View saved journeys
           </Button>
+          <Button component={Link} href="/classes">
+            Edit class schedule
+          </Button>
         </>
       ) : (
         <>
@@ -80,6 +83,9 @@ export default function ProfileUI({
               Create account
             </Button>
           </Stack>
+          <Button component={Link} href="/classes" sx={{ alignSelf: "flex-start" }}>
+            Class schedule (saved on this device)
+          </Button>
         </>
       )}
       <Typography variant="body2" color="text.secondary">

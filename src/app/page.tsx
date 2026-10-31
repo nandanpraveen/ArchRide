@@ -15,6 +15,7 @@ import { PlaceSearch } from "@/components/place-search";
 import { LocationCard } from "@/components/location-card";
 import { HomeStatus } from "@/components/home-status";
 import { HomeDepartures } from "@/components/home-departures";
+import { NextClassCard } from "@/components/next-class-card";
 import {
   homePlaceHref,
   homePlanHref,
@@ -77,6 +78,7 @@ export default function HomePage() {
         )}
       </Box>
       <LocationCard origin={origin} onOrigin={setOrigin} />
+      <NextClassCard origin={origin} />
       <HomeDepartures origin={origin} transit={transit} />
       <Box component="section" aria-label="Next trip">
         <Typography component="h2" variant="h2" sx={{ mb: 1 }}>

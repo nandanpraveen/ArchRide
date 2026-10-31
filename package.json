@@ -14,6 +14,7 @@
     "transit:ingest": "node --import tsx scripts/transit/ingest.ts",
     "transit:probe": "node --import tsx scripts/transit/probe.ts",
     "test:transit": "node --import tsx --test tests/transit/*.test.ts",
+    "test:classes": "node --import tsx --test tests/classes/*.test.ts",
     "db:types:local": "node --import tsx scripts/transit/generate-types.ts",
     "transit:edge:build": "node scripts/transit/build-edge.mjs",
     "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts",
@@ -46,16 +47,20 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.10",
+    "@eslint/js": "10.0.1",
     "@playwright/test": "1.64.0",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/pg": "8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "9.39.5",
     "eslint-config-next": "16.4.3",
+    "eslint-plugin-react": "7.37.5",
+    "globals": "17.13.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "typescript-eslint": "8.72.1"
   },
   "packageManager": "pnpm@12.5.1",
   "engines": {
