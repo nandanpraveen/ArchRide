@@ -1,6 +1,6 @@
 import { DateTime } from "ts-luxon";
 
-const CAMPUS_ZONE = "America/New_York";
+export const CAMPUS_ZONE = "America/New_York";
 
 export type ClassEntry = {
   id: string;
@@ -14,8 +14,8 @@ export type ClassEntry = {
   reminderEnabled: boolean; // task 10 reads this; nothing is delivered from here
 };
 
-// The reminder contract for task 10: an enabled class's next start as an ISO string in
-// America/New_York. Recompute after any edit, delete or disable; old results are obsolete.
+// An enabled class's next start as an ISO string in America/New_York. Reminder jobs for task 10
+// come from reminderJobs in src/lib/class-reminders.ts.
 export type NextOccurrence = {
   classEntry: ClassEntry;
   startTime: string; // ISO, in America/New_York
