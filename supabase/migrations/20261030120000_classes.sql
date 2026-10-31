@@ -1,7 +1,7 @@
 -- Private weekly class schedule. Times are campus wall-clock (America/New_York), stored as "HH:mm".
 -- building_id intentionally has no foreign key: a retired building must not delete a student's class,
 -- and the saved building_name keeps the row readable until the student picks a replacement.
-create function public.set_updated_at() returns trigger
+create function public.classes_set_updated_at() returns trigger
 language plpgsql set search_path = '' as $$
 begin
   new.updated_at = now();
@@ -26,7 +26,7 @@ create table public.classes (
 );
 create index classes_user_id on public.classes(user_id);
 create trigger classes_set_updated_at before update on public.classes
-  for each row execute function public.set_updated_at();
+  for each row execute function public.classes_set_updated_at();
 
 alter table public.classes enable row level security;
 revoke all on public.classes from anon, authenticated;

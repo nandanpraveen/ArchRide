@@ -26,7 +26,11 @@ import dayjs, { Dayjs } from "dayjs";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DataGrid, GridActionsCellItem, type GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  type GridColDef,
+} from "@mui/x-data-grid";
 import { PlaceSearch } from "@/components/place-search";
 import type { Place } from "@/lib/campus-data";
 import {
@@ -45,7 +49,17 @@ import type { ClassEntry } from "./next-class";
 const defaultTime = () => dayjs().hour(9).minute(30);
 
 const Page = () => {
-  const { classes, status, source, accountUnavailable, saveError, add, update, remove, reload } = useClasses();
+  const {
+    classes,
+    status,
+    source,
+    accountUnavailable,
+    saveError,
+    add,
+    update,
+    remove,
+    reload,
+  } = useClasses();
   const [title, setTitle] = useState("");
   const [building, setBuilding] = useState<Place | null>(null);
   const [weekday, setWeekday] = useState<number[]>([]);
@@ -58,13 +72,18 @@ const Page = () => {
 
   // With `multiple`, MUI types the value as number[] or a comma-separated string.
   const handleWeekdayChange = (value: string | number[]) => {
-    setWeekday(typeof value === "string" ? value.split(",").map(Number) : value);
+    setWeekday(
+      typeof value === "string" ? value.split(",").map(Number) : value,
+    );
   };
 
   const handleBuilding = (place: Place | null) => {
     if (place && place.type !== "building") {
       setBuilding(null);
-      setErrors((current) => ({ ...current, buildingId: "Choose a campus building, not a stop or entrance." }));
+      setErrors((current) => ({
+        ...current,
+        buildingId: "Choose a campus building, not a stop or entrance.",
+      }));
       return;
     }
     setBuilding(place);
@@ -79,7 +98,8 @@ const Page = () => {
       enabled: true,
       buildingId: building?.id ?? "",
       buildingName: building?.name ?? "",
-      minutesEarly: minutesEarly.trim() === "" ? Number.NaN : Number(minutesEarly),
+      minutesEarly:
+        minutesEarly.trim() === "" ? Number.NaN : Number(minutesEarly),
       reminderEnabled: false,
     };
     const found = validateClass(draft);
@@ -114,7 +134,13 @@ const Page = () => {
   }
 
   const columns: GridColDef<ClassEntry>[] = [
-    { field: "title", headerName: "Class", minWidth: 140, flex: 1, editable: true },
+    {
+      field: "title",
+      headerName: "Class",
+      minWidth: 140,
+      flex: 1,
+      editable: true,
+    },
     { field: "buildingName", headerName: "Building", minWidth: 160, flex: 1 },
     {
       field: "weekdays",
@@ -128,7 +154,10 @@ const Page = () => {
       headerName: "Starts (HH:mm)",
       minWidth: 120,
       editable: true,
-      preProcessEditCellProps: (params) => ({ ...params.props, error: !isValidStartTime(params.props.value) }),
+      preProcessEditCellProps: (params) => ({
+        ...params.props,
+        error: !isValidStartTime(params.props.value),
+      }),
     },
     {
       field: "minutesEarly",
@@ -136,10 +165,25 @@ const Page = () => {
       type: "number",
       minWidth: 110,
       editable: true,
-      preProcessEditCellProps: (params) => ({ ...params.props, error: !isValidMinutesEarly(params.props.value) }),
+      preProcessEditCellProps: (params) => ({
+        ...params.props,
+        error: !isValidMinutesEarly(params.props.value),
+      }),
     },
-    { field: "enabled", headerName: "On", type: "boolean", width: 80, editable: true },
-    { field: "reminderEnabled", headerName: "Reminder", type: "boolean", width: 100, editable: true },
+    {
+      field: "enabled",
+      headerName: "On",
+      type: "boolean",
+      width: 80,
+      editable: true,
+    },
+    {
+      field: "reminderEnabled",
+      headerName: "Reminder",
+      type: "boolean",
+      width: 100,
+      editable: true,
+    },
     {
       field: "actions",
       type: "actions",
@@ -162,24 +206,32 @@ const Page = () => {
         Class schedule
       </Typography>
       <Typography color="text.secondary" sx={{ maxWidth: "60ch" }}>
-        Times are campus time (Eastern), whatever timezone your phone is in. Home shows your next class.
+        Times are campus time (Eastern), whatever timezone your phone is in.
+        Home shows your next class.
       </Typography>
 
       {accountUnavailable && (
         <Alert severity="warning">
-          Account services are unavailable, so your schedule is stored on this device only for now.
+          Account services are unavailable, so your schedule is stored on this
+          device only for now.
         </Alert>
       )}
       {status === "ready" && source === "device" && !accountUnavailable && (
         <Alert
           severity="info"
           action={
-            <Button component={Link} href="/sign-in" color="inherit" size="small">
+            <Button
+              component={Link}
+              href="/sign-in"
+              color="inherit"
+              size="small"
+            >
               Sign in
             </Button>
           }
         >
-          You are using a guest schedule. It stays on this device only. Sign in to sync it privately to your account.
+          You are using a guest schedule. It stays on this device only. Sign in
+          to sync it privately to your account.
         </Alert>
       )}
       {status === "ready" && source === "account" && (
@@ -189,7 +241,11 @@ const Page = () => {
       )}
 
       <Stack component="section" aria-label="Add a class" spacing={2}>
-        <Stack direction="row" useFlexGap sx={{ flexWrap: "wrap", gap: 2, alignItems: "flex-start" }}>
+        <Stack
+          direction="row"
+          useFlexGap
+          sx={{ flexWrap: "wrap", gap: 2, alignItems: "flex-start" }}
+        >
           <TextField
             label="Class name"
             value={title}
@@ -199,8 +255,15 @@ const Page = () => {
             sx={{ minWidth: 200 }}
           />
           <Stack sx={{ minWidth: 240, flex: "1 1 240px" }}>
-            <PlaceSearch key={formKey} label="Building" inputId="class-building" onSelect={handleBuilding} />
-            {errors.buildingId && <FormHelperText error>{errors.buildingId}</FormHelperText>}
+            <PlaceSearch
+              key={formKey}
+              label="Building"
+              inputId="class-building"
+              onSelect={handleBuilding}
+            />
+            {errors.buildingId && (
+              <FormHelperText error>{errors.buildingId}</FormHelperText>
+            )}
           </Stack>
           <FormControl error={!!errors.weekdays} sx={{ minWidth: 200 }}>
             <InputLabel id="weekday-select-label">Weekdays</InputLabel>
@@ -219,14 +282,22 @@ const Page = () => {
                 </MenuItem>
               ))}
             </Select>
-            {errors.weekdays && <FormHelperText>{errors.weekdays}</FormHelperText>}
+            {errors.weekdays && (
+              <FormHelperText>{errors.weekdays}</FormHelperText>
+            )}
           </FormControl>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <TimePicker
               label="Starts at"
               value={time}
               onChange={(newValue) => setTime(newValue)}
-              slotProps={{ textField: { error: !!errors.startsAt, helperText: errors.startsAt, sx: { width: 160 } } }}
+              slotProps={{
+                textField: {
+                  error: !!errors.startsAt,
+                  helperText: errors.startsAt,
+                  sx: { width: 160 },
+                },
+              }}
             />
           </LocalizationProvider>
           <TextField
@@ -236,11 +307,18 @@ const Page = () => {
             onChange={(e) => setMinutesEarly(e.target.value)}
             error={!!errors.minutesEarly}
             helperText={errors.minutesEarly}
-            slotProps={{ htmlInput: { min: 0, max: MAX_MINUTES_EARLY, step: 1 } }}
+            slotProps={{
+              htmlInput: { min: 0, max: MAX_MINUTES_EARLY, step: 1 },
+            }}
             sx={{ width: 170 }}
           />
         </Stack>
-        <Button variant="contained" startIcon={<AddIcon />} onClick={handleAdd} sx={{ alignSelf: "flex-start" }}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAdd}
+          sx={{ alignSelf: "flex-start" }}
+        >
           Add class
         </Button>
       </Stack>
@@ -252,7 +330,12 @@ const Page = () => {
       )}
 
       {status === "loading" && (
-        <Stack direction="row" spacing={2} role="status" sx={{ alignItems: "center" }}>
+        <Stack
+          direction="row"
+          spacing={2}
+          role="status"
+          sx={{ alignItems: "center" }}
+        >
           <CircularProgress size={24} />
           <Typography>Loading your schedule…</Typography>
         </Stack>
@@ -266,15 +349,19 @@ const Page = () => {
             </Button>
           }
         >
-          Your schedule could not be loaded. Check your connection and try again.
+          Your schedule could not be loaded. Check your connection and try
+          again.
         </Alert>
       )}
       {status === "ready" && classes.length === 0 && (
-        <Typography color="text.secondary">No classes yet. Add your first class above.</Typography>
+        <Typography color="text.secondary">
+          No classes yet. Add your first class above.
+        </Typography>
       )}
       {status === "ready" && classes.length > 0 && (
         <DataGrid
           aria-label="Weekly class schedule"
+          disableVirtualization
           rows={classes}
           columns={columns}
           autoHeight
@@ -290,7 +377,8 @@ const Page = () => {
         <DialogTitle>Delete this class?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {pendingDelete?.title} will be removed from your schedule. You can undo right after.
+            {pendingDelete?.title} will be removed from your schedule. You can
+            undo right after.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
