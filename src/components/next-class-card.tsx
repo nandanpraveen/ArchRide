@@ -6,9 +6,11 @@ import { DateTime } from "ts-luxon";
 import getNextOccurrence from "@/app/classes/next-class";
 import { homePlanHref, type HomeOrigin } from "@/components/home-journey";
 import { useClasses } from "@/lib/use-classes";
+import { useMissingBuildings } from "@/lib/use-missing-building";
 
 export function NextClassCard({ origin }: { origin: HomeOrigin | null }) {
   const { classes, status, source, reload } = useClasses();
+  const missing = useMissingBuildings(classes.map((item) => item.buildingId));
   const [now, setNow] = useState(() => DateTime.now());
 
   // Keep "next class" current while Home stays open.
@@ -19,6 +21,7 @@ export function NextClassCard({ origin }: { origin: HomeOrigin | null }) {
 
   const next = status === "ready" ? getNextOccurrence(classes, now) : null;
   const start = next ? DateTime.fromISO(next.startTime, { zone: "America/New_York" }) : null;
+  const buildingGone = !!next && missing.has(next.classEntry.buildingId);
 
   return (
     <Box component="section" aria-label="Next class">
@@ -54,19 +57,30 @@ export function NextClassCard({ origin }: { origin: HomeOrigin | null }) {
           <Typography color="text.secondary" sx={{ overflowWrap: "anywhere" }}>
             {next.classEntry.buildingName || "Building not set"}
           </Typography>
-          <Button
-            component={Link}
-            href={homePlanHref(origin, {
-              id: next.classEntry.buildingId,
-              name: next.classEntry.buildingName,
-              type: "building",
-              locationLabel: "Class building",
-            })}
-            variant="contained"
-            sx={{ mt: 2, mr: 1 }}
-          >
-            Plan trip to class
-          </Button>
+          {buildingGone ? (
+            <>
+              <Alert severity="warning" sx={{ mt: 1 }}>
+                This building is no longer in campus data, so a trip there cannot be planned.
+              </Alert>
+              <Button component={Link} href="/classes" variant="contained" sx={{ mt: 2, mr: 1 }}>
+                Choose a new building
+              </Button>
+            </>
+          ) : (
+            <Button
+              component={Link}
+              href={homePlanHref(origin, {
+                id: next.classEntry.buildingId,
+                name: next.classEntry.buildingName,
+                type: "building",
+                locationLabel: "Class building",
+              })}
+              variant="contained"
+              sx={{ mt: 2, mr: 1 }}
+            >
+              Plan trip to class
+            </Button>
+          )}
         </>
       )}
       <Button component={Link} href="/classes" sx={{ mt: 2 }}>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   Alert,
   Button,
+  Chip,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -23,6 +24,8 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import dayjs, { Dayjs } from "dayjs";
+import EditLocationIcon from "@mui/icons-material/EditLocationAltOutlined";
+import { useMissingBuildings } from "@/lib/use-missing-building";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -69,6 +72,10 @@ const Page = () => {
   const [formKey, setFormKey] = useState(0);
   const [pendingDelete, setPendingDelete] = useState<ClassEntry | null>(null);
   const [undo, setUndo] = useState<ClassDraft | null>(null);
+  const [changing, setChanging] = useState<ClassEntry | null>(null);
+  const [newPlace, setNewPlace] = useState<Place | null>(null);
+  const newBuilding = newPlace?.type === "building" ? newPlace : null;
+  const missing = useMissingBuildings(classes.map((item) => item.buildingId));
 
   // With `multiple`, MUI types the value as number[] or a comma-separated string.
   const handleWeekdayChange = (value: string | number[]) => {
@@ -114,7 +121,21 @@ const Page = () => {
       setFormKey((value) => value + 1);
     }
   }
+  function closeChange() {
+    setChanging(null);
+    setNewPlace(null);
+  }
 
+  async function saveBuilding() {
+    if (!changing || !newBuilding) return;
+    const { id, ...draft } = changing;
+    const saved = await update(id, {
+      ...draft,
+      buildingId: newBuilding.id,
+      buildingName: newBuilding.name,
+    });
+    if (saved) closeChange();
+  }
   async function confirmDelete() {
     if (!pendingDelete) return;
     const { id, ...draft } = pendingDelete;
@@ -141,7 +162,26 @@ const Page = () => {
       flex: 1,
       editable: true,
     },
-    { field: "buildingName", headerName: "Building", minWidth: 160, flex: 1 },
+    {
+      field: "buildingName",
+      headerName: "Building",
+      minWidth: 220,
+      flex: 1,
+      renderCell: ({ row }) => (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{ alignItems: "center", minWidth: 0 }}
+        >
+          <Typography variant="body2" noWrap>
+            {row.buildingName || "Building not set"}
+          </Typography>
+          {missing.has(row.buildingId) && (
+            <Chip size="small" color="warning" label="Unavailable" />
+          )}
+        </Stack>
+      ),
+    },
     {
       field: "weekdays",
       headerName: "Days",
@@ -187,9 +227,15 @@ const Page = () => {
     {
       field: "actions",
       type: "actions",
-      headerName: "Delete",
-      width: 80,
+      headerName: "Actions",
+      width: 120,
       getActions: ({ row }) => [
+        <GridActionsCellItem
+          key="change-building"
+          icon={<EditLocationIcon />}
+          label={`Change building for ${row.title}`}
+          onClick={() => setChanging(row)}
+        />,
         <GridActionsCellItem
           key="delete"
           icon={<DeleteIcon />}
@@ -358,6 +404,13 @@ const Page = () => {
           No classes yet. Add your first class above.
         </Typography>
       )}
+      {status === "ready" &&
+        classes.some((item) => missing.has(item.buildingId)) && (
+          <Alert severity="warning">
+            A building on your schedule is no longer in campus data. Use Change
+            building on the classes marked Unavailable.
+          </Alert>
+        )}
       {status === "ready" && classes.length > 0 && (
         <DataGrid
           aria-label="Weekly class schedule"
@@ -373,6 +426,41 @@ const Page = () => {
         />
       )}
 
+      <Dialog open={!!changing} onClose={closeChange} fullWidth maxWidth="sm">
+        <DialogTitle>Change building</DialogTitle>
+        <DialogContent>
+          <DialogContentText sx={{ mb: 2 }}>
+            {changing?.title} is set to{" "}
+            {changing?.buildingName || "no building"}. Pick the building it
+            meets in now.
+          </DialogContentText>
+          <PlaceSearch
+            label="New building"
+            inputId="class-new-building"
+            onSelect={setNewPlace}
+          />
+          {newPlace && !newBuilding && (
+            <FormHelperText error>
+              Choose a campus building, not a stop or entrance.
+            </FormHelperText>
+          )}
+          {saveError && (
+            <Alert severity="error" role="alert" sx={{ mt: 2 }}>
+              {saveError}
+            </Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeChange}>Cancel</Button>
+          <Button
+            variant="contained"
+            disabled={!newBuilding}
+            onClick={saveBuilding}
+          >
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Dialog open={!!pendingDelete} onClose={() => setPendingDelete(null)}>
         <DialogTitle>Delete this class?</DialogTitle>
         <DialogContent>
