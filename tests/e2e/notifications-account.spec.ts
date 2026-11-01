@@ -86,7 +86,9 @@ test("signed-in reminder settings upsert to the account and survive reload", asy
   await lead.click();
   await page.getByRole("option", { name: "10 minutes", exact: true }).click();
   await expect(page.getByText("Saved to your account.")).toBeVisible();
-  await page.getByLabel("Remind me when a watched bus is close").uncheck();
+  await expect(page.getByRole("listbox", { includeHidden: true })).toHaveCount(0);
+  // Account writes finish over HTTP; the controlled switch updates after save.
+  await page.getByLabel("Remind me when a watched bus is close").click();
   await expect(page.getByLabel("Remind me when a watched bus is close")).not.toBeChecked();
   expect(store.writes).toHaveLength(2);
   expect(store.writes[1]).toMatchObject({ table: "notification_preferences", method: "POST", body: { leave_now_enabled: false, bus_lead_minutes: 10 } });
