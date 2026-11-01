@@ -9,6 +9,7 @@ import { arrivalFeedConnected } from "@/lib/transit/contracts";
 import { useNotifications } from "@/lib/use-notifications";
 import {
   addWatched,
+  isWatched,
   pickWatchedEstimate,
   pruneHandled,
   pruneWatched,
@@ -31,7 +32,7 @@ const ARRIVALS_FEED = "uga-passio:arrivals";
 type NotificationCenter = ReturnType<typeof useNotifications> & {
   watched: WatchedBusEntry[];
   watchBus: (bus: WatchedBus) => void;
-  unwatchBus: (bus: Pick<WatchedBus, "tripId" | "stopId">) => void;
+  unwatchBus: (bus: Pick<WatchedBus, "arrivalId" | "tripId" | "stopId">) => void;
 };
 
 const NotificationsContext = createContext<NotificationCenter | null>(null);
@@ -67,36 +68,45 @@ export function NotificationsProvider({ children }: { children: React.ReactNode 
   const watchBus = useCallback((bus: WatchedBus) => {
     const next = addWatched(pruneWatched(readDeviceWatched()), bus);
     writeDeviceWatched(next);
+    latest.current.watched = next;
     setWatched(next);
   }, []);
 
-  const unwatchBus = useCallback((bus: Pick<WatchedBus, "tripId" | "stopId">) => {
+  const unwatchBus = useCallback((bus: Pick<WatchedBus, "arrivalId" | "tripId" | "stopId">) => {
     const next = removeWatched(readDeviceWatched(), bus);
     writeDeviceWatched(next);
+    latest.current.watched = next;
     setWatched(next);
   }, []);
 
   const check = useCallback(async () => {
     if (checking.current) return;
-    const { watched: list, preferences: settings } = latest.current;
+    const list = pruneWatched(latest.current.watched);
+    if (list.length !== latest.current.watched.length) {
+      latest.current.watched = list;
+      writeDeviceWatched(list);
+      setWatched(list);
+    }
     const db = publicTransitClient();
     if (!list.length || !db) return;
     checking.current = true;
     try {
-      const clock = Date.now();
       const [feed, ...arrivals] = await Promise.all([
-        db.from("feed_status").select("*").eq("id", ARRIVALS_FEED).maybeSingle(),
+        db.from("feed_status").select("*").eq("id", ARRIVALS_FEED).abortSignal(AbortSignal.timeout(10_000)).maybeSingle(),
         ...list.map((bus) => readWatchedArrivals(db, bus)),
       ]);
       // If the arrival feed cannot be read, every prediction counts as stale and nothing is sent.
-      const connected = !feed.error && arrivalFeedConnected(feed.data ?? undefined, clock);
-      handled.current = pruneHandled(handled.current, clock);
+      handled.current = pruneHandled(handled.current);
       const finished: WatchedBusEntry[] = [];
       for (const [index, bus] of list.entries()) {
+        // Network requests may have taken time or the student may have changed this watch/settings.
+        const clock = Date.now();
+        const connected = !feed.error && arrivalFeedConnected(feed.data ?? undefined, clock);
+        if (!connected || !isWatched(pruneWatched(latest.current.watched, clock), bus)) continue;
         const rows = arrivals[index];
         if (rows.error) continue;
         const estimate = pickWatchedEstimate(rows.data, clock, connected);
-        const reminder = leaveNowReminder(bus, estimate, settings, new Set(Object.keys(handled.current)), clock);
+        const reminder = leaveNowReminder(bus, estimate, latest.current.preferences, new Set(Object.keys(handled.current)), clock);
         let delivered = true;
         if (reminder) {
           const result = await add(reminder);

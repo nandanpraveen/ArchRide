@@ -6,6 +6,7 @@ import type {
 
 /** A bus the student tapped "Watch this bus" on. */
 export type WatchedBus = {
+  arrivalId: string; // stable trip instance + stop occurrence, including service date
   tripId: string; // which bus run
   stopId: string; // which stop they're waiting at
   routeName: string; // for example "Route L"
@@ -32,7 +33,8 @@ export function leaveNowReminder(
   // A cancellation gets its own key, so it can still arrive after a leave-now prompt.
   const cancelled = estimate.state === "cancelled";
   const label = cancelled ? "cancel" : "leave";
-  const key = `${label}:${watch.tripId}:${watch.stopId}`;
+  const key = `${label}:${watch.arrivalId}`;
+  if (key.length > 200) return null;
   if (handledKeys.has(key)) return null;
 
   let expiresAtMs = now + CANCELLED_NOTICE_MINUTES * minuteInMs;

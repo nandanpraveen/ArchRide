@@ -6,6 +6,7 @@ const PREFERENCES_KEY = "archride.notification-preferences.v1";
 
 // The fixture's one bus (a trip at the "Memorial Hall" stop), as a student would be watching it.
 const watchedBus = () => ({
+  arrivalId: "arrival1",
   tripId: "uga-passio:trip",
   stopId: "uga-passio:east",
   routeName: "Campus Loop",
@@ -235,3 +236,81 @@ test("a bus with no prediction row is not reported as cancelled", async ({ page 
   await expect(bell(page)).toBeVisible();
   expect(await page.evaluate((key) => localStorage.getItem(key), WATCHED_KEY)).toContain("uga-passio:trip");
 });
+
+test("a different run of the watched trip cannot trigger its reminder", async ({ page }) => {
+  const tables = busDue(3);
+  tables.transit_arrivals = [{ ...tables.transit_arrivals[0], id: "different-run" }];
+  await mockTransit(page, tables);
+  await seed(page, WATCHED_KEY, [watchedBus()]);
+  const checked = arrivalsChecked(page);
+  await page.goto("/notifications");
+  await checked;
+  await page.waitForTimeout(500);
+  await expect(page.getByRole("heading", { name: "No notifications" })).toBeVisible();
+  await expect(leaveNowAlert(page)).toHaveCount(0);
+});
+
+for (const staleFeed of [false, true]) {
+  test(`an ${staleFeed ? "unhealthy feed" : "expired cancellation"} never sends a cancellation notice`, async ({ page }) => {
+    const tables = busDue(3, {
+      relationship: "CANCELED",
+      ...(!staleFeed ? { update_timestamp: new Date(Date.now() - 600_000).toISOString() } : {}),
+    });
+    if (staleFeed) tables.feed_status = tables.feed_status.map((feed) => ({ ...feed, state: "failed" }));
+    await mockTransit(page, tables);
+    await seed(page, WATCHED_KEY, [watchedBus()]);
+    const checked = arrivalsChecked(page);
+    await page.goto("/notifications");
+    await checked;
+    await page.waitForTimeout(500);
+    await expect(page.getByRole("heading", { name: "No notifications" })).toBeVisible();
+    expect(await page.evaluate((key) => localStorage.getItem(key), WATCHED_KEY)).toContain("arrival1");
+  });
+}
+
+test("a watch expires while the same page stays open", async ({ page }) => {
+  const tables = busDue(3);
+  tables.transit_arrivals = [];
+  await mockTransit(page, tables);
+  await seed(page, WATCHED_KEY, [{ ...watchedBus(), addedAt: Date.now() - 3 * 60 * 60_000 + 30_000 }]);
+  await page.clock.install();
+  const checked = arrivalsChecked(page);
+  await page.goto("/notifications");
+  await checked;
+  await page.clock.fastForward(61_000);
+  await expect.poll(() => page.evaluate((key) => localStorage.getItem(key), WATCHED_KEY)).toBe("[]");
+  await expect(page.getByRole("heading", { name: "No notifications" })).toBeVisible();
+});
+
+for (const action of ["disable reminders", "unwatch the bus"] as const) {
+test(`${action} while an arrival request is pending suppresses delivery`, async ({ page }) => {
+  let release = () => {};
+  const pending = new Promise<void>((resolve) => { release = resolve; });
+  let requested = false;
+  await mockTransit(page, busDue(3), async (route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+    if (request.method() === "GET" && url.pathname.endsWith("/transit_arrivals") && url.searchParams.get("id") === "eq.arrival1") {
+      requested = true;
+      await pending;
+    }
+    return false;
+  });
+  await seed(page, WATCHED_KEY, [watchedBus()]);
+  await page.goto(action === "disable reminders" ? "/profile" : "/");
+  await expect.poll(() => requested).toBe(true);
+  if (action === "disable reminders") {
+    await page.getByLabel("Remind me when a watched bus is close").uncheck();
+  } else {
+    await chooseHomeOrigin(page);
+    await page.getByRole("button", { name: "Stop watching Campus Loop at Memorial Hall" }).click();
+  }
+  const checked = arrivalsChecked(page);
+  release();
+  await checked;
+  await page.waitForTimeout(500);
+  await expect(leaveNowAlert(page)).toHaveCount(0);
+  await bell(page).click();
+  await expect(page.getByRole("heading", { name: "No notifications" })).toBeVisible();
+});
+}

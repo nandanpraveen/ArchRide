@@ -78,6 +78,7 @@ export function HomeDepartures({ origin, transit }: {
                       <Typography variant="body2" color="text.secondary">{arrival.headsign || "Direction not supplied"}{arrival.direction_id !== null ? ` · direction ${arrival.direction_id}` : ""} · stop occurrence {arrival.stop_sequence}</Typography>
                       <ArrivalStatus arrival={arrival} connected={!transit.data?.errors?.health && arrivalFeedConnected(feed, clock)} />
                       <WatchBusButton
+                        arrivalId={arrival.id}
                         tripId={arrival.trip_id}
                         stopId={arrival.stop_id}
                         routeName={transit.data?.routes.find((route) => route.id === arrival.route_id)?.long_name || transit.data?.routes.find((route) => route.id === arrival.route_id)?.short_name || "Route unavailable"}

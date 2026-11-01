@@ -2,10 +2,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { WatchedBus } from "@/lib/leave-now";
 import type { Database } from "@/lib/supabase/database.types";
 import type { Arrival } from "@/lib/transit/contracts";
-import { arrivalEstimate, type ArrivalEstimate } from "@/lib/transit/estimates";
+import { arrivalEstimate, ESTIMATE_MAX_AGE_MS, type ArrivalEstimate } from "@/lib/transit/estimates";
+import { freshness } from "@/lib/transit/contracts";
 
 export type WatchedBusEntry = WatchedBus & { addedAt: number };
-type BusId = Pick<WatchedBus, "tripId" | "stopId">;
+type BusId = Pick<WatchedBus, "arrivalId" | "tripId" | "stopId">;
 
 export const MAX_WATCHED_BUSES = 5;
 // A watch is dropped after this long, so a forgotten bus stops being checked.
@@ -14,7 +15,7 @@ export const WATCH_LIFETIME_MS = 3 * 60 * 60_000;
 const MAX_NAME = 80;
 
 const sameBus = (a: BusId, b: BusId) =>
-  a.tripId === b.tripId && a.stopId === b.stopId;
+  a.arrivalId === b.arrivalId && a.tripId === b.tripId && a.stopId === b.stopId;
 export const isWatched = (list: WatchedBusEntry[], bus: BusId) =>
   list.some((item) => sameBus(item, bus));
 
@@ -54,7 +55,16 @@ export function pickWatchedEstimate(
   now = Date.now(),
   connected = true,
 ): ArrivalEstimate | null {
-  const estimates = rows.map((row) => arrivalEstimate(row, now, connected));
+  const estimates = rows.map((row) => {
+    const estimate = arrivalEstimate(row, now, connected);
+    // The shared UI can display an old cancellation, but dispatch requires current evidence.
+    if (estimate.state === "cancelled" && (!connected || row.provenance !== "source"
+      || freshness(row.update_timestamp, ESTIMATE_MAX_AGE_MS / 1000, now) !== "current"
+      || !(Date.parse(row.valid_until) > now))) {
+      return { ...estimate, state: "stale" as const, reason: "Cancellation evidence is expired or disconnected." };
+    }
+    return estimate;
+  });
   estimates.sort(
     (a, b) =>
       STATE_PRIORITY[a.state] - STATE_PRIORITY[b.state] ||
@@ -79,6 +89,7 @@ export function readWatchedArrivals(
   return db
     .from("transit_arrivals")
     .select("*")
+    .eq("id", bus.arrivalId)
     .eq("stop_id", bus.stopId)
     .eq("trip_id", bus.tripId)
     .eq("provenance", "source")
@@ -111,6 +122,7 @@ function isWatchedEntry(item: unknown): item is WatchedBusEntry {
   if (!item || typeof item !== "object") return false;
   const entry = item as WatchedBusEntry;
   return (
+    isId(entry.arrivalId) &&
     isId(entry.tripId) &&
     isId(entry.stopId) &&
     isName(entry.routeName) &&

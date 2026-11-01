@@ -69,7 +69,7 @@ test("tells the student when the bus is cancelled", () => {
 });
 
 // leaveNowReminder: the whole decision for one watched bus.
-const watch: WatchedBus = { tripId: "trip-9", stopId: "stop-3", routeName: "Route L", stopName: "Tate Center" };
+const watch: WatchedBus = { arrivalId: "run-1|stop-1", tripId: "trip-9", stopId: "stop-3", routeName: "Route L", stopName: "Tate Center" };
 const NOW = Date.parse("2026-10-30T12:00:00.000Z");
 const remind = (est: ArrivalEstimate | null, handled: string[] = [], prefs = DEFAULT_PREFERENCES) =>
   leaveNowReminder(watch, est, prefs, new Set(handled), NOW);
@@ -80,7 +80,7 @@ test("creates a leave-now notification that lasts 10 minutes past the predicted 
     title: "Your bus is 3 minutes away. Leave now if you want to catch it!",
     body: "Route L at Tate Center",
     link: "/map?stop=stop-3",
-    dedupeKey: "leave:trip-9:stop-3",
+    dedupeKey: "leave:run-1|stop-1",
     expiresAt: "2026-10-30T12:15:00.000Z",
   });
 });
@@ -98,17 +98,17 @@ test("creates nothing when the student turned leave-now reminders off", () => {
 test("uses the student's own lead time", () => {
   const eightAway = estimate({ countdownMinutes: 8 });
   assert.equal(remind(eightAway), null);
-  assert.equal(remind(eightAway, [], { ...DEFAULT_PREFERENCES, busLeadMinutes: 10 })?.dedupeKey, "leave:trip-9:stop-3");
+  assert.equal(remind(eightAway, [], { ...DEFAULT_PREFERENCES, busLeadMinutes: 10 })?.dedupeKey, "leave:run-1|stop-1");
 });
 
 test("does not create a reminder that was already handled, even if it was cleared", () => {
-  assert.equal(remind(estimate({ countdownMinutes: 3 }), ["leave:trip-9:stop-3"]), null);
+  assert.equal(remind(estimate({ countdownMinutes: 3 }), ["leave:run-1|stop-1"]), null);
 });
 
 test("a handled reminder for one bus or stop does not block another", () => {
   const close = estimate({ countdownMinutes: 3 });
-  assert.equal(remind(close, ["leave:trip-8:stop-3"])?.dedupeKey, "leave:trip-9:stop-3");
-  assert.equal(remind(close, ["leave:trip-9:stop-4"])?.dedupeKey, "leave:trip-9:stop-3");
+  assert.equal(remind(close, ["leave:trip-8:stop-3"])?.dedupeKey, "leave:run-1|stop-1");
+  assert.equal(remind(close, ["leave:trip-9:stop-4"])?.dedupeKey, "leave:run-1|stop-1");
 });
 
 test("the notification links to the stop's details, encoding the stop id", () => {
@@ -133,17 +133,23 @@ test("a cancellation notice lasts 30 minutes from now, even with no arrival time
     title: "Bus watch cancelled.",
     body: "Route L at Tate Center",
     link: "/map?stop=stop-3",
-    dedupeKey: "cancel:trip-9:stop-3",
+    dedupeKey: "cancel:run-1|stop-1",
     expiresAt: "2026-10-30T12:30:00.000Z",
   });
 });
 
 test("a cancellation still arrives after a leave-now prompt, but only once", () => {
   const cancelled = estimate({ state: "cancelled", countdownMinutes: null });
-  assert.equal(remind(cancelled, ["leave:trip-9:stop-3"])?.dedupeKey, "cancel:trip-9:stop-3");
-  assert.equal(remind(cancelled, ["cancel:trip-9:stop-3"]), null);
+  assert.equal(remind(cancelled, ["leave:run-1|stop-1"])?.dedupeKey, "cancel:run-1|stop-1");
+  assert.equal(remind(cancelled, ["cancel:run-1|stop-1"]), null);
 });
 
 test("creates nothing for a close bus that has no arrival time", () => {
   assert.equal(remind(estimate({ countdownMinutes: 3, arrivalAt: null })), null);
+});
+
+test("a later run of the same trip and stop gets its own reminder", () => {
+  const laterRun = { ...watch, arrivalId: "run-2|stop-1" };
+  assert.equal(leaveNowReminder(laterRun, estimate(), DEFAULT_PREFERENCES,
+    new Set(["leave:run-1|stop-1"]), NOW)?.dedupeKey, "leave:run-2|stop-1");
 });

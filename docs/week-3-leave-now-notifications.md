@@ -19,7 +19,7 @@ Watch this bus  ->  watched list (this device)
                           |
           every 60 s, and when the tab becomes visible again
                           |
-   read the arrival feed's health + the watched trip's rows at its stop
+   read the arrival feed's health + the watched arrival occurrence by its stable id
                           |
    pickWatchedEstimate  ->  ArrivalEstimate (valid / cancelled / passed / stale / missing)
                           |
@@ -34,8 +34,10 @@ Rules that matter:
 
 - **No trusted countdown without a healthy feed.** If the feed's health cannot be read or is not current, every prediction counts as stale and nothing is sent.
 - **A missing row is not a cancellation.** Only an explicit `CANCELED` or `SKIPPED` row produces the cancellation notice. This follows `src/lib/transit/estimates.ts`.
-- **One reminder per bus per stop.** The dedupe key is `leave:<trip>:<stop>` (cancellation: `cancel:<trip>:<stop>`). The database enforces it with `unique (user_id, dedupe_key)`.
+- **One reminder per bus per stop.** The dedupe key is `leave:<arrival-id>` (cancellation: `cancel:<arrival-id>`). The stable arrival id includes the service instance and stop occurrence, so separate bus runs and repeated stops cannot overwrite or suppress each other. The database enforces it with `unique (user_id, dedupe_key)`.
 - **Clearing does not bring it back.** Clearing deletes the row, which frees the database key, so the app also remembers handled keys on the device until each reminder's expiry.
+- **Recheck before dispatch.** Feed and prediction freshness use the clock after requests finish. Reminders use the latest settings and are suppressed when the watch was removed while a request was pending. Cancellation notices also require fresh, unexpired source evidence.
+- **Watch expiry.** The timer removes watches older than three hours while the page stays open. Stored watches without a stable arrival id are discarded; select the bus again on Home.
 - **Expiry.** A leave-now notification disappears 10 minutes after the predicted arrival (buses run late). A cancellation notice lasts 30 minutes.
 
 ## Where the code is
@@ -43,7 +45,8 @@ Rules that matter:
 | Piece | File |
 |---|---|
 | Table definitions, row security | `supabase/migrations/20261031120000_notifications.sql` (hand-applied, see below) |
-| Database tests (pgTAP) | `supabase/tests/database/notifications.test.sql` |
+| Database security tests (CI) | `tests/notifications/database.test.ts` (real migrations in isolated PostgreSQL) |
+| Additional database tests (pgTAP) | `supabase/tests/database/notifications.test.sql` |
 | Types, converters, settings checks, guest storage | `src/lib/notifications.ts` |
 | Load / add / mark read / clear / save settings | `src/lib/use-notifications.ts` |
 | "Should this bus notify now?" | `src/lib/leave-now.ts` |
@@ -100,12 +103,11 @@ Sources: [MDN Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_AP
 ## Known gaps and setup notes
 
 - **The migration was applied by hand** in the Supabase SQL editor, like `classes`, so it is not in the project's migration history. The Supabase CLI is not installed or linked. Anyone who later runs `supabase db push` must first run `supabase migration repair` for the hand-applied migrations, or it will try to apply them again.
-- **The pgTAP file has never been run.** `supabase test db` needs Docker, and CI does not run it. The browser tests below exercise only the guest path.
-- **The signed-in path has no automated test.** Loading, saving settings (an upsert), inserting, marking read and clearing against the real tables were checked only for types and logic. Confirm them once by hand: sign in, change the lead time, and look at `notification_preferences` and `notifications` in the dashboard.
+- **The pgTAP file has not been run.** `supabase test db` needs Docker. CI instead applies the actual migrations to isolated PostgreSQL and checks owner-only CRUD, preference upserts, per-user deduplication, immutable notification content, constraints, and guest denial through `tests/notifications/database.test.ts`. Browser tests exercise the guest path.
+- **Signed-in browser flows have not been exercised end to end.** Database isolation and preference upserts are tested in CI; authenticated UI loading and saving still need a browser check. Confirm them once by hand: sign in, change the lead time, and look at `notification_preferences` and `notifications` in the dashboard.
 - **Background tabs.** Browsers slow down or freeze timers in tabs that are not visible, especially on phones, so a reminder can arrive late until the student returns to the app. The check also runs as soon as the tab becomes visible.
-- **Home needs the button.** `WatchBusButton` exists but has to be placed in a departure row (`src/components/home-departures.tsx`) before students can start watching a bus.
 
 ## Tests
 
-- `pnpm test:notifications`: unit tests for the decision logic, converters, guest storage and the watched list. Runs in CI.
+- `pnpm test:notifications`: unit and PostgreSQL tests for the decision logic, converters, guest storage, watched list, and account permissions. Runs in CI.
 - `pnpm exec playwright test tests/e2e/notifications.spec.ts`: guest browser tests for the empty center, settings, a close bus, lead time, a far bus, reminders off, an unhealthy feed, a cancelled bus, and a bus with no row. The Playwright config starts its own server on port 3100, so stop `pnpm dev` first.

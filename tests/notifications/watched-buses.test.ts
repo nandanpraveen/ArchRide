@@ -21,7 +21,7 @@ import {
 const NOW = Date.parse("2026-10-30T12:00:00.000Z");
 const iso = (offsetMinutes: number) => new Date(NOW + offsetMinutes * 60_000).toISOString();
 
-const bus = { tripId: "trip-9", stopId: "stop-3", routeName: "Route L", stopName: "Tate Center" };
+const bus = { arrivalId: "run-1|stop-1", tripId: "trip-9", stopId: "stop-3", routeName: "Route L", stopName: "Tate Center" };
 
 // A live prediction for the watched bus, updated just now.
 const row = (overrides: Partial<Arrival> = {}): Arrival => ({
@@ -50,12 +50,20 @@ test("watching a bus adds it once", () => {
   assert.deepEqual(once, [{ ...bus, addedAt: NOW }]);
   assert.equal(addWatched(once, bus, NOW + 1000), once);
   assert.equal(isWatched(once, bus), true);
-  assert.equal(isWatched(once, { tripId: "trip-9", stopId: "other" }), false);
+  assert.equal(isWatched(once, { ...bus, stopId: "other" }), false);
 });
 
 test("the same trip at another stop is a separate watch", () => {
   const list = addWatched(addWatched([], bus, NOW), { ...bus, stopId: "stop-4" }, NOW);
   assert.equal(list.length, 2);
+});
+
+test("different runs and stop occurrences of the same scheduled trip stay separate", () => {
+  const first = addWatched([], bus, NOW);
+  const second = { ...bus, arrivalId: "run-2|stop-1" };
+  const list = addWatched(first, second, NOW);
+  assert.equal(list.length, 2);
+  assert.deepEqual(removeWatched(list, bus).map((entry) => entry.arrivalId), [second.arrivalId]);
 });
 
 test("at the limit the oldest watch makes room for the newest", () => {
@@ -115,6 +123,14 @@ test("when the feed is disconnected a live prediction is stale, so no countdown 
 test("an old prediction is stale", () => {
   const old = row({ update_timestamp: iso(-30), valid_until: iso(3) });
   assert.equal(pickWatchedEstimate([old], NOW)?.state, "stale");
+});
+
+test("cancellation dispatch requires connected, fresh, unexpired source evidence", () => {
+  const cancelled = row({ relationship: "CANCELED" });
+  assert.equal(pickWatchedEstimate([cancelled], NOW, false)?.state, "stale");
+  assert.equal(pickWatchedEstimate([{ ...cancelled, update_timestamp: iso(-30) }], NOW)?.state, "stale");
+  assert.equal(pickWatchedEstimate([{ ...cancelled, valid_until: iso(0) }], NOW)?.state, "stale");
+  assert.equal(pickWatchedEstimate([cancelled], NOW)?.state, "cancelled");
 });
 
 test("a passed bus stops being watched, a live or stale one does not", () => {
