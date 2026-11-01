@@ -9,6 +9,7 @@ import { publicTransitClient, type usePublicTransit } from "@/lib/transit/public
 import { readHomeDepartures } from "@/lib/transit/read";
 import { transitTime } from "@/lib/transit/map-data";
 import { nearestHomeStops, type HomeOrigin } from "./home-journey";
+import { WatchBusButton } from "./watch-bus-button";
 
 type Departures = Awaited<ReturnType<typeof readHomeDepartures>>;
 
@@ -76,6 +77,12 @@ export function HomeDepartures({ origin, transit }: {
                       <Typography>{transit.data?.routes.find((route) => route.id === arrival.route_id)?.long_name || transit.data?.routes.find((route) => route.id === arrival.route_id)?.short_name || "Route unavailable"} · {transitTime(arrival.arrival_at!)}</Typography>
                       <Typography variant="body2" color="text.secondary">{arrival.headsign || "Direction not supplied"}{arrival.direction_id !== null ? ` · direction ${arrival.direction_id}` : ""} · stop occurrence {arrival.stop_sequence}</Typography>
                       <ArrivalStatus arrival={arrival} connected={!transit.data?.errors?.health && arrivalFeedConnected(feed, clock)} />
+                      <WatchBusButton
+                        tripId={arrival.trip_id}
+                        stopId={arrival.stop_id}
+                        routeName={transit.data?.routes.find((route) => route.id === arrival.route_id)?.long_name || transit.data?.routes.find((route) => route.id === arrival.route_id)?.short_name || "Route unavailable"}
+                        stopName={stop.name}
+                      />
                     </Box>)}
                   <Button component={Link} href={`/map?stop=${encodeURIComponent(stop.id)}`} sx={{ alignSelf: "flex-start" }}>View {stop.name} details</Button>
                 </Stack>

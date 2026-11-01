@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import type { ArrivalEstimate } from "../../src/lib/transit/estimates";
 import { determineNotifSignaling, leaveNowReminder, type WatchedBus } from "../../src/lib/leave-now";
-import { DEFAULT_PREFERENCES } from "../../src/lib/notifications";
+import { DEFAULT_PREFERENCES, isInAppLink } from "../../src/lib/notifications";
 
 // A usable bus estimate; each test overrides only what it is about.
 const estimate = (overrides: Partial<ArrivalEstimate> = {}): ArrivalEstimate => ({
@@ -79,7 +79,7 @@ test("creates a leave-now notification that lasts 10 minutes past the predicted 
     type: "leave_now",
     title: "Your bus is 3 minutes away. Leave now if you want to catch it!",
     body: "Route L at Tate Center",
-    link: "/",
+    link: "/map?stop=stop-3",
     dedupeKey: "leave:trip-9:stop-3",
     expiresAt: "2026-10-30T12:15:00.000Z",
   });
@@ -111,13 +111,28 @@ test("a handled reminder for one bus or stop does not block another", () => {
   assert.equal(remind(close, ["leave:trip-9:stop-4"])?.dedupeKey, "leave:trip-9:stop-3");
 });
 
+test("the notification links to the stop's details, encoding the stop id", () => {
+  const colonStop: WatchedBus = { ...watch, stopId: "uga-passio:east" };
+  const reminder = leaveNowReminder(colonStop, estimate({ countdownMinutes: 3 }), DEFAULT_PREFERENCES, new Set(), NOW);
+  assert.equal(reminder?.link, "/map?stop=uga-passio%3Aeast");
+  // The database only accepts in-app paths, so the link must pass the same rule.
+  assert.equal(isInAppLink(reminder?.link), true);
+});
+
+test("a stop id cannot turn the link into an outside address", () => {
+  const sneaky: WatchedBus = { ...watch, stopId: "//evil.example/x?y=" };
+  const reminder = leaveNowReminder(sneaky, estimate({ countdownMinutes: 3 }), DEFAULT_PREFERENCES, new Set(), NOW);
+  assert.equal(reminder?.link, "/map?stop=%2F%2Fevil.example%2Fx%3Fy%3D");
+  assert.equal(isInAppLink(reminder?.link), true);
+});
+
 test("a cancellation notice lasts 30 minutes from now, even with no arrival time", () => {
   const cancelled = estimate({ state: "cancelled", countdownMinutes: null, arrivalAt: null });
   assert.deepEqual(remind(cancelled), {
     type: "leave_now",
     title: "Bus watch cancelled.",
     body: "Route L at Tate Center",
-    link: "/",
+    link: "/map?stop=stop-3",
     dedupeKey: "cancel:trip-9:stop-3",
     expiresAt: "2026-10-30T12:30:00.000Z",
   });

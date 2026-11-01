@@ -21,6 +21,8 @@ import School from "@mui/icons-material/School";
 import BookmarkRounded from "@mui/icons-material/BookmarkRounded";
 import PersonRounded from "@mui/icons-material/PersonRounded";
 import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
+import { NotificationBell } from "./notification-bell";
+import { NotificationsProvider } from "./notifications-provider";
 const destinations = [
   { label: "Home", href: "/", icon: HomeRounded },
   { label: "Map", href: "/map", icon: MapRounded },
@@ -32,7 +34,7 @@ const destinations = [
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <>
+    <NotificationsProvider>
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
@@ -57,6 +59,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             ArchRide
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
+          <NotificationBell />
           <Chip size="small" variant="outlined" label="UGA campus" />
         </Toolbar>
       </AppBar>
@@ -145,6 +148,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </BottomNavigation>
       </Box>
-    </>
+    </NotificationsProvider>
   );
 }

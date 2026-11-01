@@ -171,7 +171,7 @@ const Page = () => {
         <Stack
           direction="row"
           spacing={1}
-          sx={{ alignItems: "center", minWidth: 0 }}
+          sx={{ alignItems: "center", minWidth: 0, height: "100%" }}
         >
           <Typography variant="body2" noWrap>
             {row.buildingName || "Building not set"}

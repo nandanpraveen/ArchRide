@@ -45,7 +45,8 @@ export function leaveNowReminder(
     type: "leave_now",
     title: message,
     body: `${watch.routeName} at ${watch.stopName}`,
-    link: "/",
+    // Opens the stop's details. The id is encoded because stop ids contain a colon.
+    link: `/map?stop=${encodeURIComponent(watch.stopId)}`,
     dedupeKey: key,
     expiresAt: new Date(expiresAtMs).toISOString(),
   };
