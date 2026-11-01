@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
 import {
   DEFAULT_PREFERENCES,
   activeNotifications,
@@ -37,6 +38,7 @@ const EXPIRY_CHECK_MS = 30_000;
 // Signed-in students keep notifications and settings in Supabase (private by row-level
 // security). Guests keep them on this device only, the same split as useClasses.
 export function useNotifications() {
+  const pathname = usePathname();
   const [all, setAll] = useState<NotificationEntry[]>([]);
   const [preferences, setPreferences] =
     useState<NotificationPreferences>(DEFAULT_PREFERENCES);
@@ -47,9 +49,14 @@ export function useNotifications() {
   const [revision, setRevision] = useState(0);
   const [now, setNow] = useState(() => Date.now());
 
+  // The provider survives navigation, including server-side sign-out redirects
+  // that do not emit a browser Auth event.
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      setStatus("loading");
+      setAll([]);
+      setSaveError("");
       const account = await findAccount();
       if (cancelled) return;
       setAccountUnavailable(account.unavailable);
@@ -88,7 +95,24 @@ export function useNotifications() {
     return () => {
       cancelled = true;
     };
-  }, [revision]);
+  }, [pathname, revision]);
+
+  useEffect(() => {
+    try {
+      const { data: { subscription } } = createClient().auth.onAuthStateChange((event) => {
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT") return;
+        // Keep this callback synchronous. The load effect verifies identity
+        // after Supabase releases its session lock.
+        setStatus("loading");
+        setAll([]);
+        setSaveError("");
+        setRevision((value) => value + 1);
+      });
+      return () => subscription.unsubscribe();
+    } catch {
+      // Public guest browsing also works without Supabase configuration.
+    }
+  }, []);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), EXPIRY_CHECK_MS);
