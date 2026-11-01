@@ -1,6 +1,6 @@
 # Week 3: leave-now reminders and notification center
 
-Status: built, in-app only. Written 2026-10-31.
+Status: built, in-app only. Updated 2026-11-01.
 
 ## What students get
 
@@ -44,7 +44,7 @@ Rules that matter:
 
 | Piece | File |
 |---|---|
-| Table definitions, row security | `supabase/migrations/20261031120000_notifications.sql` (hand-applied, see below) |
+| Table definitions, row security | `supabase/migrations/20261031120000_notifications.sql` (recorded in hosted history) |
 | Database security tests (CI) | `tests/notifications/database.test.ts` (real migrations in isolated PostgreSQL) |
 | Additional database tests (pgTAP) | `supabase/tests/database/notifications.test.sql` |
 | Types, converters, settings checks, guest storage | `src/lib/notifications.ts` |
@@ -100,14 +100,21 @@ Sources: [MDN Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_AP
 - **Walking-time estimates.** The lead time is a fixed number the student chooses. The planner's numbers are placeholders and must not feed leave times.
 - **Deleting an account's notification data beyond the cascade.** Deleting the auth user deletes both tables' rows (`on delete cascade`). There is no separate export or purge.
 
-## Known gaps and setup notes
+## Hosted verification — November 1, 2026
 
-- **The migration was applied by hand** in the Supabase SQL editor, like `classes`, so it is not in the project's migration history. The Supabase CLI is not installed or linked. Anyone who later runs `supabase db push` must first run `supabase migration repair` for the hand-applied migrations, or it will try to apply them again.
-- **The pgTAP file has not been run.** `supabase test db` needs Docker. CI instead applies the actual migrations to isolated PostgreSQL and checks owner-only CRUD, preference upserts, per-user deduplication, immutable notification content, constraints, and guest denial through `tests/notifications/database.test.ts`. Browser tests exercise the guest path.
-- **Signed-in browser flows have not been exercised end to end.** Database isolation and preference upserts are tested in CI; authenticated UI loading and saving still need a browser check. Confirm them once by hand: sign in, change the lead time, and look at `notification_preferences` and `notifications` in the dashboard.
-- **Background tabs.** Browsers slow down or freeze timers in tabs that are not visible, especially on phones, so a reminder can arrive late until the student returns to the app. The check also runs as soon as the tab becomes visible.
+The previously hand-applied `classes` (`20261030120000`) and `notifications` (`20261031120000`) migrations are now recorded in the hosted project's migration history. All 10 repository versions match the recorded history, with no pending or untracked versions. Do not reapply these migrations.
+
+Before recording them, 227 schema and security checks matched an isolated database built from the repository migrations: columns, constraints, indexes, triggers, function definitions, policies, grants, and RLS. Reconciliation changed migration metadata only; application schema and user data were unchanged.
+
+Both checked-in pgTAP suites were also run against the hosted database: **9 class checks and 17 notification checks passed**. Each suite ran in a transaction that was rolled back, including its test users and temporary pgTAP extension. No test data or extension remained afterward.
+
+Authenticated browser tests use the existing local Auth protocol fixture and stateful private REST fixtures. They exercise account loading, mark-read and clear persistence, preference upserts/reloads, and account reminder insertion/deduplication without a client-supplied owner. Hosted ownership enforcement is verified separately by the real database tests above; browser tests send no email and do not modify production accounts.
+
+## Runtime limits
+
+Browsers slow down or freeze timers in background tabs, especially on phones, so a reminder can arrive late until the student returns to the app. The check also runs as soon as the tab becomes visible. In-app delivery remains the intended scope.
 
 ## Tests
 
 - `pnpm test:notifications`: unit and PostgreSQL tests for the decision logic, converters, guest storage, watched list, and account permissions. Runs in CI.
-- `pnpm exec playwright test tests/e2e/notifications.spec.ts`: guest browser tests for the empty center, settings, a close bus, lead time, a far bus, reminders off, an unhealthy feed, a cancelled bus, and a bus with no row. The Playwright config starts its own server on port 3100, so stop `pnpm dev` first.
+- `pnpm exec playwright test tests/e2e/notifications*.spec.ts`: guest and authenticated account browser tests. Guest coverage includes for the empty center, settings, a close bus, lead time, a far bus, reminders off, an unhealthy feed, a cancelled bus, and a bus with no row. The Playwright config starts its own server on port 3100, so stop `pnpm dev` first.

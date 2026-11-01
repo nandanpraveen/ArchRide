@@ -33,6 +33,12 @@ supabase db advisors --linked --type all
 
 Never modify an already-applied migration to change a hosted schema. Add a migration. Enable RLS on exposed tables, explicitly grant only intended operations, and test private ownership across two users when implementing personal features. New jobs use server-only secrets; clients use publishable keys.
 
+### Hosted migration reconciliation — November 1, 2026
+
+All 10 checked-in migrations are recorded in ArchRide's hosted history. The previously hand-applied `20261030120000_classes` and `20261031120000_notifications` entries were reconciled after 227 schema/security comparisons matched an isolated database built from the repository. Only history metadata changed. There are no pending or untracked versions as of this verification; do not reapply either migration.
+
+The hosted class and notification pgTAP suites passed all 26 permission checks using verified TLS. Test transactions, users, and the temporary pgTAP extension were rolled back. See [notification verification](week-3-leave-now-notifications.md#hosted-verification--november-1-2026) for coverage and browser fixture boundaries.
+
 ## Runtime boundaries
 
 - `src/app/` owns Next.js routes. The five public starter pages are working navigation and honest empty states.
