@@ -95,6 +95,13 @@ test("signed-in reminder settings upsert to the account and survive reload", asy
   await page.reload();
   await expect(lead).toHaveText("10 minutes");
   await expect(page.getByLabel("Remind me when a watched bus is close")).not.toBeChecked();
+  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await expect(page).toHaveURL(/\/sign-in$/);
+  await page.getByRole("link", { name: "Continue as guest", exact: true }).click();
+  await page.getByRole("link", { name: "Profile", exact: true }).click();
+  await expect(page.getByLabel("Remind me when a watched bus is close")).toBeChecked();
+  await expect(lead).toHaveText("5 minutes");
+  expect(store.writes).toHaveLength(2);
 });
 
 test("a signed-in watched bus saves one account reminder without a client-supplied owner", async ({ page }) => {

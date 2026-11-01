@@ -36,6 +36,7 @@ Rules that matter:
 - **A missing row is not a cancellation.** Only an explicit `CANCELED` or `SKIPPED` row produces the cancellation notice. This follows `src/lib/transit/estimates.ts`.
 - **One reminder per bus per stop.** The dedupe key is `leave:<arrival-id>` (cancellation: `cancel:<arrival-id>`). The stable arrival id includes the service instance and stop occurrence, so separate bus runs and repeated stops cannot overwrite or suppress each other. The database enforces it with `unique (user_id, dedupe_key)`.
 - **Clearing does not bring it back.** Clearing deletes the row, which frees the database key, so the app also remembers handled keys on the device until each reminder's expiry.
+- **Account transitions.** The shared notification provider reloads after sign-in/sign-out and navigation, so settings switch between account and device storage without a manual refresh. Old account notifications are cleared while identity is rechecked.
 - **Recheck before dispatch.** Feed and prediction freshness use the clock after requests finish. Reminders use the latest settings and are suppressed when the watch was removed while a request was pending. Cancellation notices also require fresh, unexpired source evidence.
 - **Watch expiry.** The timer removes watches older than three hours while the page stays open. Stored watches without a stable arrival id are discarded; select the bus again on Home.
 - **Expiry.** A leave-now notification disappears 10 minutes after the predicted arrival (buses run late). A cancellation notice lasts 30 minutes.
