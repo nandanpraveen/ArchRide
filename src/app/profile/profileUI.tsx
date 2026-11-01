@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { Alert, Button, Stack, TextField, Typography } from "@mui/material";
+import { NotificationSettings } from "@/components/notification-settings";
 import { signOut } from "./actions";
 
 function SignOutButton() {
@@ -88,6 +89,7 @@ export default function ProfileUI({
           </Button>
         </>
       )}
+      <NotificationSettings />
       <Typography variant="body2" color="text.secondary">
         Location sharing is optional. GPS coordinates stay in Home page memory;
         ArchRide does not store a continuous location trail.

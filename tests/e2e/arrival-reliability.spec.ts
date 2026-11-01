@@ -53,6 +53,8 @@ test("stop details lose countdown after source expiry without a network refresh"
 test("repeated campus hour requires a choice and invalid buffer retains input and focus", async ({
   page,
 }) => {
+  // Keep the repeated hour in the future regardless of the day CI runs.
+  await page.clock.setFixedTime(new Date("2026-10-31T12:00:00Z"));
   await mockTransit(page);
   await page.goto("/plan");
   await page.getByLabel("Campus arrival deadline").fill("2026-11-01T01:30");
