@@ -59,6 +59,80 @@ export type Database = {
         };
         Relationships: [];
       };
+
+      notification_preferences: {
+        Row: {
+          alerts_enabled: boolean;
+          bus_lead_minutes: number;
+          class_reminders_enabled: boolean;
+          created_at: string;
+          leave_now_enabled: boolean;
+          trip_updates_enabled: boolean;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          alerts_enabled?: boolean;
+          bus_lead_minutes?: number;
+          class_reminders_enabled?: boolean;
+          created_at?: string;
+          leave_now_enabled?: boolean;
+          trip_updates_enabled?: boolean;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Update: {
+          alerts_enabled?: boolean;
+          bus_lead_minutes?: number;
+          class_reminders_enabled?: boolean;
+          created_at?: string;
+          leave_now_enabled?: boolean;
+          trip_updates_enabled?: boolean;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      notifications: {
+        Row: {
+          body: string;
+          created_at: string;
+          dedupe_key: string;
+          expires_at: string;
+          id: string;
+          link: string;
+          read_at: string | null;
+          title: string;
+          type: string;
+          user_id: string;
+        };
+        Insert: {
+          body?: string;
+          created_at?: string;
+          dedupe_key: string;
+          expires_at: string;
+          id?: string;
+          link?: string;
+          read_at?: string | null;
+          title: string;
+          type: string;
+          user_id?: string;
+        };
+        Update: {
+          body?: string;
+          created_at?: string;
+          dedupe_key?: string;
+          expires_at?: string;
+          id?: string;
+          link?: string;
+          read_at?: string | null;
+          title?: string;
+          type?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+
       feed_status: {
         Row: {
           entity_count: number;

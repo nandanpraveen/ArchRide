@@ -19,7 +19,7 @@ const DEVICE_SAVE_FAILED = "This browser could not save your schedule on this de
 
 // Signed-in students sync through Supabase (private by row-level security). Guests and
 // anyone whose account service is unreachable keep a schedule on this device only.
-async function findAccount(): Promise<{ signedIn: boolean; unavailable: boolean }> {
+export async function findAccount(): Promise<{ signedIn: boolean; unavailable: boolean }> {
   try {
     const { data, error } = await createClient().auth.getUser();
     if (data.user) return { signedIn: true, unavailable: false };
