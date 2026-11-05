@@ -4,26 +4,41 @@ import { assertStudentNavigation, noHorizontalOverflow, readyForLayout, snapshot
 const root = "/archride/";
 const destinations = ["", "map/", "plan/", "saved/", "profile/", "classes/", "notifications/", "privacy/"];
 
-test("static direct URLs load assets under /archride and primary navigation preserves Back", async ({ page }) => {
-  await syntheticExportData(page);
-  const errors: string[] = [], failedAssets: string[] = [];
-  page.on("pageerror", error => errors.push(error.message));
-  page.on("response", response => { if (response.url().includes("/_next/") && response.status() >= 400) failedAssets.push(`${response.status()} ${response.url()}`); });
+test("static direct URLs load assets under /archride and primary navigation preserves Back", async ({ page, context }) => {
+  const failedAssets: string[] = [];
+  const assetResponse = (response: import("@playwright/test").Response) => {
+    if (response.url().includes("/_next/") && response.status() >= 400) failedAssets.push(`${response.status()} ${response.url()}`);
+  };
+  // Separate documents keep WebKit's expected unload cancellations out of the next page's startup checks.
   for (const destination of destinations) {
-    const response = await page.goto(root + destination);
+    const direct = await context.newPage();
+    await syntheticExportData(direct);
+    const errors: string[] = [];
+    const recordError = (error: Error) => errors.push(error.message);
+    direct.on("pageerror", recordError);
+    direct.on("response", assetResponse);
+    const response = await direct.goto(root + destination);
     expect(response?.status(), destination || "Home").toBe(200);
-    await expect(page.locator("main")).toBeVisible();
-    await expect(page.locator("main h1")).toHaveCount(1);
-    await readyForLayout(page, destination);
-    await assertStudentNavigation(page);
+    await expect(direct.locator("main h1")).toHaveCount(1);
+    await readyForLayout(direct, destination);
+    await noHorizontalOverflow(direct);
+    await assertStudentNavigation(direct);
+    expect(errors, destination || "Home").toEqual([]);
+    direct.off("pageerror", recordError);
+    await direct.close();
   }
+  await syntheticExportData(page);
+  page.on("response", assetResponse);
   await page.goto(root);
+  await readyForLayout(page, "");
   await page.getByRole("navigation", { name: "Primary navigation", exact: true }).getByRole("link", { name: "Map", exact: true }).filter({ visible: true }).click();
   await expect(page).toHaveURL(/\/archride\/map\/?$/);
+  await expect(page.locator("main h1")).toHaveText("Campus map");
+  await readyForLayout(page, "map/");
   await page.goBack();
   await expect(page).toHaveURL(/\/archride\/$/);
+  await readyForLayout(page, "");
   expect(failedAssets).toEqual([]);
-  expect(errors).toEqual([]);
 });
 
 test("removed student account routes provide 404 or a useful account-free destination", async ({ page }) => {

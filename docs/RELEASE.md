@@ -43,7 +43,11 @@ The November 5 release uses a simpler header, open trip form, compact rows, disc
 - [Hosted health](evidence/release-health.json) and [overnight operations](evidence/release-operations-status.json): all four feeds current, all 12 cron jobs active, cleanup jobs successful, database 115.3 MB (23.05% of Free quota).
 - [Ponytail Audit and applied cleanup](evidence/ponytail-audit.md); [original council review and peer reviews](evidence/council-review.md).
 
-Deployment details are recorded in `evidence/deployment.json` after the Pages build and live checks complete.
+[ArchRide is deployed](https://nandanpraveen.github.io/archride/). All 34 production-path checks also passed against the live HTTPS site. [Deployment evidence](evidence/deployment.json) records the code and site commits, preserved portfolio/resume hashes, live checks and release tag. [An isolated rollback drill](evidence/frontend-rollback.json) restored all 102 prior artifact files without changing production.
+
+[Lighthouse lab measurements](evidence/performance.json) scored mobile performance 99 and desktop performance 98, with accessibility, best practices and SEO at 100 in both runs. These are lab snapshots, not physical-device or real-user guarantees.
+
+Project review still covers the same 14 items. Twelve are Done under the current guest-only scope. The ship-gate item remains In Progress for its explicit physical-device/student acceptance criteria; adaptive prediction remains In Progress until its real-data promotion criteria are met. No accuracy or hardware acceptance result is inferred from fixtures or desktop emulation.
 
 Evidence already available:
 

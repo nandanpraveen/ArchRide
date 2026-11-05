@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-05T14:22:11.041Z",
+  "checkedAt": "2026-11-05T19:30:15.017Z",
   "endpoint": "health",
   "method": "GET",
   "httpStatus": 200,
@@ -18,28 +18,26 @@
         "entityCount": 4878
       },
       {
-        "id": "uga-passio:alerts",
-        "freshness": "current",
-        "sourceTimestamp": "2026-11-05T14:21:42.000Z",
-        "lastSuccessAt": "2026-11-05T14:21:42.914Z",
-        "entityCount": 1
-      },
-      {
         "id": "uga-passio:arrivals",
         "freshness": "current",
-        "sourceTimestamp": "2026-11-05T14:21:52.000Z",
-        "lastSuccessAt": "2026-11-05T14:21:52.933Z",
-        "entityCount": 443
+        "sourceTimestamp": "2026-11-05T19:29:55.000Z",
+        "lastSuccessAt": "2026-11-05T19:29:55.431Z",
+        "entityCount": 421
+      },
+      {
+        "id": "uga-passio:alerts",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-05T19:29:55.000Z",
+        "lastSuccessAt": "2026-11-05T19:29:55.679Z",
+        "entityCount": 1
       },
       {
         "id": "uga-passio:vehicles",
         "freshness": "current",
-        "sourceTimestamp": "2026-11-05T14:22:08.000Z",
-        "lastSuccessAt": "2026-11-05T14:22:09.030Z",
-        "entityCount": 32
+        "sourceTimestamp": "2026-11-05T19:30:14.000Z",
+        "lastSuccessAt": "2026-11-05T19:30:14.550Z",
+        "entityCount": 29
       }
     ]
-  },
-  "manualProviderRequests": 0,
-  "note": "Read-only public health endpoint. Feed timestamps are ordinary scheduled ingestion observations. No new provider polling was performed for this check."
+  }
 }

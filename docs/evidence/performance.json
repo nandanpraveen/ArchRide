@@ -1,0 +1,69 @@
+{
+  "scope": "Lighthouse lab measurements of the production artifact on localhost; simulated conditions, not physical-device or field performance",
+  "sourceCodeCommit": "9bdf9e65e7abb78b6e5c8ae9feb5eb94dbb59539",
+  "lighthouseVersion": "13.6.0",
+  "measurements": {
+    "mobile": {
+      "measuredAt": "2026-11-05T19:49:40.797Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 1352.1801,
+          "unit": "millisecond",
+          "display": "1.4\u00a0s"
+        },
+        "largest-contentful-paint": {
+          "value": 1352.1801,
+          "unit": "millisecond",
+          "display": "1.4\u00a0s"
+        },
+        "total-blocking-time": {
+          "value": 63,
+          "unit": "millisecond",
+          "display": "60\u00a0ms"
+        },
+        "cumulative-layout-shift": {
+          "value": 0.05088768724014418,
+          "unit": "unitless",
+          "display": "0.051"
+        }
+      }
+    },
+    "desktop": {
+      "measuredAt": "2026-11-05T19:49:51.372Z",
+      "scores": {
+        "performance": 98,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 322.00569999999993,
+          "unit": "millisecond",
+          "display": "0.3\u00a0s"
+        },
+        "largest-contentful-paint": {
+          "value": 322.00569999999993,
+          "unit": "millisecond",
+          "display": "0.3\u00a0s"
+        },
+        "total-blocking-time": {
+          "value": 30.5,
+          "unit": "millisecond",
+          "display": "30\u00a0ms"
+        },
+        "cumulative-layout-shift": {
+          "value": 0.05879310367597701,
+          "unit": "unitless",
+          "display": "0.059"
+        }
+      }
+    }
+  }
+}

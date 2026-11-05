@@ -1,5 +1,7 @@
 # ArchRide
 
+[Open ArchRide](https://nandanpraveen.github.io/archride/)
+
 A student-built UGA campus travel app for desktop and mobile browsers. Compare verified walking paths with reachable direct bus journeys, find boarding stops and campus parking, and plan around classes.
 
 **No account is required.** Saved journeys, classes, preferences, active trips, and reminders stay in the current browser. They do not sync across devices. Backend request limits protect shared services without student accounts.
@@ -8,7 +10,7 @@ A student-built UGA campus travel app for desktop and mobile browsers. Compare v
 
 ## Run locally
 
-Use Node.js 24 and pnpm 12.5.1.
+Use Node.js 24 and pnpm 12.5.1. Python 3 serves static files during browser tests.
 
 ```sh
 pnpm install --frozen-lockfile
