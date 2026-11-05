@@ -8,6 +8,9 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -18,11 +21,16 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm transit:edge:build
-      - run: git diff --exit-code -- supabase/functions/transit-ingest/core.js
+      - run: git diff --exit-code -- supabase/functions/transit-ingest/core.js supabase/functions/predictor-update/core.js supabase/functions/predictor-update/dataset.js
       - run: pnpm test:transit
       - run: pnpm test:classes
       - run: pnpm test:notifications
+      - run: pnpm test:planner
+      - run: pnpm test:personal
+      - run: pnpm test:parking
       - run: pnpm typecheck
-      - run: pnpm build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test
+      - run: pnpm build:pages
+      - run: pnpm exec playwright install --with-deps webkit
+      - run: pnpm exec playwright test --config playwright.export.config.ts --grep-invert "real public catalog"

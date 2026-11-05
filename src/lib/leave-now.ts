@@ -11,6 +11,11 @@ export type WatchedBus = {
   stopId: string; // which stop they're waiting at
   routeName: string; // for example "Route L"
   stopName: string; // for example "Tate Center"
+  walkSeconds?: number;
+  safetySeconds?: number;
+  planLink?: string;
+  activeTrip?: boolean;
+  instanceKey?: string;
 };
 
 const minuteInMs = 60_000;
@@ -28,7 +33,43 @@ export function leaveNowReminder(
   now = Date.now(),
 ): NewNotification | null {
   if (!preferences.leaveNowEnabled) return null;
-  const message = determineNotifSignaling(estimate, preferences.busLeadMinutes);
+  const walking = watch.walkSeconds;
+  const safety = watch.safetySeconds ?? 0;
+  const hasWalk =
+    Number.isFinite(walking) &&
+    walking! >= 0 &&
+    walking! <= 7200 &&
+    Number.isFinite(safety) &&
+    safety >= 0 &&
+    safety <= 1800;
+  const remaining = estimate?.arrivalAt
+    ? (Date.parse(estimate.arrivalAt) - now) / 1000
+    : NaN;
+  if (hasWalk && estimate?.state === "valid" && remaining < walking! + safety) {
+    if (
+      !preferences.tripUpdatesEnabled ||
+      handledKeys.has(`unreachable:${watch.arrivalId}`)
+    )
+      return null;
+    return {
+      type: "trip",
+      title: "Recheck your trip",
+      body: "This bus may arrive before you can reach its stop. Compare another bus or walking.",
+      link: watch.planLink?.startsWith("/plan?")
+        ? watch.planLink
+        : `/map?stop=${encodeURIComponent(watch.stopId)}`,
+      dedupeKey: `unreachable:${watch.arrivalId}`,
+      expiresAt: new Date(
+        Math.max(now + 1000, Date.parse(estimate.arrivalAt!)),
+      ).toISOString(),
+    };
+  }
+  const message =
+    hasWalk && estimate?.state === "valid"
+      ? remaining <= walking! + safety + 60
+        ? "Time to leave for your bus"
+        : null
+      : determineNotifSignaling(estimate, preferences.busLeadMinutes);
   if (message === null || estimate === null) return null;
   // A cancellation gets its own key, so it can still arrive after a leave-now prompt.
   const cancelled = estimate.state === "cancelled";
@@ -40,7 +81,8 @@ export function leaveNowReminder(
   let expiresAtMs = now + CANCELLED_NOTICE_MINUTES * minuteInMs;
   if (!cancelled) {
     if (estimate.arrivalAt === null) return null;
-    expiresAtMs = Date.parse(estimate.arrivalAt) + LATE_BUS_GRACE_MINUTES * minuteInMs;
+    expiresAtMs =
+      Date.parse(estimate.arrivalAt) + LATE_BUS_GRACE_MINUTES * minuteInMs;
   }
 
   return {
@@ -48,7 +90,9 @@ export function leaveNowReminder(
     title: message,
     body: `${watch.routeName} at ${watch.stopName}`,
     // Opens the stop's details. The id is encoded because stop ids contain a colon.
-    link: `/map?stop=${encodeURIComponent(watch.stopId)}`,
+    link: watch.planLink?.startsWith("/plan?")
+      ? watch.planLink
+      : `/map?stop=${encodeURIComponent(watch.stopId)}`,
     dedupeKey: key,
     expiresAt: new Date(expiresAtMs).toISOString(),
   };
@@ -68,7 +112,7 @@ export function determineNotifSignaling(
           "Your bus is " +
           minutesAway +
           (minutesAway === 1 ? " minute" : " minutes") +
-          " away. Leave now if you want to catch it!"
+          " away."
         );
 
       case "cancelled":

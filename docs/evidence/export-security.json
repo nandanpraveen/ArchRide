@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-11-05T19:27:33.036096+00:00",
+  "sourceTextFiles": 283,
+  "exportTextFiles": 100,
+  "historyTextBlobsPreviouslyChecked": 609,
+  "checks": [
+    "literal secret keys",
+    "JWTs carrying service_role"
+  ],
+  "findings": []
+}

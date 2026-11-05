@@ -11,20 +11,15 @@ export default defineConfig({
     { name: "desktop", use: { ...devices["Desktop Chrome"] } },
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
-  webServer: [{
-    command: "node tests/fixtures/auth-server.mjs",
-    url: "http://127.0.0.1:3101/__ready",
-    reuseExistingServer: false,
-    timeout: 10000,
-  }, {
-    command: "pnpm dev --hostname 127.0.0.1 --port 3100",
+  webServer: {
+    command: "pnpm build && python3 scripts/serve-export.py --port 3100 --base-path /",
     url: "http://127.0.0.1:3100",
-    // Local Auth also serves server-side session/callback requests; transit stays intercepted.
     reuseExistingServer: false,
     env: {
+      NEXT_PUBLIC_BASE_PATH: "",
       NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:3101",
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "sb_publishable_archride_test",
     },
     timeout: 120000,
-  }],
+  },
 });

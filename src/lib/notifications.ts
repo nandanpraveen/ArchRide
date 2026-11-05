@@ -1,4 +1,3 @@
-import type { Database } from "@/lib/supabase/database.types";
 
 export type NotificationType = "leave_now" | "class" | "alert" | "trip";
 
@@ -59,30 +58,11 @@ export const isValidBusLeadMinutes = (value: unknown) =>
 export const isInAppLink = (value: unknown) =>
   typeof value === "string" && /^\/([^/\\]|$)/.test(value);
 
-// This function's only goal is to hand out a complaint if the data isn't valid
-export function validatePreferences(
-  preferences: NotificationPreferences,
-): string | null {
-  const LEAD_TIME = preferences.busLeadMinutes;
-  const ERROR_MESSAGES = [
-    "Choose a whole number of minutes from " +
-      MIN_BUS_LEAD_MINUTES +
-      " to " +
-      MAX_BUS_LEAD_MINUTES +
-      ".",
-
-    "Please enter a whole number of minutes",
-  ];
-  if (LEAD_TIME >= MIN_BUS_LEAD_MINUTES && LEAD_TIME <= MAX_BUS_LEAD_MINUTES) {
-    //Has remainder means this is decimal number
-    if (isValidBusLeadMinutes(LEAD_TIME)) {
-      return null;
-    } else {
-      return ERROR_MESSAGES[1];
-    }
-  } else {
-    return ERROR_MESSAGES[0];
-  }
+export function validatePreferences(preferences: NotificationPreferences): string | null {
+  const minutes = preferences.busLeadMinutes;
+  if (!Number.isFinite(minutes) || minutes < MIN_BUS_LEAD_MINUTES || minutes > MAX_BUS_LEAD_MINUTES)
+    return `Choose a whole number of minutes from ${MIN_BUS_LEAD_MINUTES} to ${MAX_BUS_LEAD_MINUTES}.`;
+  return Number.isInteger(minutes) ? null : "Please enter a whole number of minutes";
 }
 
 /** Notifications still worth showing, newest first. Expired ones are hidden, not deleted. */
@@ -95,73 +75,7 @@ export function activeNotifications(
     .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 }
 
-type NotificationRow = Database["public"]["Tables"]["notifications"]["Row"];
-type NotificationInsert =
-  Database["public"]["Tables"]["notifications"]["Insert"];
-type PreferencesRow =
-  Database["public"]["Tables"]["notification_preferences"]["Row"];
-type PreferencesInsert =
-  Database["public"]["Tables"]["notification_preferences"]["Insert"];
-
-/** Returns null for a row whose type this version of the app does not know. */
-export function notificationFromRow(
-  row: NotificationRow,
-): NotificationEntry | null {
-  if (!isNotificationType(row.type)) return null;
-  return {
-    id: row.id,
-    type: row.type,
-    title: row.title,
-    body: row.body,
-    link: row.link,
-    dedupeKey: row.dedupe_key,
-    createdAt: row.created_at,
-    expiresAt: row.expires_at,
-    readAt: row.read_at,
-  };
-}
-
-// No user_id: the database fills it in from the signed-in account, so it cannot be spoofed.
-export function rowFromNotification(
-  notification: NewNotification,
-): NotificationInsert {
-  return {
-    type: notification.type,
-    title: notification.title,
-    body: notification.body,
-    link: notification.link,
-    dedupe_key: notification.dedupeKey,
-    expires_at: notification.expiresAt,
-  };
-}
-
-/** A student with no saved row yet gets the defaults. */
-export function preferencesFromRow(
-  row: PreferencesRow | null,
-): NotificationPreferences {
-  if (!row) return { ...DEFAULT_PREFERENCES };
-  return {
-    leaveNowEnabled: row.leave_now_enabled,
-    classRemindersEnabled: row.class_reminders_enabled,
-    alertsEnabled: row.alerts_enabled,
-    tripUpdatesEnabled: row.trip_updates_enabled,
-    busLeadMinutes: row.bus_lead_minutes,
-  };
-}
-
-export function rowFromPreferences(
-  preferences: NotificationPreferences,
-): PreferencesInsert {
-  return {
-    leave_now_enabled: preferences.leaveNowEnabled,
-    class_reminders_enabled: preferences.classRemindersEnabled,
-    alerts_enabled: preferences.alertsEnabled,
-    trip_updates_enabled: preferences.tripUpdatesEnabled,
-    bus_lead_minutes: preferences.busLeadMinutes,
-  };
-}
-
-// Guests keep notifications and settings on this device only; they never reach Supabase.
+// Notifications and preferences stay in this browser and are never uploaded.
 const DEVICE_NOTIFICATIONS_KEY = "archride.notifications.v1";
 const DEVICE_PREFERENCES_KEY = "archride.notification-preferences.v1";
 
@@ -170,7 +84,7 @@ const isText = (value: unknown, max: number, min = 0) =>
 const isTime = (value: unknown) =>
   typeof value === "string" && Number.isFinite(Date.parse(value));
 
-// The same rules the database enforces, for guest notifications that never reach it.
+// Validate stored browser data before rendering or using it.
 export function isNotificationEntry(item: unknown): item is NotificationEntry {
   if (!item || typeof item !== "object") return false;
   const entry = item as NotificationEntry;

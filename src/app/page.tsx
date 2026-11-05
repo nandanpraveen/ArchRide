@@ -1,59 +1,126 @@
 "use client";
-
 import Link from "next/link";
 import { useState } from "react";
-import { Alert, Box, Button, Link as MuiLink, Stack, Typography } from "@mui/material";
-import ArrowForwardRounded from "@mui/icons-material/ArrowForwardRounded";
-import { PlaceSearch } from "@/components/place-search";
-import { LocationCard } from "@/components/location-card";
-import { HomeStatus } from "@/components/home-status";
+import { Box, Button, Stack, Typography, useMediaQuery } from "@mui/material";
+import { JourneyForm } from "@/components/journey-form";
+import { CampusOverview } from "@/components/campus-overview";
 import { HomeDepartures } from "@/components/home-departures";
-import { NextClassCard } from "@/components/next-class-card";
+import { HomeStatus, HomeAlerts } from "@/components/home-status";
 import { HomeFavorites } from "@/components/home-favorites";
-import { homePlaceHref, homePlanHref, type HomeOrigin } from "@/components/home-journey";
-import type { Place } from "@/lib/campus-data";
+import { NextClassCard } from "@/components/next-class-card";
+import { usePersonal } from "@/components/personal-provider";
+import { type HomeOrigin } from "@/components/home-journey";
 import { usePublicTransit } from "@/lib/transit/public-data";
-
-const shortcuts = [
-  { href: "/map", label: "Explore the campus map" },
-  { href: "/saved", label: "Open your saved journeys" },
-  { href: "/profile", label: "Manage travel preferences" },
-];
-
+import { planRefHref } from "@/lib/personal";
+import { ManualNotices } from "@/components/manual-notices";
 export default function HomePage() {
-  const transit = usePublicTransit();
+  const transit = usePublicTransit(),
+    personal = usePersonal();
   const [origin, setOrigin] = useState<HomeOrigin | null>(null);
-  const [destination, setDestination] = useState<Place | null>(null);
-
-  return <Stack spacing={4}>
-    <Box>
-      <Typography component="h1" variant="h1" sx={{ maxWidth: "18ch", mb: 2 }}>Where are you headed?</Typography>
-      <Typography color="text.secondary" sx={{ maxWidth: "55ch" }}>Find your way across campus, with the bus and the walk in one place.</Typography>
-    </Box>
-    <Box component="section" aria-label="Choose a destination">
-      <PlaceSearch onSelect={setDestination} />
-      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>Campus buildings and doors: <MuiLink href="https://www.architects.uga.edu/maps" target="_blank" rel="noopener noreferrer">UGA Office of University Architects ↗</MuiLink>. A mapped door does not establish an accessible walking route.</Typography>
-      {destination && <Stack spacing={1} sx={{ mt: 2 }}>
-        <Typography role="status" sx={{ overflowWrap: "anywhere" }}>Destination: {destination.name}</Typography>
-        <Button component={Link} href={homePlaceHref(destination)} sx={{ alignSelf: "flex-start" }}>View destination details</Button>
-      </Stack>}
-    </Box>
-    <LocationCard origin={origin} onOrigin={setOrigin} />
-    <HomeDepartures origin={origin} transit={transit} />
-    <HomeFavorites />
-    <NextClassCard origin={origin} />
-    <Box component="section" aria-label="Next trip">
-      <Typography component="h2" variant="h2" sx={{ mb: 1 }}>Your next trip</Typography>
-      <Typography color="text.secondary">{origin && destination ? "Your starting point and destination are selected. " : "Choose a starting point and destination. "}Trip recommendations need a connected walking and journey-planning service; available departures alone do not establish that you can catch a bus.</Typography>
-      {origin && destination && <Alert severity="info" sx={{ mt: 2 }}>No journey recommendation is available yet. You can review the selected places in Plan.</Alert>}
-      <Button component={Link} href={homePlanHref(origin, destination)} variant="contained" sx={{ mt: 2 }}>Review trip in Plan</Button>
-    </Box>
-    <HomeStatus transit={transit} />
-    <Box component="section">
-      <Typography component="h2" variant="h2" sx={{ mb: 2 }}>Your campus, at a glance</Typography>
-      <Stack divider={<Box sx={{ borderBottom: 1, borderColor: "divider" }} />}>
-        {shortcuts.map(({ href, label }) => <Button key={href} component={Link} href={href} endIcon={<ArrowForwardRounded />} sx={{ justifyContent: "space-between", px: 0, py: 2, borderRadius: 0 }}>{label}</Button>)}
-      </Stack>
-    </Box>
-  </Stack>;
+  const desktop = useMediaQuery("(min-width: 900px)");
+  return (
+    <Stack spacing={{ xs: 3, md: 3.5 }}>
+      <Box>
+        <Typography component="h1" variant="h1">
+          Where are you headed?
+        </Typography>
+      </Box>
+      {personal.active && (
+        <Box sx={{ py: 2, borderBottom: 1, borderColor: "divider" }}>
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            sx={{
+              alignItems: { sm: "center" },
+              justifyContent: "space-between",
+            }}
+          >
+            <Box>
+              <Typography sx={{ fontWeight: 700 }}>Trip in progress</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {personal.active.destination.name}
+              </Typography>
+            </Box>
+            <Button
+              component={Link}
+              href={
+                planRefHref(
+                  personal.active.origin,
+                  personal.active.destination,
+                ) + "&resume=1"
+              }
+              variant="contained"
+            >
+              Resume trip
+            </Button>
+          </Stack>
+        </Box>
+      )}
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "minmax(0,1fr)",
+            md: "minmax(300px,.8fr) minmax(0,1.5fr)",
+          },
+          gap: { xs: 3, md: 5 },
+          alignItems: "stretch",
+        }}
+      >
+        <Box sx={{ py: { md: 1 }, minWidth: 0 }}>
+          <JourneyForm
+            initialFrom={personal.prefs.defaultOrigin}
+            onOrigin={setOrigin}
+          />
+        </Box>
+        {desktop && (
+          <Box
+            sx={{
+              minHeight: { xs: 280, md: 380 },
+              height: { xs: "auto", md: "100%" },
+            }}
+          >
+            <CampusOverview data={transit.data} />
+          </Box>
+        )}
+      </Box>
+      <HomeAlerts transit={transit} />
+      <ManualNotices />
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "minmax(0,1fr)",
+            md: "minmax(0,1fr) minmax(0,1fr)",
+          },
+          gap: { xs: 3, md: 5 },
+          borderTop: 1,
+          borderColor: "divider",
+          pt: 3,
+        }}
+      >
+        <NextClassCard origin={origin} />
+        <HomeFavorites />
+      </Box>
+      {origin && (
+        <Box sx={{ borderTop: 1, borderColor: "divider", pt: 3 }}>
+          <HomeDepartures origin={origin} transit={transit} />
+        </Box>
+      )}
+      <Box
+        component="details"
+        sx={{ borderTop: 1, borderColor: "divider", pt: 2 }}
+      >
+        <Box
+          component="summary"
+          sx={{ cursor: "pointer", py: 1.5, fontWeight: 600, minHeight: 48 }}
+        >
+          Transit updates & data sources
+        </Box>
+        <Box sx={{ pt: 2 }}>
+          <HomeStatus transit={transit} />
+        </Box>
+      </Box>
+    </Stack>
+  );
 }

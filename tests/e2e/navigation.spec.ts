@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 test.beforeEach(async ({ page }) => {
-  await page.route("**/rest/v1/**", (route) => route.fulfill({ json: [] }));
+  await page.route("**/functions/v1/public-read?**", (route) => route.fulfill({ json: [] }));
   await page.route("https://tile.openstreetmap.org/**", (route) => route.abort());
 });
 test("a guest can visit all destinations without invented arrivals", async ({
@@ -10,15 +10,14 @@ test("a guest can visit all destinations without invented arrivals", async ({
   await expect(
     page.getByRole("heading", { name: "Where are you headed?" }),
   ).toBeVisible();
-  await expect(page.getByRole("main")).toContainText("Public transit browsing works without an account");
+  await expect(page.getByRole("button", { name: "Find a trip", exact: true })).toBeEnabled();
   const navigation = page
     .getByRole("navigation", { name: "Primary navigation" })
     .filter({ visible: true });
   for (const [label, heading] of [
     ["Map", "Campus map"],
-    ["Plan", "Plan a trip"],
-    ["Classes", "Classes"],
-    ["Saved", "Saved journeys"],
+    ["Plan", "Plan your trip"],
+    ["Saved", "Saved"],
     ["Profile", "Profile"],
     ["Home", "Where are you headed?"],
   ]) {

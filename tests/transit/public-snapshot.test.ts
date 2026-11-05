@@ -23,7 +23,9 @@ test("independent public catalog failures retain useful data and search covers p
   const requestedOffsets: number[] = [];
   const requestedTables: string[] = [];
   globalThis.fetch = async (input, init) => {
-    const url = new URL(String(input));
+    const endpoint = new URL(String(input));
+    assert.equal(endpoint.pathname, "/functions/v1/public-read");
+    const url = new URL(endpoint.searchParams.get("path")!, endpoint.origin);
     assert.equal(url.hostname, "snapshot.example.test");
     assert.equal(init?.method, "GET");
     init?.signal?.throwIfAborted();

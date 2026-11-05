@@ -1,153 +1,67 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ClassEntry } from "@/app/classes/next-class";
-import {
-  classFromRow,
-  readDeviceClasses,
-  rowFromDraft,
-  validateClass,
-  writeDeviceClasses,
-  type ClassDraft,
-} from "@/lib/classes";
-import { createClient } from "@/lib/supabase/browser-client";
-
-export type ClassesSource = "account" | "device";
+import { readDeviceClasses, validateClass, writeDeviceClasses, type ClassDraft } from "./classes";
+export type ClassesSource = "device";
 export type ClassesStatus = "loading" | "ready" | "error";
-
-const SAVE_FAILED = "Your change could not be saved. Check your connection and try again.";
-const DEVICE_SAVE_FAILED = "This browser could not save your schedule on this device.";
-
-// Signed-in students sync through Supabase (private by row-level security). Guests and
-// anyone whose account service is unreachable keep a schedule on this device only.
-export async function findAccount(): Promise<{ signedIn: boolean; unavailable: boolean }> {
-  try {
-    const { data, error } = await createClient().auth.getUser();
-    if (data.user) return { signedIn: true, unavailable: false };
-    const missingSession = !error || error.name === "AuthSessionMissingError" || error.status === 401 || error.status === 403;
-    return { signedIn: false, unavailable: !missingSession };
-  } catch {
-    return { signedIn: false, unavailable: true };
-  }
-}
+const CHANGED = "archride:classes-changed";
 
 export function useClasses() {
-  const [classes, setClasses] = useState<ClassEntry[]>([]);
-  const [status, setStatus] = useState<ClassesStatus>("loading");
-  const [source, setSource] = useState<ClassesSource>("device");
-  const [accountUnavailable, setAccountUnavailable] = useState(false);
+  const [state, setState] = useState<{ classes: ClassEntry[]; status: ClassesStatus }>({ classes: [], status: "loading" });
   const [saveError, setSaveError] = useState("");
-  const [revision, setRevision] = useState(0);
-
+  const saving = useRef(false), generation = useRef(0);
+  const reload = useCallback(() => setState({ classes: readDeviceClasses(), status: "ready" }), []);
   useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      const account = await findAccount();
-      if (cancelled) return;
-      setAccountUnavailable(account.unavailable);
-      if (!account.signedIn) {
-        setSource("device");
-        setClasses(readDeviceClasses());
-        setStatus("ready");
-        return;
-      }
-      setSource("account");
-      try {
-        const { data, error } = await createClient()
-          .from("classes")
-          .select("*")
-          .order("starts_at")
-          .order("created_at");
-        if (cancelled) return;
-        if (error) {
-          setStatus("error");
-          return;
-        }
-        setClasses(data.map(classFromRow));
-        setStatus("ready");
-      } catch {
-        if (!cancelled) setStatus("error");
-      }
-    }
-    void load();
+    let active = true;
+    queueMicrotask(() => { if (active) reload(); });
+    const cleared = () => { generation.current++; reload(); };
+    const storage = (event: StorageEvent) => { if (event.newValue === null) generation.current++; reload(); };
+    window.addEventListener("storage", storage);
+    window.addEventListener("focus", reload);
+    window.addEventListener(CHANGED, reload);
+    window.addEventListener("archride:device-data-cleared", cleared);
     return () => {
-      cancelled = true;
+      active = false;
+      window.removeEventListener("storage", storage);
+      window.removeEventListener("focus", reload);
+      window.removeEventListener(CHANGED, reload);
+      window.removeEventListener("archride:device-data-cleared", cleared);
     };
-  }, [revision]);
-
-  const reload = useCallback(() => {
-    setStatus("loading");
-    setRevision((value) => value + 1);
-  }, []);
-
-  const fail = useCallback((message: string) => {
-    setSaveError(message);
-    return false;
-  }, []);
-
-  const add = useCallback(
-    async (draft: ClassDraft) => {
-      setSaveError("");
-      if (Object.keys(validateClass(draft)).length) return fail("Check the class details and try again.");
-      if (source === "device") {
-        const next = [...readDeviceClasses(), { ...draft, title: draft.title.trim(), id: crypto.randomUUID() }];
-        if (!writeDeviceClasses(next)) return fail(DEVICE_SAVE_FAILED);
-        setClasses(next);
+  }, [reload]);
+  const change = async (kind: "add" | "update" | "remove", id: string | null, draft?: ClassDraft) => {
+    if (saving.current || state.status !== "ready") return false;
+    if (draft && Object.keys(validateClass(draft)).length) {
+      setSaveError("Check the class details and try again.");
+      return false;
+    }
+    saving.current = true;
+    setSaveError("");
+    const stamp = generation.current;
+    try {
+      const commit = () => {
+        if (generation.current !== stamp) return false;
+        const current = readDeviceClasses();
+        if (kind === "add" && current.length >= 200) throw new Error("Remove an old class before adding another.");
+        if (kind !== "add" && !current.some((entry) => entry.id === id)) throw new Error("This class was changed in another tab. Reload and try again.");
+        const next = kind === "remove" ? current.filter((entry) => entry.id !== id)
+          : kind === "update" ? current.map((entry) => entry.id === id ? { ...draft!, title: draft!.title.trim(), id: entry.id } : entry)
+          : [...current, { ...draft!, title: draft!.title.trim(), id: crypto.randomUUID() }];
+        if (!writeDeviceClasses(next)) throw new Error("This browser could not save your schedule. Storage may be full or blocked.");
+        setState({ classes: next, status: "ready" });
+        window.dispatchEvent(new Event(CHANGED));
         return true;
-      }
-      try {
-        const { data, error } = await createClient().from("classes").insert(rowFromDraft(draft)).select().single();
-        if (error) return fail(SAVE_FAILED);
-        setClasses((current) => [...current, classFromRow(data)]);
-        return true;
-      } catch {
-        return fail(SAVE_FAILED);
-      }
-    },
-    [fail, source],
-  );
-
-  const update = useCallback(
-    async (id: string, draft: ClassDraft) => {
-      setSaveError("");
-      if (Object.keys(validateClass(draft)).length) return fail("Check the class details and try again.");
-      if (source === "device") {
-        const next = readDeviceClasses().map((item) => (item.id === id ? { ...draft, title: draft.title.trim(), id } : item));
-        if (!writeDeviceClasses(next)) return fail(DEVICE_SAVE_FAILED);
-        setClasses(next);
-        return true;
-      }
-      try {
-        const { data, error } = await createClient().from("classes").update(rowFromDraft(draft)).eq("id", id).select().single();
-        if (error) return fail(SAVE_FAILED);
-        setClasses((current) => current.map((item) => (item.id === id ? classFromRow(data) : item)));
-        return true;
-      } catch {
-        return fail(SAVE_FAILED);
-      }
-    },
-    [fail, source],
-  );
-
-  const remove = useCallback(
-    async (id: string) => {
-      setSaveError("");
-      if (source === "device") {
-        const next = readDeviceClasses().filter((item) => item.id !== id);
-        if (!writeDeviceClasses(next)) return fail(DEVICE_SAVE_FAILED);
-        setClasses(next);
-        return true;
-      }
-      try {
-        const { error } = await createClient().from("classes").delete().eq("id", id);
-        if (error) return fail(SAVE_FAILED);
-        setClasses((current) => current.filter((item) => item.id !== id));
-        return true;
-      } catch {
-        return fail(SAVE_FAILED);
-      }
-    },
-    [fail, source],
-  );
-
-  return { classes, status, source, accountUnavailable, saveError, add, update, remove, reload };
+      };
+      // Native locks prevent two tabs from overwriting each other's local edits.
+      return navigator.locks ? await navigator.locks.request("archride:classes", commit) : commit();
+    } catch (error) {
+      setSaveError(error instanceof Error ? error.message : "Your change could not be saved.");
+      return false;
+    } finally { saving.current = false; }
+  };
+  return {
+    ...state, source: "device" as ClassesSource, saveError,
+    add: (draft: ClassDraft) => change("add", null, draft),
+    update: (id: string, draft: ClassDraft) => change("update", id, draft),
+    remove: (id: string) => change("remove", id), reload,
+  };
 }

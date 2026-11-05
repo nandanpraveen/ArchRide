@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-11-05T19:27:32.972138+00:00",
+  "scope": "Built static export at /archride/ using production public configuration",
+  "stats": {
+    "startTime": "2026-11-05T19:25:58.797Z",
+    "duration": 39246.725,
+    "expected": 34,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "engines": [
+    "Chromium",
+    "WebKit"
+  ],
+  "viewportWidths": [
+    320,
+    375,
+    768,
+    1440
+  ],
+  "textSizesPercent": [
+    100,
+    150,
+    200
+  ],
+  "functionalSuite": {
+    "passed": 156,
+    "scope": "compiled static root export with deterministic fixtures; desktop and phone viewport"
+  },
+  "finalMapSuite": {
+    "passed": 26,
+    "scope": "map, parking and navigation after bus-marker and mobile-control changes"
+  },
+  "unitDatabaseChecks": 182,
+  "hostedAnonymousSecurityChecks": 19,
+  "physicalDevicesTested": false,
+  "realCatalogWalking": {
+    "passed": 2,
+    "scope": "unmocked public catalog and routing: MLC to Tate, start/resume/end in both engines"
+  },
+  "notes": [
+    "Synthetic scenarios verify behavior, not real prediction accuracy.",
+    "Explicit mobile action widths prevent WebKit text buttons shrinking on focus.",
+    "Mobile Home loads planning first; interactive mapping is on the Map screen."
+  ]
+}

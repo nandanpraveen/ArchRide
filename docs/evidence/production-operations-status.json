@@ -1,0 +1,276 @@
+{
+  "checkedAt": "2026-11-04T17:45:02.333478+00:00",
+  "counts": {
+    "activeLeases": 0,
+    "jobs": 36295,
+    "networkBuckets": 0,
+    "observations": 62729,
+    "predictionHistory": 97718,
+    "walkingCache": 0
+  },
+  "cronLastHour": {
+    "failed": 0,
+    "lastSuccessAt": "2026-11-04T17:45:00.021686+00:00",
+    "runs": 444
+  },
+  "databaseBytes": 147199667,
+  "feeds": [
+    {
+      "entityCount": 0,
+      "errorCode": "partial_rejection",
+      "id": "uga-passio:arrivals",
+      "lastAttemptAt": "2026-11-04T17:44:50.073+00:00",
+      "lastSuccessAt": "2026-11-04T11:25:41.761+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": "2026-11-04T11:25:41+00:00",
+      "state": "stale"
+    },
+    {
+      "entityCount": 1,
+      "errorCode": null,
+      "id": "uga-passio:alerts",
+      "lastAttemptAt": "2026-11-04T17:44:50.25+00:00",
+      "lastSuccessAt": "2026-11-04T17:44:50.25+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": "2026-11-04T17:44:50+00:00",
+      "state": "healthy"
+    },
+    {
+      "entityCount": 36,
+      "errorCode": null,
+      "id": "uga-passio:vehicles",
+      "lastAttemptAt": "2026-11-04T17:44:59.339+00:00",
+      "lastSuccessAt": "2026-11-04T17:44:59.339+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": "2026-11-04T17:44:59+00:00",
+      "state": "healthy"
+    },
+    {
+      "entityCount": 4878,
+      "errorCode": null,
+      "id": "uga-passio:static",
+      "lastAttemptAt": "2026-11-04T00:21:44.128+00:00",
+      "lastSuccessAt": "2026-11-04T00:21:44.128+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": null,
+      "state": "healthy"
+    }
+  ],
+  "jobs": [
+    {
+      "active": true,
+      "name": "archride-static-refresh",
+      "schedule": "17 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-cron-log-retention",
+      "schedule": "23 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-realtime-refresh",
+      "schedule": "10 seconds"
+    },
+    {
+      "active": true,
+      "name": "archride-rider-retention",
+      "schedule": "17 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-report-validation",
+      "schedule": "23 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-predictor-evaluation",
+      "schedule": "37 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-operations-retention",
+      "schedule": "53 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-anonymous-report-validation",
+      "schedule": "29 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-public-limit-retention",
+      "schedule": "* * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-transit-retention",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-arrival-evaluation-retention",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "active": true,
+      "name": "archride-walking-cache-budget",
+      "schedule": "*/10 * * * *"
+    }
+  ],
+  "largestTables": [
+    {
+      "heap_bytes": 25075712,
+      "index_bytes": 36880384,
+      "n_dead_tup": 213,
+      "n_live_tup": 97718,
+      "relname": "arrival_predictions",
+      "schemaname": "archride_private",
+      "total_bytes": 61997056
+    },
+    {
+      "heap_bytes": 21929984,
+      "index_bytes": 18718720,
+      "n_dead_tup": 1562,
+      "n_live_tup": 62729,
+      "relname": "transit_observations",
+      "schemaname": "public",
+      "total_bytes": 40689664
+    },
+    {
+      "heap_bytes": 10395648,
+      "index_bytes": 7004160,
+      "n_dead_tup": 503,
+      "n_live_tup": 36295,
+      "relname": "transit_job_runs",
+      "schemaname": "public",
+      "total_bytes": 17440768
+    },
+    {
+      "heap_bytes": 843776,
+      "index_bytes": 802816,
+      "n_dead_tup": 0,
+      "n_live_tup": 4351,
+      "relname": "transit_stop_times",
+      "schemaname": "public",
+      "total_bytes": 1687552
+    },
+    {
+      "heap_bytes": 352256,
+      "index_bytes": 712704,
+      "n_dead_tup": 351,
+      "n_live_tup": 675,
+      "relname": "transit_arrivals",
+      "schemaname": "public",
+      "total_bytes": 1105920
+    },
+    {
+      "heap_bytes": 8192,
+      "index_bytes": 32768,
+      "n_dead_tup": 22,
+      "n_live_tup": 22,
+      "relname": "transit_shapes",
+      "schemaname": "public",
+      "total_bytes": 425984
+    },
+    {
+      "heap_bytes": 270336,
+      "index_bytes": 49152,
+      "n_dead_tup": 0,
+      "n_live_tup": 354,
+      "relname": "transit_buildings",
+      "schemaname": "public",
+      "total_bytes": 352256
+    },
+    {
+      "heap_bytes": 98304,
+      "index_bytes": 131072,
+      "n_dead_tup": 0,
+      "n_live_tup": 229,
+      "relname": "transit_trips",
+      "schemaname": "public",
+      "total_bytes": 270336
+    }
+  ],
+  "retention": {
+    "event_days": 14,
+    "id": true,
+    "job_days": 3,
+    "job_max_rows": 60000,
+    "observation_hours": 12,
+    "observation_max_rows": 200000,
+    "prediction_hours": 6,
+    "prediction_max_rows": 200000
+  },
+  "syntheticAnonymousReportsRemaining": 0,
+  "syntheticAuthAccountsRemaining": 0,
+  "studentSignupDisabled": true,
+  "anonymousAuthDisabled": true,
+  "temporaryProbeRemoved": true,
+  "sourceNote": "The stored operational snapshot is from November 4. November 5 fixed-trip-hosted-smoke.json supersedes its arrival-health diagnosis; neither artifact measures prediction accuracy.",
+  "migrationsMatchRepository": true,
+  "migrationCount": 16,
+  "latestMigration": "20261104021049",
+  "advisors": [
+    {
+      "name": "auth_leaked_password_protection",
+      "title": "Leaked Password Protection Disabled",
+      "level": "WARN",
+      "facing": "EXTERNAL",
+      "categories": [
+        "SECURITY"
+      ],
+      "description": "Leaked password protection is currently disabled.",
+      "detail": "Supabase Auth prevents the use of compromised passwords by checking against HaveIBeenPwned.org. Enable this feature to enhance security.",
+      "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection",
+      "metadata": {
+        "entity": "Auth",
+        "type": "auth"
+      },
+      "cache_key": "auth_leaked_password_protection"
+    }
+  ],
+  "functions": [
+    {
+      "name": "transit-ingest",
+      "status": "ACTIVE",
+      "version": 9
+    },
+    {
+      "name": "walking-route",
+      "status": "ACTIVE",
+      "version": 5
+    },
+    {
+      "name": "admin-operations",
+      "status": "ACTIVE",
+      "version": 2
+    },
+    {
+      "name": "delete-account",
+      "status": "ACTIVE",
+      "version": 2
+    },
+    {
+      "name": "health",
+      "status": "ACTIVE",
+      "version": 3
+    },
+    {
+      "name": "predictor-update",
+      "status": "ACTIVE",
+      "version": 4
+    },
+    {
+      "name": "public-read",
+      "status": "ACTIVE",
+      "version": 1
+    },
+    {
+      "name": "rider-report",
+      "status": "ACTIVE",
+      "version": 1
+    }
+  ],
+  "laterArrivalCorrectionEvidence": "fixed-trip-hosted-smoke.json"
+}

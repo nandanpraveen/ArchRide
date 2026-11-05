@@ -26,7 +26,18 @@ export function transitFixtures() {
 
 export async function mockTransit(page: Page, tables: Record<string, unknown[]> = transitFixtures(), override?: (route: Route) => Promise<boolean>) {
   await page.route("https://tile.openstreetmap.org/**", (route) => route.abort());
-  await page.route("**/rest/v1/**", async (route) => {
+  await page.route("**/functions/v1/public-read?**", async (route) => {
+    const original = route;
+    const endpoint = new URL(original.request().url());
+    const decoded = new URL(endpoint.searchParams.get("path") || "/rest/v1/invalid", endpoint.origin);
+    route = new Proxy(original, { get(target, name) {
+      if (name === "request") return () => new Proxy(target.request(), { get(request, key) {
+        if (key === "url") return () => decoded.href;
+        if (key === "headers") return () => ({ ...request.headers(), ...(endpoint.searchParams.get("single") === "true" ? { accept: "application/vnd.pgrst.object+json" } : {}) });
+        const value = Reflect.get(request, key); return typeof value === "function" ? value.bind(request) : value;
+      } });
+      const value = Reflect.get(target, name); return typeof value === "function" ? value.bind(target) : value;
+    } });
     if (override && await override(route)) return;
     const url = new URL(route.request().url());
     const table = url.pathname.split("/").at(-1)!;

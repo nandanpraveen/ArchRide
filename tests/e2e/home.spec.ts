@@ -1,113 +1,108 @@
 import { test, expect } from "@playwright/test";
 import { mockTransit, transitFixtures } from "./transit-fixtures";
 
-test("Home uses the real catalog contract and filters source notice periods", async ({ page }) => {
+async function status(page: import("@playwright/test").Page) {
+  await page.getByText("Transit updates & data sources", { exact: true }).click();
+}
+
+test("Home uses the catalog and filters source notice periods", async ({ page }) => {
   await mockTransit(page);
   await page.goto("/");
+  await status(page);
   await expect(page.getByText("Static data: current", { exact: true })).toBeVisible();
   await expect(page.getByText("3 verified stops are available", { exact: false })).toBeVisible();
+  await page.getByText("Service updates (1)", { exact: true }).click();
   await expect(page.getByText("Board at the signed stop", { exact: true })).toBeVisible();
   await expect(page.getByText("Future notice hidden")).toHaveCount(0);
   await expect(page.getByText("Expired notice hidden")).toHaveCount(0);
 });
 
-test("keyboard search preserves duplicate stop identities and opens the selected detail", async ({ page }) => {
+test("keyboard search preserves duplicate stop identity in the complete trip query", async ({ page }) => {
   await mockTransit(page);
   await page.goto("/");
-  await expect(page.getByText("Static data: current", { exact: true })).toBeVisible();
-  const search = page.getByRole("combobox", { name: "Search buildings and stops" });
-  await search.fill("  MEMORIAL   hall  ");
+  const from = page.getByRole("combobox", { name: "From", exact: true });
+  await from.fill("Student Center");
+  await page.getByRole("option").click();
+  const to = page.getByRole("combobox", { name: "To", exact: true });
+  await to.fill("  MEMORIAL   hall  ");
   await expect(page.getByRole("option")).toHaveCount(2);
-  await search.press("ArrowDown");
-  await search.press("ArrowDown");
-  await search.press("Enter");
-  await page.getByRole("link", { name: "View destination details" }).click();
-  await expect(page).toHaveURL(/map\?stop=uga-passio%3Awest$/);
-  await expect(page.getByRole("region", { name: "Stop details" })).toContainText("Memorial Hall");
+  await to.press("ArrowDown");
+  await to.press("ArrowDown");
+  await to.press("Enter");
+  await page.getByRole("button", { name: "Find a trip", exact: true }).click();
+  await expect(page).toHaveURL(/to=uga-passio%3Awest&toType=stop&from=building&fromType=building/);
 });
 
-test("changing search clears old clickable results and rejects a late older response", async ({ page }) => {
-  let searches = 0;
+test("changing search removes old options and ignores a delayed older result", async ({ page }) => {
+  let held = false;
   await mockTransit(page, transitFixtures(), async (route) => {
     const u = new URL(route.request().url());
-    if (u.pathname.endsWith("transit_stops") && u.searchParams.get("select") === "id,name,latitude,longitude") {
-      searches++;
-      if (searches === 2) await new Promise((resolve) => setTimeout(resolve, 600));
+    if (!held && u.pathname.endsWith("transit_stops") && u.searchParams.get("select") === "id,name,latitude,longitude") {
+      held = true;
+      await new Promise((resolve) => setTimeout(resolve, 600));
     }
     return false;
   });
   await page.goto("/");
-  await expect(page.getByText("Static data: current", { exact: true })).toBeVisible();
-  const search = page.getByRole("combobox", { name: "Search buildings and stops" });
+  const search = page.getByRole("combobox", { name: "To", exact: true });
   await search.fill("Memorial Hall");
-  await expect(page.getByRole("option")).toHaveCount(2);
-  await search.fill("Memorial");
-  await expect(page.getByRole("option")).toHaveCount(0);
-  await expect.poll(() => searches).toBeGreaterThanOrEqual(2);
+  await expect.poll(() => held).toBe(true);
   await search.fill("Science");
   await expect(page.getByRole("option")).toHaveCount(1);
   await expect(page.getByRole("option")).toContainText("Science Center");
-  await expect(page.getByRole("option")).toHaveCount(1);
 });
 
-test("search aliases and building type survive navigation", async ({ page }) => {
+test("building aliases retain building type when the trip is opened", async ({ page }) => {
   await mockTransit(page);
   await page.goto("/");
-  await expect(page.getByText("Static data: current", { exact: true })).toBeVisible();
-  await page.getByRole("combobox", { name: "Search buildings and stops" }).fill("Student Center");
+  await page.getByRole("combobox", { name: "From", exact: true }).fill("Science");
   await page.getByRole("option").click();
-  await page.getByRole("link", { name: "View destination details" }).click();
-  await expect(page).toHaveURL(/place=building&type=building/);
-  await expect(page.getByRole("heading", { name: "Mémorial Building" })).toBeVisible();
+  await page.getByRole("combobox", { name: "To", exact: true }).fill("Student Center");
+  await page.getByRole("option").click();
+  await page.getByRole("button", { name: "Find a trip", exact: true }).click();
+  await expect(page).toHaveURL(/to=building&toType=building&from=uga-passio%3Asouth&fromType=stop/);
 });
 
-test("backend failure has a useful reason and search retries", async ({ page }) => {
+test("failed campus search keeps an explicit retry action", async ({ page }) => {
   let broken = true;
   await mockTransit(page, transitFixtures(), async (route) => {
     if (!broken) return false;
-    await route.fulfill({ status: 403, json: { message: "unavailable" }, headers: { "access-control-allow-origin": "*" } });
+    await route.fulfill({ status: 403, json: { message: "unavailable" } });
     return true;
   });
   await page.goto("/");
   await expect(page.getByRole("button", { name: "Retry data" })).toBeVisible();
-  const search = page.getByRole("combobox", { name: "Search buildings and stops" });
+  const search = page.getByRole("combobox", { name: "To", exact: true });
   await search.fill("Memorial Hall");
   await expect(page.getByText("Campus location data is temporarily unavailable. Please try again.", { exact: false })).toBeVisible();
   broken = false;
   await page.getByRole("button", { name: "Retry search" }).click();
-  await search.click();
   await expect(page.getByRole("option")).toHaveCount(2);
 });
 
-test("missing data and stale catalogs remain honest", async ({ page }) => {
+test("missing stops and stale sources have honest states", async ({ page }) => {
   const tables = transitFixtures();
   tables.feed_status = tables.feed_status.map((f) => ({ ...f, source_timestamp: "2020-01-01T00:00:00Z", last_success_at: "2020-01-01T00:00:00Z" }));
   tables.transit_stops = [];
   await mockTransit(page, tables);
   await page.goto("/");
+  await status(page);
   await expect(page.getByText("Static data: stale", { exact: true })).toBeVisible();
   await expect(page.getByText("Live arrivals: stale", { exact: true })).toBeVisible();
-  await expect(page.getByText("No stop or departure data is available.", { exact: false })).toBeVisible();
+  await expect(page.getByText("0 verified stops are available", { exact: false })).toBeVisible();
 });
 
-test("manual location fallback opens a separate accessible origin search", async ({ page }) => {
-  await mockTransit(page);
-  await page.goto("/");
-  await page.getByRole("button", { name: "Choose a building or stop" }).click();
-  await expect(page.getByRole("combobox", { name: "Choose your starting building or stop" })).toBeFocused();
-});
-
-test("location is opt-in and shows nearest verified stops without claiming walking distances", async ({ page, context }) => {
+test("location is opt-in and nearby distances are labeled straight line", async ({ page, context }) => {
   await context.grantPermissions(["geolocation"]);
   await context.setGeolocation({ latitude: 33.948, longitude: -83.377 });
   await mockTransit(page);
   await page.goto("/");
   await expect(page.getByRole("list", { name: "Nearby stops" })).toHaveCount(0);
   await page.getByRole("button", { name: "Use my location" }).click();
-  await expect(page.getByRole("list", { name: "Nearby stops" })).toContainText("About 0 m in a straight line");
+  await expect(page.getByRole("list", { name: "Nearby stops" })).toContainText("About 0 m away (straight line)");
 });
 
-for (const [kind, code, message] of [["denied", 1, "Location is blocked"], ["unavailable", 2, "Your location isn't available"], ["timeout", 3, "Finding your location took too long"]] as const) {
+for (const [kind, code] of [["denied", 1], ["unavailable", 2], ["timeout", 3]] as const) {
   test(`location ${kind} keeps manual origin usable`, async ({ page }) => {
     await page.addInitScript((code) => {
       Object.defineProperty(navigator, "geolocation", { value: { getCurrentPosition: (_success: unknown, failure: (error: { code: number }) => void) => failure({ code }) } });
@@ -115,19 +110,21 @@ for (const [kind, code, message] of [["denied", 1, "Location is blocked"], ["una
     await mockTransit(page);
     await page.goto("/");
     await page.getByRole("button", { name: "Use my location" }).click();
-    await expect(page.getByText(message, { exact: false })).toBeVisible();
-    await page.getByRole("button", { name: "Choose a building or stop" }).click();
-    await expect(page.getByRole("combobox", { name: "Choose your starting building or stop" })).toBeFocused();
+    await expect(page.getByRole("alert").filter({ hasText: code === 1 ? "Location is blocked" : "We couldn't find your location" })).toBeVisible();
+    const from = page.getByRole("combobox", { name: "From", exact: true });
+    await from.fill("Student Center");
+    await page.getByRole("option").click();
+    await expect(from).toHaveValue("Mémorial Building");
   });
 }
 
-test("outside-area location offers manual selection and Home fits 320 px", async ({ page, context }) => {
+test("outside-area location retains manual selection and fits 320 px", async ({ page, context }) => {
   await context.grantPermissions(["geolocation"]);
   await context.setGeolocation({ latitude: 40.7128, longitude: -74.006 });
   await mockTransit(page);
   await page.setViewportSize({ width: 320, height: 700 });
   await page.goto("/");
   await page.getByRole("button", { name: "Use my location" }).click();
-  await expect(page.getByText("far from the available campus stops", { exact: false })).toBeVisible();
+  await expect(page.getByText("outside the supported Athens campus area", { exact: false })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });

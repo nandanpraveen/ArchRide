@@ -116,38 +116,4 @@ export function arriveBy(
         Date.parse(a.candidate.departureAt),
     );
 }
-/** Resolve a campus wall time without depending on the browser timezone.
- * DST gaps are rejected; repeated hours require an explicit earlier/later choice. */
-export function campusDeadline(
-  local: string,
-  choice?: "earlier" | "later",
-): string | null {
-  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local)) return null;
-  const anchor = Date.parse(`${local}:00Z`);
-  if (!Number.isFinite(anchor)) return null;
-  const formatter = new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "America/New_York",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  });
-  const matches = [-4, -5]
-    .map((offset) => anchor - offset * 3_600_000)
-    .filter((value) => {
-      const parts = Object.fromEntries(
-        formatter.formatToParts(value).map((part) => [part.type, part.value]),
-      );
-      return (
-        `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}` ===
-        local
-      );
-    })
-    .sort();
-  if (!matches.length || (matches.length > 1 && !choice)) return null;
-  return new Date(
-    choice === "later" ? matches.at(-1)! : matches[0],
-  ).toISOString();
-}
+export { campusDeadline } from "./service-times";

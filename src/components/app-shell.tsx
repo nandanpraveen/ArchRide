@@ -2,119 +2,166 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  AppBar,
   BottomNavigation,
   BottomNavigationAction,
   Box,
-  Chip,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
+  Stack,
   Typography,
 } from "@mui/material";
 import HomeRounded from "@mui/icons-material/HomeRounded";
 import MapRounded from "@mui/icons-material/MapRounded";
 import AltRouteRounded from "@mui/icons-material/AltRouteRounded";
-import School from "@mui/icons-material/School";
 import BookmarkRounded from "@mui/icons-material/BookmarkRounded";
 import PersonRounded from "@mui/icons-material/PersonRounded";
 import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
 import { NotificationBell } from "./notification-bell";
 import { NotificationsProvider } from "./notifications-provider";
+
 const destinations = [
   { label: "Home", href: "/", icon: HomeRounded },
   { label: "Map", href: "/map", icon: MapRounded },
   { label: "Plan", href: "/plan", icon: AltRouteRounded },
-  { label: "Classes", href: "/classes", icon: School },
   { label: "Saved", href: "/saved", icon: BookmarkRounded },
   { label: "Profile", href: "/profile", icon: PersonRounded },
 ];
-export function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
+function Brand() {
   return (
-    <NotificationsProvider>
+    <Stack
+      component={Link}
+      prefetch={false}
+      href="/"
+      direction="row"
+      spacing={1}
+      sx={{
+        alignItems: "center",
+        textDecoration: "none",
+        color: "text.primary",
+        flexShrink: 0,
+      }}
+    >
+      <DirectionsBusRounded sx={{ color: "primary.main", fontSize: 28 }} />
+      <Typography
+        component="span"
+        sx={{ fontSize: "1.3rem", fontWeight: 750, letterSpacing: "-.045em" }}
+      >
+        ArchRide
+      </Typography>
+    </Stack>
+  );
+}
+function Shell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname().replace(/\/$/, "") || "/";
+  const current = pathname === "/classes" ? "/profile" : pathname;
+  return (
+    <>
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>
-      <AppBar
-        position="static"
-        color="transparent"
-        elevation={0}
-        sx={{ borderBottom: 1, borderColor: "divider" }}
+      <Box
+        component="header"
+        sx={{
+          bgcolor: "background.paper",
+          borderBottom: 1,
+          borderColor: "divider",
+        }}
       >
-        <Toolbar sx={{ gap: 1.5, minHeight: 72 }}>
-          <DirectionsBusRounded color="primary" sx={{ fontSize: 30 }} />
-          <Typography
-            component={Link}
-            href="/"
-            variant="h6"
+        <Box
+          sx={{
+            maxWidth: 1280,
+            mx: "auto",
+            px: { xs: 2.5, sm: 4 },
+            minHeight: 68,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+          <Brand />
+          <Box
+            component="nav"
+            aria-label="Primary navigation"
             sx={{
-              color: "text.primary",
-              textDecoration: "none",
-              fontWeight: 700,
+              display: { xs: "none", md: "flex" },
+              alignSelf: "stretch",
+              gap: 1,
             }}
           >
-            ArchRide
-          </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <NotificationBell />
-          <Chip size="small" variant="outlined" label="UGA campus" />
-        </Toolbar>
-      </AppBar>
-      <Box sx={{ display: "flex", maxWidth: 1280, mx: "auto" }}>
-        <Box
-          component="nav"
-          aria-label="Primary navigation"
-          sx={{
-            display: { xs: "none", md: "block" },
-            width: 220,
-            flexShrink: 0,
-            pt: 4,
-            px: 2,
-          }}
-        >
-          <List>
-            {destinations.map(({ href, label, icon: Icon }) => (
-              <ListItemButton
+            {destinations.map(({ href, label }) => (
+              <Box
                 key={href}
                 component={Link}
+                prefetch={false}
                 href={href}
-                selected={pathname === href}
-                aria-current={pathname === href ? "page" : undefined}
-                sx={{ borderRadius: 8, mb: 0.75, minHeight: 52 }}
+                aria-current={current === href ? "page" : undefined}
+                sx={{
+                  minHeight: 48,
+                  px: 2,
+                  display: "flex",
+                  alignItems: "center",
+                  textDecoration: "none",
+                  fontSize: ".9rem",
+                  fontWeight: current === href ? 650 : 500,
+                  color: current === href ? "primary.main" : "text.secondary",
+                  borderBottom: "2px solid",
+                  borderColor:
+                    current === href ? "primary.main" : "transparent",
+                  "&:hover": { color: "text.primary" },
+                }}
               >
-                <ListItemIcon sx={{ minWidth: 42 }}>
-                  <Icon color={pathname === href ? "primary" : "inherit"} />
-                </ListItemIcon>
-                <ListItemText primary={label} />
-              </ListItemButton>
+                {label}
+              </Box>
             ))}
-          </List>
+          </Box>
+          <NotificationBell />
         </Box>
+      </Box>
+      <Box
+        component="main"
+        id="main-content"
+        tabIndex={-1}
+        sx={{
+          minWidth: 0,
+          maxWidth: 1280,
+          mx: "auto",
+          px: { xs: 2.5, sm: 4 },
+          pt: { xs: 3, md: 4 },
+          pb: { xs: 13, md: 4 },
+        }}
+      >
+        {children}
         <Box
-          component="main"
-          id="main-content"
-          tabIndex={-1}
+          component="footer"
           sx={{
-            flex: 1,
-            minWidth: 0,
-            px: { xs: 2.5, sm: 4 },
-            pt: { xs: 4, md: 6 },
-            pb: 16,
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            columnGap: 2,
+            rowGap: 1,
+            mt: 5,
+            pt: 2,
+            borderTop: 1,
+            borderColor: "divider",
           }}
         >
-          {children}
           <Typography
-            component="footer"
             variant="caption"
             color="text.secondary"
-            sx={{ display: "block", mt: 8, maxWidth: "65ch" }}
+            sx={{ flex: "1 1 220px" }}
           >
-            A student-built KTP project. Not affiliated with or endorsed by UGA.
-            Transit estimates depend on available source data.
+            Independent student project · Times are estimates.
           </Typography>
+          <Link href="/privacy" prefetch={false} className="quiet-link">
+            Privacy & data
+          </Link>
+          <a
+            href="https://routes.uga.edu/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="quiet-link"
+          >
+            UGA bus tracker ↗
+          </a>
         </Box>
       </Box>
       <Box
@@ -129,25 +176,46 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           zIndex: "appBar",
           borderTop: 1,
           borderColor: "divider",
-          bgcolor: "background.default",
+          bgcolor: "background.paper",
           pb: "env(safe-area-inset-bottom)",
         }}
       >
-        <BottomNavigation showLabels value={pathname} sx={{ height: 76 }}>
+        <BottomNavigation
+          showLabels
+          value={current}
+          sx={{ height: 64, bgcolor: "transparent" }}
+        >
           {destinations.map(({ href, label, icon: Icon }) => (
             <BottomNavigationAction
               key={href}
               component={Link}
+              prefetch={false}
               href={href}
               value={href}
               label={label}
-              aria-current={pathname === href ? "page" : undefined}
-              icon={<Icon />}
-              sx={{ minWidth: 0, px: 0.5 }}
+              aria-current={current === href ? "page" : undefined}
+              icon={<Icon sx={{ fontSize: 22 }} />}
+              sx={{
+                minWidth: 0,
+                px: 0.5,
+                gap: 0.5,
+                "& .MuiBottomNavigationAction-label": { fontSize: ".7rem" },
+                "&.Mui-selected .MuiBottomNavigationAction-label": {
+                  fontSize: ".7rem",
+                  fontWeight: 700,
+                },
+              }}
             />
           ))}
         </BottomNavigation>
       </Box>
+    </>
+  );
+}
+export function AppShell({ children }: { children: React.ReactNode }) {
+  return (
+    <NotificationsProvider>
+      <Shell>{children}</Shell>
     </NotificationsProvider>
   );
 }

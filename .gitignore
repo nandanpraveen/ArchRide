@@ -45,3 +45,5 @@ next-env.d.ts
 /test-results/
 /supabase/.temp/
 .secrets/
+__pycache__/
+*.pyc

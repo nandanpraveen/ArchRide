@@ -1,0 +1,1936 @@
+[
+  {
+    "id": "1pp",
+    "code": "1PP",
+    "name": "One Press Place",
+    "type": "lot",
+    "longitude": -83.3717138,
+    "latitude": 33.9588582,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 46314,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "csc",
+    "code": "CSC",
+    "name": "Club Sports Complex",
+    "type": "lot",
+    "longitude": -83.371878,
+    "latitude": 33.9049106,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 7315,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e01",
+    "code": "E01",
+    "name": "Intramural Fields",
+    "type": "lot",
+    "longitude": -83.3701349,
+    "latitude": 33.9335374,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1304,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e02",
+    "code": "E02",
+    "name": "Animal Science",
+    "type": "lot",
+    "longitude": -83.3694847,
+    "latitude": 33.9354681,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1650,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e03",
+    "code": "E03",
+    "name": "Ramsey Lot",
+    "type": "lot",
+    "longitude": -83.3694262,
+    "latitude": 33.9372315,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1305,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e04",
+    "code": "E04",
+    "name": "East Deck",
+    "type": "deck",
+    "longitude": -83.3693186,
+    "latitude": 33.9381609,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; ",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 2011,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e05",
+    "code": "E05",
+    "name": "East Village Deck",
+    "type": "deck",
+    "longitude": -83.3663509,
+    "latitude": 33.9384246,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1486,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e06",
+    "code": "E06",
+    "name": "River Road South",
+    "type": "lot",
+    "longitude": -83.367218,
+    "latitude": 33.9393907,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1647,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e07",
+    "code": "E07",
+    "name": "River Road East",
+    "type": "lot",
+    "longitude": -83.367517,
+    "latitude": 33.9408005,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1473,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e08",
+    "code": "E08",
+    "name": "River Road West",
+    "type": "lot",
+    "longitude": -83.3706276,
+    "latitude": 33.9411071,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1471,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e09",
+    "code": "E09",
+    "name": "Ramsey Center West",
+    "type": "lot",
+    "longitude": -83.3721787,
+    "latitude": 33.9384439,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1277,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e10",
+    "code": "E10",
+    "name": "University Health",
+    "type": "lot",
+    "longitude": -83.3724997,
+    "latitude": 33.936493,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 5184,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e11",
+    "code": "E11",
+    "name": "River Road North",
+    "type": "lot",
+    "longitude": -83.3688507,
+    "latitude": 33.9428002,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1807,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e12",
+    "code": "E12",
+    "name": "East Campus Road North",
+    "type": "lot",
+    "longitude": -83.3711735,
+    "latitude": 33.9464796,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 6845,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e13",
+    "code": "E13",
+    "name": "Riverbend West",
+    "type": "lot",
+    "longitude": -83.3674878,
+    "latitude": 33.9286522,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 17363,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e14",
+    "code": "E14",
+    "name": "Riverbend East",
+    "type": "lot",
+    "longitude": -83.3625782,
+    "latitude": 33.9302805,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 46325,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e15",
+    "code": "E15",
+    "name": "River's Crossing",
+    "type": "lot",
+    "longitude": -83.3593385,
+    "latitude": 33.9306151,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1778,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e16",
+    "code": "E16",
+    "name": "East Village surface lot",
+    "type": "lot",
+    "longitude": -83.3660546,
+    "latitude": 33.9391336,
+    "weekday": "unknown",
+    "evening": "unknown",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Published location confirmed; no matching ordinary enforcement row. Access conditions are unknown.",
+      "Current TPS map label reconciled to the published OUA polygon; the older GIS code differs."
+    ],
+    "sourceObjectId": 641,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e20",
+    "code": "E20",
+    "name": "PAC Deck",
+    "type": "deck",
+    "longitude": -83.3701105,
+    "latitude": 33.9420698,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (Monday - Thursday after 1:00 PM)  (Friday all day)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 7752,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e21",
+    "code": "E21",
+    "name": "Intramural Deck",
+    "type": "deck",
+    "longitude": -83.3723715,
+    "latitude": 33.93253,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 7884,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e23",
+    "code": "E23",
+    "name": "College Station Park and Ride",
+    "type": "lot",
+    "longitude": -83.3623008,
+    "latitude": 33.9381722,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "Daily paid visitor parking via ParkMobile; see TPS for hours and current fees.",
+    "notes": [],
+    "sourceObjectId": 48364,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e24",
+    "code": "E24",
+    "name": "Transit/Riverbend Farms",
+    "type": "lot",
+    "longitude": -83.3697143,
+    "latitude": 33.9210341,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Weekday gate opens 6 AM and closes 7 PM. Do not enter after gate closure; weekend access is unverified."
+    ],
+    "sourceObjectId": 27415,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e25",
+    "code": "E25",
+    "name": "Rec Sports Park & Walk",
+    "type": "lot",
+    "longitude": -83.3751261,
+    "latitude": 33.9297683,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "Daily paid visitor parking via ParkMobile; see TPS for hours and current fees.",
+    "notes": [],
+    "sourceObjectId": 10086,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "e26",
+    "code": "E26",
+    "name": "East Side Park & Ride",
+    "type": "lot",
+    "longitude": -83.3489339,
+    "latitude": 33.9210641,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "Daily paid visitor parking via ParkMobile; see TPS for hours and current fees.",
+    "notes": [],
+    "sourceObjectId": 49259,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "hsc",
+    "code": "HSC",
+    "name": "Health Sciences Complex",
+    "type": "lot",
+    "longitude": -83.4065417,
+    "latitude": 33.9649561,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 8288,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "hscppd",
+    "code": "HSCPPD",
+    "name": "Health Sciences facilities parking",
+    "type": "lot",
+    "longitude": -83.4079375,
+    "latitude": 33.9665947,
+    "weekday": "unknown",
+    "evening": "unknown",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Published location confirmed; no matching ordinary enforcement row. Access conditions are unknown."
+    ],
+    "sourceObjectId": 8474,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "hscvis",
+    "code": "HSCVIS",
+    "name": "Health Sciences visitor parking",
+    "type": "lot",
+    "longitude": -83.4066668,
+    "latitude": 33.963024,
+    "weekday": "unknown",
+    "evening": "unknown",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Published location confirmed; no matching ordinary enforcement row. Access conditions are unknown."
+    ],
+    "sourceObjectId": 8285,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n01",
+    "code": "N01",
+    "name": "Chicopee Complex",
+    "type": "lot",
+    "longitude": -83.3654937,
+    "latitude": 33.9578728,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1917,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n02",
+    "code": "N02",
+    "name": "Oconee Street",
+    "type": "lot",
+    "longitude": -83.3708839,
+    "latitude": 33.9561854,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (after 5:00 PM)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 24172,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n03",
+    "code": "N03",
+    "name": "Thomas Street",
+    "type": "lot",
+    "longitude": -83.371028,
+    "latitude": 33.9567292,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (after 5:00 PM)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 1516,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n04",
+    "code": "N04",
+    "name": "Jackson Street",
+    "type": "lot",
+    "longitude": -83.3728418,
+    "latitude": 33.9574725,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (after 5:00 PM)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 2106,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n05",
+    "code": "N05",
+    "name": "Herty Drive/Bocock Street",
+    "type": "lot",
+    "longitude": -83.3757139,
+    "latitude": 33.9542077,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (after 5:00 PM)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 11,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n06",
+    "code": "N06",
+    "name": "North Deck",
+    "type": "deck",
+    "longitude": -83.372555,
+    "latitude": 33.9561728,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; ",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS.",
+      "After-hours deck entry may require a UGA OneCard at the gate. Check the current after-hours map."
+    ],
+    "sourceObjectId": 1802,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n07",
+    "code": "N07",
+    "name": "Baldwin Street",
+    "type": "lot",
+    "longitude": -83.3733366,
+    "latitude": 33.9542597,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1779,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n08",
+    "code": "N08",
+    "name": "East Campus Road North",
+    "type": "lot",
+    "longitude": -83.3712549,
+    "latitude": 33.9542108,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1921,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n09",
+    "code": "N09",
+    "name": "Psychology/Journalism",
+    "type": "lot",
+    "longitude": -83.3719681,
+    "latitude": 33.9526087,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1460,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n10",
+    "code": "N10",
+    "name": "Reed Hall",
+    "type": "lot",
+    "longitude": -83.3718797,
+    "latitude": 33.9511557,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1093,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n11",
+    "code": "N11",
+    "name": "Tate Center Deck",
+    "type": "deck",
+    "longitude": -83.3765189,
+    "latitude": 33.9507007,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; ",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 7270,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n12",
+    "code": "N12",
+    "name": "O'Malley's",
+    "type": "lot",
+    "longitude": -83.3692704,
+    "latitude": 33.9538489,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 5057,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n13",
+    "code": "N13",
+    "name": "Athens Plumbing/Oconee Street",
+    "type": "lot",
+    "longitude": -83.3722727,
+    "latitude": 33.9576828,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (after 5:00 PM)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS.",
+      "Current TPS map label reconciled to the published OUA polygon; the older GIS code differs."
+    ],
+    "sourceObjectId": 1319,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "n14",
+    "code": "N14",
+    "name": "East Campus Road / Reed Hall",
+    "type": "lot",
+    "longitude": -83.3710851,
+    "latitude": 33.9519253,
+    "weekday": "unknown",
+    "evening": "unknown",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Published location confirmed; no matching ordinary enforcement row. Access conditions are unknown.",
+      "Current TPS map label reconciled to the published OUA polygon; the older GIS code differs."
+    ],
+    "sourceObjectId": 23773,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s01",
+    "code": "S01",
+    "name": "Field Street",
+    "type": "lot",
+    "longitude": -83.3760885,
+    "latitude": 33.948728,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1524,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s02",
+    "code": "S02",
+    "name": "Clark Howell",
+    "type": "lot",
+    "longitude": -83.3765243,
+    "latitude": 33.9496358,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 5638,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s03",
+    "code": "S03",
+    "name": "Dawson Hall",
+    "type": "lot",
+    "longitude": -83.37675,
+    "latitude": 33.9473828,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1664,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s04",
+    "code": "S04",
+    "name": "Conner Hall",
+    "type": "lot",
+    "longitude": -83.373699,
+    "latitude": 33.9470979,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1990,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s05",
+    "code": "S05",
+    "name": "Hardman Hall",
+    "type": "lot",
+    "longitude": -83.3743114,
+    "latitude": 33.9456352,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1492,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s06",
+    "code": "S06",
+    "name": "STEM Deck",
+    "type": "deck",
+    "longitude": -83.3717255,
+    "latitude": 33.9441405,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 46322,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s07",
+    "code": "S07",
+    "name": "Life Sciences",
+    "type": "lot",
+    "longitude": -83.373538,
+    "latitude": 33.9433849,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1498,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s08",
+    "code": "S08",
+    "name": "Aderhold Hall",
+    "type": "lot",
+    "longitude": -83.3719087,
+    "latitude": 33.9419866,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1994,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s09",
+    "code": "S09",
+    "name": "Pharmacy",
+    "type": "lot",
+    "longitude": -83.3745695,
+    "latitude": 33.9433033,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1501,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s10",
+    "code": "S10",
+    "name": "McPhaul Center",
+    "type": "lot",
+    "longitude": -83.3771334,
+    "latitude": 33.9433668,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 10074,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s11",
+    "code": "S11",
+    "name": "South Deck",
+    "type": "deck",
+    "longitude": -83.3775597,
+    "latitude": 33.9455512,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; ",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS.",
+      "After-hours deck entry may require a UGA OneCard at the gate. Check the current after-hours map."
+    ],
+    "sourceObjectId": 1489,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s12",
+    "code": "S12",
+    "name": "Hoke Smith Annex",
+    "type": "lot",
+    "longitude": -83.3793018,
+    "latitude": 33.9437325,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 7810,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s13",
+    "code": "S13",
+    "name": "Butts/Mehre",
+    "type": "lot",
+    "longitude": -83.3812571,
+    "latitude": 33.9415434,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1484,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s14",
+    "code": "S14",
+    "name": "Foley Field",
+    "type": "lot",
+    "longitude": -83.3796633,
+    "latitude": 33.9412358,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1504,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s15",
+    "code": "S15",
+    "name": "Carlton Street Deck",
+    "type": "deck",
+    "longitude": -83.3779541,
+    "latitude": 33.9412175,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (Monday - Thursday after 1:00 PM)  (Friday all day)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 1488,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s16",
+    "code": "S16",
+    "name": "AG Drive",
+    "type": "lot",
+    "longitude": -83.3770093,
+    "latitude": 33.9394881,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1645,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s17",
+    "code": "S17",
+    "name": "Engineering/Vet Med",
+    "type": "lot",
+    "longitude": -83.3738149,
+    "latitude": 33.9403168,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 6834,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s18",
+    "code": "S18",
+    "name": "University Village East",
+    "type": "lot",
+    "longitude": -83.3737177,
+    "latitude": 33.9371462,
+    "weekday": "permit",
+    "evening": "unknown",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "TPS enforcement table and published housing rules disagree after 5 PM. Check posted signs and TPS before parking."
+    ],
+    "sourceObjectId": 1128,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s19",
+    "code": "S19",
+    "name": "University Village Central",
+    "type": "lot",
+    "longitude": -83.374334,
+    "latitude": 33.9367699,
+    "weekday": "permit",
+    "evening": "unknown",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "TPS enforcement table and published housing rules disagree after 5 PM. Check posted signs and TPS before parking."
+    ],
+    "sourceObjectId": 1505,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s20",
+    "code": "S20",
+    "name": "University Village West",
+    "type": "lot",
+    "longitude": -83.3743972,
+    "latitude": 33.934952,
+    "weekday": "permit",
+    "evening": "unknown",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "TPS enforcement table and published housing rules disagree after 5 PM. Check posted signs and TPS before parking."
+    ],
+    "sourceObjectId": 1133,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s21",
+    "code": "S21",
+    "name": "Fam & Grad Housing",
+    "type": "lot",
+    "longitude": -83.3781132,
+    "latitude": 33.9315704,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1295,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s22",
+    "code": "S22",
+    "name": "FGH Brandon Oaks",
+    "type": "lot",
+    "longitude": -83.3785558,
+    "latitude": 33.9299145,
+    "weekday": "permit",
+    "evening": "unknown",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "TPS enforcement table and published housing rules disagree after 5 PM. Check posted signs and TPS before parking."
+    ],
+    "sourceObjectId": 1136,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s23",
+    "code": "S23",
+    "name": "Rogers Road North",
+    "type": "lot",
+    "longitude": -83.3777608,
+    "latitude": 33.9296777,
+    "weekday": "permit",
+    "evening": "unknown",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "TPS enforcement table and published housing rules disagree after 5 PM. Check posted signs and TPS before parking."
+    ],
+    "sourceObjectId": 1137,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s24",
+    "code": "S24",
+    "name": "Rogers Road South",
+    "type": "lot",
+    "longitude": -83.3773786,
+    "latitude": 33.9267954,
+    "weekday": "permit",
+    "evening": "unknown",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "TPS enforcement table and published housing rules disagree after 5 PM. Check posted signs and TPS before parking."
+    ],
+    "sourceObjectId": 1140,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s25",
+    "code": "S25",
+    "name": "Carlton Street",
+    "type": "lot",
+    "longitude": -83.3746481,
+    "latitude": 33.9416051,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1659,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s26",
+    "code": "S26",
+    "name": "University Village",
+    "type": "lot",
+    "longitude": -83.377532,
+    "latitude": 33.9309441,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "Daily paid visitor parking via ParkMobile; see TPS for hours and current fees.",
+    "notes": [],
+    "sourceObjectId": 45917,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "s27",
+    "code": "S27",
+    "name": "University Village parking (GIS S27)",
+    "type": "lot",
+    "longitude": -83.3680363,
+    "latitude": 33.8975626,
+    "weekday": "unknown",
+    "evening": "unknown",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Published location confirmed; no matching ordinary enforcement row. Access conditions are unknown."
+    ],
+    "sourceObjectId": 1846,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "ssb",
+    "code": "SSB",
+    "name": "Soccer/Softball",
+    "type": "lot",
+    "longitude": -83.3809503,
+    "latitude": 33.9114068,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1283,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "tsl",
+    "code": "TSL",
+    "name": "Tate Surface Lot",
+    "type": "lot",
+    "longitude": -83.3761673,
+    "latitude": 33.9500538,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Current TPS map label reconciled to the published OUA polygon; the older GIS code differs.",
+      "Weekday permit enforcement begins at 4 AM. Gameday relocation may begin Thursday at 5:15 PM."
+    ],
+    "sourceObjectId": 7271,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "vmc",
+    "code": "VMC",
+    "name": "Veterinary Medicine Center",
+    "type": "lot",
+    "longitude": -83.3467992,
+    "latitude": 33.9192288,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 22579,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "vmcvis",
+    "code": "VMCVIS",
+    "name": "Veterinary Medical Center visitor parking",
+    "type": "lot",
+    "longitude": -83.3477395,
+    "latitude": 33.9193801,
+    "weekday": "unknown",
+    "evening": "unknown",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Published location confirmed; no matching ordinary enforcement row. Access conditions are unknown."
+    ],
+    "sourceObjectId": 46327,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w02",
+    "code": "W02",
+    "name": "Morris Hall",
+    "type": "lot",
+    "longitude": -83.3774182,
+    "latitude": 33.9532584,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 48839,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w03",
+    "code": "W03",
+    "name": "Government Relations/Wray Nicholson",
+    "type": "lot",
+    "longitude": -83.3785228,
+    "latitude": 33.9553306,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Current TPS map label reconciled to the published OUA polygon; the older GIS code differs."
+    ],
+    "sourceObjectId": 1087,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w05",
+    "code": "W05",
+    "name": "Hull Street Deck",
+    "type": "deck",
+    "longitude": -83.3788497,
+    "latitude": 33.9530521,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (Monday - Thursday after 1:00 PM)  (Friday all day)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 1485,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w06",
+    "code": "W06",
+    "name": "Lumpkin Street North",
+    "type": "lot",
+    "longitude": -83.3780218,
+    "latitude": 33.950073,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1331,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w07",
+    "code": "W07",
+    "name": "Baxter Street",
+    "type": "lot",
+    "longitude": -83.3802186,
+    "latitude": 33.9505929,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1940,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w08",
+    "code": "W08",
+    "name": "Church Street",
+    "type": "lot",
+    "longitude": -83.3827298,
+    "latitude": 33.9488811,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1935,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w09",
+    "code": "W09",
+    "name": "West Campus Deck",
+    "type": "deck",
+    "longitude": -83.3818143,
+    "latitude": 33.9488155,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1487,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w10",
+    "code": "W10",
+    "name": "Russell Hall",
+    "type": "lot",
+    "longitude": -83.3808719,
+    "latitude": 33.9486477,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1335,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w11",
+    "code": "W11",
+    "name": "Oglethorpe House",
+    "type": "lot",
+    "longitude": -83.3795396,
+    "latitude": 33.9480815,
+    "weekday": "permit",
+    "evening": "permit",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1110,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w12",
+    "code": "W12",
+    "name": "Lumpkin Street South",
+    "type": "lot",
+    "longitude": -83.380817,
+    "latitude": 33.9451168,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1400,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w13",
+    "code": "W13",
+    "name": "Newton Street",
+    "type": "lot",
+    "longitude": -83.3801159,
+    "latitude": 33.9538455,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1253,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w14",
+    "code": "W14",
+    "name": "Lucy Cobb",
+    "type": "lot",
+    "longitude": -83.3902112,
+    "latitude": 33.956369,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1390,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w15",
+    "code": "W15",
+    "name": "International Education",
+    "type": "lot",
+    "longitude": -83.3823012,
+    "latitude": 33.9441386,
+    "weekday": "permit",
+    "evening": "any",
+    "weekend": "any",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [],
+    "sourceObjectId": 1266,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w16",
+    "code": "W16",
+    "name": "Broad Street",
+    "type": "lot",
+    "longitude": -83.3784457,
+    "latitude": 33.9567334,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (after 5:00 PM)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 1380,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w17",
+    "code": "W17",
+    "name": "Broad Street",
+    "type": "lot",
+    "longitude": -83.3777077,
+    "latitude": 33.9562292,
+    "weekday": "permit",
+    "evening": "registered",
+    "weekend": "unknown",
+    "paid": "Pay-per-hour offered; (after 5:00 PM)",
+    "notes": [
+      "Official weekend/after-hours sources differ. Weekend permission and payment hours need confirmation with TPS."
+    ],
+    "sourceObjectId": 48833,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/",
+      "https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf"
+    ],
+    "verifiedAt": "2026-11-03"
+  },
+  {
+    "id": "w18",
+    "code": "W18",
+    "name": "West Campus Deck 2",
+    "type": "deck",
+    "longitude": -83.3826012,
+    "latitude": 33.9483386,
+    "weekday": "unknown",
+    "evening": "unknown",
+    "weekend": "unknown",
+    "paid": "No paid visitor option confirmed for this location.",
+    "notes": [
+      "Published location confirmed; no matching ordinary enforcement row. Access conditions are unknown."
+    ],
+    "sourceObjectId": 48358,
+    "sources": [
+      "https://tps.uga.edu/parking/enforcement/",
+      "https://tps.uga.edu/navigating-campus/maps/permit-parking/",
+      "https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8",
+      "https://tps.uga.edu/parking/visitors/"
+    ],
+    "verifiedAt": "2026-11-03"
+  }
+]

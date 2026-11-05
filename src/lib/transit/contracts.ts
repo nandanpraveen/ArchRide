@@ -6,16 +6,28 @@ export type Stop = Tables<"transit_stops">;
 export type Vehicle = Tables<"transit_vehicles">;
 export type Arrival = Tables<"transit_arrivals">;
 export type FeedHealth = Tables<"feed_status">;
-export function activeTransitAlerts(alerts: Tables<"transit_alerts">[], now = Date.now()) {
+export function activeTransitAlerts(
+  alerts: Tables<"transit_alerts">[],
+  now = Date.now(),
+) {
   return alerts.filter((alert) => {
     if (!alert.active || !Array.isArray(alert.active_periods)) return false;
     if (!alert.active_periods.length) return true;
     return alert.active_periods.some((period) => {
-      if (!period || typeof period !== "object" || Array.isArray(period)) return false;
+      if (!period || typeof period !== "object" || Array.isArray(period))
+        return false;
       const { start, end } = period;
-      if (start != null && (typeof start !== "number" || !Number.isFinite(start))) return false;
-      if (end != null && (typeof end !== "number" || !Number.isFinite(end))) return false;
-      return (start == null || start * 1000 <= now) && (end == null || now < end * 1000);
+      if (
+        start != null &&
+        (typeof start !== "number" || !Number.isFinite(start))
+      )
+        return false;
+      if (end != null && (typeof end !== "number" || !Number.isFinite(end)))
+        return false;
+      return (
+        (start == null || start * 1000 <= now) &&
+        (end == null || now < end * 1000)
+      );
     });
   });
 }
@@ -38,7 +50,15 @@ export function feedFreshness(feed: FeedHealth, now = Date.now()): Freshness {
   if (feed.state !== "healthy") return "stale";
   return feed.id.endsWith(":static")
     ? freshness(feed.last_success_at, STATIC_STALE_SECONDS, now)
-    : freshness(feed.source_timestamp, feed.id.endsWith(":vehicles") ? FRESH_SECONDS.vehicles : feed.id.endsWith(":alerts") ? FRESH_SECONDS.alerts : FRESH_SECONDS.arrivals, now);
+    : freshness(
+        feed.source_timestamp,
+        feed.id.endsWith(":vehicles")
+          ? FRESH_SECONDS.vehicles
+          : feed.id.endsWith(":alerts")
+            ? FRESH_SECONDS.alerts
+            : FRESH_SECONDS.arrivals,
+        now,
+      );
 }
 // Consumers must assess the observation clock, not the time the HTTP response was fetched.
 export function vehicleFreshness(
@@ -52,8 +72,17 @@ export function usableArrival(arrival: Arrival, now = Date.now()): boolean {
 }
 
 // A partial snapshot can carry valid individual predictions while overall health stays stale.
-export function arrivalFeedConnected(feed: FeedHealth | undefined, now = Date.now()): boolean {
+export function arrivalFeedConnected(
+  feed: FeedHealth | undefined,
+  now = Date.now(),
+): boolean {
   if (!feed) return false;
-  return feedFreshness(feed, now) === "current" ||
-    (feed.error_code === "partial_rejection" && freshness(feed.last_attempt_at, FRESH_SECONDS.arrivals, now) === "current");
+  return (
+    feedFreshness(feed, now) === "current" ||
+    (feed.error_code === "partial_rejection" &&
+      freshness(feed.last_attempt_at, FRESH_SECONDS.arrivals, now) ===
+        "current")
+  );
 }
+/** The source explicitly labels retired points; retain them in storage, not trip choices. */
+export const isPublicBoardingStop = (stop: { name: string }) => !/^xARCHIVE_/i.test(stop.name);

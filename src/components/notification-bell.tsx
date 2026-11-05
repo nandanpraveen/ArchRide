@@ -9,8 +9,11 @@ export function NotificationBell() {
   return (
     <IconButton
       component={Link}
+      prefetch={false}
       href="/notifications"
-      aria-label={unreadCount ? `Notifications, ${unreadCount} unread` : "Notifications"}
+      aria-label={
+        unreadCount ? `Notifications, ${unreadCount} unread` : "Notifications"
+      }
     >
       <Badge badgeContent={unreadCount} color="primary" max={9}>
         <NotificationsRounded />

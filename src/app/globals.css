@@ -1,13 +1,9 @@
-@layer theme, base, mui, components, utilities;
-@import "tailwindcss";
+@layer mui, components;
 :root {
-  --archride-background: oklch(1 0 0);
-  --archride-surface: oklch(0.97 0 0);
-  --archride-ink: oklch(0.2 0 0);
-  --archride-primary: oklch(0.48 0.18 24);
-}
-@theme inline {
-  --font-sans: var(--font-roboto);
+  --archride-background: var(--mui-palette-background-default, #f7f8fa);
+  --archride-surface: var(--mui-palette-background-paper, #ffffff);
+  --archride-ink: var(--mui-palette-text-primary, #18222b);
+  --archride-primary: var(--mui-palette-primary-main, #ba0c2f);
 }
 html {
   min-width: 320px;
@@ -16,6 +12,46 @@ body {
   margin: 0;
   background: var(--archride-background);
   color: var(--archride-ink);
+}
+.quiet-link {
+  color: var(--mui-palette-text-secondary);
+  font-size: 0.75rem;
+  text-underline-offset: 4px;
+}
+button,
+a,
+input,
+select {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+button,
+a {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    box-shadow 180ms ease;
+}
+.transit-number {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+.journey-line {
+  position: relative;
+  padding-left: 32px;
+}
+.journey-line::before {
+  content: "";
+  position: absolute;
+  left: 9px;
+  top: 26px;
+  bottom: 26px;
+  width: 2px;
+  background: var(--mui-palette-divider);
+}
+::selection {
+  background: #f7c9d1;
+  color: #48131d;
 }
 h1,
 h2,
@@ -49,5 +85,17 @@ p {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Map controls use the same physical target size as nearby touch controls. */
+.maplibregl-map .maplibregl-ctrl-group button {
+  width: 32px;
+  height: 32px;
+}
+@media (max-width: 600px) {
+  .maplibregl-map .maplibregl-ctrl-group button {
+    width: 44px;
+    height: 44px;
   }
 }

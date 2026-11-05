@@ -1,7 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Autocomplete, Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Autocomplete,
+  Box,
+  Button,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { searchPlaces, type Place } from "@/lib/campus-data";
 
 type Status = "idle" | "loading" | "ok" | "unavailable" | "error";
@@ -16,10 +22,12 @@ export function PlaceSearch({
   label = "Search buildings and stops",
   inputId = "campus-place-search",
   onSelect,
+  selectedPlace,
 }: {
   label?: string;
   inputId?: string;
   onSelect?: (place: Place | null) => void;
+  selectedPlace?: Place | null;
 }) {
   const router = useRouter();
   const [input, setInput] = useState("");
@@ -28,6 +36,7 @@ export function PlaceSearch({
   const [reason, setReason] = useState("");
   const [warning, setWarning] = useState("");
   const [revision, setRevision] = useState(0);
+  const editing = useRef(false);
 
   function handleInput(value: string) {
     setInput(value);
@@ -84,47 +93,80 @@ export function PlaceSearch({
 
   return (
     <Box>
-    <Autocomplete
-      id={inputId}
-      options={options}
-      filterOptions={(x) => x}
-      inputValue={input}
-      onInputChange={(_, value) => handleInput(value)}
-      getOptionLabel={(option) => option.name}
-      getOptionKey={(option) => `${option.type}:${option.id}`}
-      isOptionEqualToValue={(a, b) => a.id === b.id && a.type === b.type}
-      loading={status === "loading"}
-      noOptionsText={<Box>{emptyText}{(status === "unavailable" || status === "error") && <Button onMouseDown={(event) => event.preventDefault()} onClick={() => { setStatus("loading"); setRevision((value) => value + 1); }}>Retry search</Button>}</Box>}
-      onChange={(_, place) => {
-        if (onSelect) onSelect(place);
-        else if (place) router.push(place.type === "stop"
-          ? `/map?stop=${encodeURIComponent(place.id)}`
-          : `/map?place=${encodeURIComponent(place.id)}&type=${place.type}`);
-      }}
-      renderOption={(props, option) => {
-        const { key, ...rest } = props;
-        return (
-          <li key={key} {...rest} style={{ minHeight: 48 }}>
-            <Box sx={{ minWidth: 0 }}>
-              <Typography sx={{ overflowWrap: "anywhere" }}>
-                {option.name}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                {typeLabel[option.type]} · {option.locationLabel}
-              </Typography>
-            </Box>
-          </li>
-        );
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={label}
-          placeholder="Where are you going?"
-          helperText={warning || undefined}
-        />
-      )}
-    />
+      <Autocomplete
+        id={inputId}
+        options={options}
+        value={selectedPlace}
+        filterOptions={(x) => x}
+        inputValue={input}
+        onInputChange={(_, value, reason) => {
+          // Clearing the selected ID while typing must not erase the new query.
+          if (reason === "reset" && editing.current) return;
+          editing.current = reason === "input";
+          handleInput(value);
+          if (reason === "input") onSelect?.(null);
+        }}
+        getOptionLabel={(option) => option.name}
+        getOptionKey={(option) => `${option.type}:${option.id}`}
+        isOptionEqualToValue={(a, b) => a.id === b.id && a.type === b.type}
+        loading={status === "loading"}
+        noOptionsText={
+          <Box>
+            {emptyText}
+            {(status === "unavailable" || status === "error") && (
+              <Button
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  setStatus("loading");
+                  setRevision((value) => value + 1);
+                }}
+              >
+                Retry search
+              </Button>
+            )}
+          </Box>
+        }
+        onChange={(_, place) => {
+          editing.current = false;
+          handleInput(place?.name ?? "");
+          if (onSelect) onSelect(place);
+          else if (place)
+            router.push(
+              place.type === "stop"
+                ? `/map?stop=${encodeURIComponent(place.id)}`
+                : `/map?place=${encodeURIComponent(place.id)}&type=${place.type}`,
+            );
+        }}
+        renderOption={(props, option) => {
+          const { key, ...rest } = props;
+          return (
+            <li key={key} {...rest} style={{ minHeight: 48 }}>
+              <Box sx={{ minWidth: 0 }}>
+                <Typography sx={{ overflowWrap: "anywhere" }}>
+                  {option.name}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {typeLabel[option.type]}
+                  {options.filter(
+                    (place) =>
+                      place.name === option.name && place.type === option.type,
+                  ).length > 1
+                    ? ` · ${option.locationLabel}`
+                    : ""}
+                </Typography>
+              </Box>
+            </li>
+          );
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={label}
+            placeholder="Search a building or stop"
+            helperText={warning || undefined}
+          />
+        )}
+      />
     </Box>
   );
 }

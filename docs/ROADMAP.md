@@ -1,6 +1,6 @@
 # ArchRide delivery plan
 
-[Open the GitHub project](https://github.com/users/nandanpraveen/projects/1). These are **12 draft issues in Projects**, ready for teammates to claim; they have not been converted into repository issues or pre-assigned.
+[Open the GitHub project](https://github.com/users/nandanpraveen/projects/1). The current board contains **14 items**, including the added parking task and adaptive-prediction issue. Historical week assignments remain below. See [release verification](RELEASE.md) for the current scope, implementation evidence, and remaining external validation. Student sign-in was removed by the project owner on November 3; device storage and backend request limits replace its student-facing requirements.
 
 All handoffs use America/New_York. Sunday is the shared review/handoff day between adjacent work windows.
 
@@ -48,3 +48,8 @@ Draft identifiers 1–12 below mean plan order, not GitHub issue numbers.
 Every draft uses the requested Summary, Background, Requirements, Out of scope, What we'll test, and Resources format. Read the full descriptions in the project or [the local backlog](backlog/01.md); `roadmap.json` is a machine-readable copy.
 
 The ship gate requires every earlier feature integrated, no production starter placeholders, real authorized transit data, valid walking directions, privacy/RLS checks, all required test commands passing on the final commit, a production URL, and a completed production smoke test/rollback check. Fixture-only demos and unsupported accuracy claims do not pass. Background push and custom prediction improvements follow the evidence/support conditions in the original brief; in-app reminders and honest source estimates are required.
+
+## Added scope
+
+- Campus parking inventory, source reconciliation, access rules, list alternative, and geographic three-mile camera bounds.
+- [Adaptive bus prediction using validated rider observations](https://github.com/nandanpraveen/ArchRide/issues/10), with independent evidence and promotion gates. Official predictions remain active until held-out evaluation supports a replacement.

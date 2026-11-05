@@ -14,7 +14,9 @@ export function WatchBusButton(bus: WatchedBus) {
     <Button
       size="small"
       variant={watching ? "contained" : "outlined"}
-      startIcon={watching ? <NotificationsOffRounded /> : <NotificationsActiveRounded />}
+      startIcon={
+        watching ? <NotificationsOffRounded /> : <NotificationsActiveRounded />
+      }
       aria-pressed={watching}
       aria-label={`${watching ? "Stop watching" : "Watch"} ${bus.routeName} at ${bus.stopName}`}
       onClick={() => (watching ? unwatchBus(bus) : watchBus(bus))}

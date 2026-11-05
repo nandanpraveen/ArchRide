@@ -1,0 +1,554 @@
+[
+  {
+    "layer": "Parking Lots",
+    "name": "N01 — Chicopee Complex",
+    "longitude": -83.365774,
+    "latitude": 33.9593427
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N02 — Oconee Street",
+    "longitude": -83.3708835,
+    "latitude": 33.9566826
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N03 — Thomas Street and Hodgson Oil Building",
+    "longitude": -83.3721388,
+    "latitude": 33.9572819
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N04 — Jackson Street North",
+    "longitude": -83.3736362,
+    "latitude": 33.9571768
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N05 — Herty Drive and Babcock Street",
+    "longitude": -83.3755156,
+    "latitude": 33.9568297
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N06 — North Campus Parking Deck",
+    "longitude": -83.3725114,
+    "latitude": 33.9561224
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N07 — Baldwin Street and Main Library",
+    "longitude": -83.3717819,
+    "latitude": 33.9535948
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N08 — East Campus Road North",
+    "longitude": -83.3712674,
+    "latitude": 33.952381
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N09 — Psychology and Journalism",
+    "longitude": -83.3721674,
+    "latitude": 33.9524017
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N10 — Reed Hall and Memorial Hall",
+    "longitude": -83.372045,
+    "latitude": 33.9511993
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "Tate Center Deck",
+    "longitude": -83.3765183,
+    "latitude": 33.950614
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "N12 — O’Malley Lot and School of Social Work",
+    "longitude": -83.3692841,
+    "latitude": 33.9539741
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S01 — Field Street, Physics, Chemistry, and Biological Sciences",
+    "longitude": -83.3762048,
+    "latitude": 33.9487887
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S02 — Clark Howell Hall and Geography/Geology",
+    "longitude": -83.3764454,
+    "latitude": 33.9494841
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S03 — Dawson Hall and Myers Hall",
+    "longitude": -83.3767269,
+    "latitude": 33.9473728
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S04 — Connor Hall and Food and Poultry Science",
+    "longitude": -83.3737475,
+    "latitude": 33.947024
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S05 — Hardman Hall, Snelling Dining Commons and Boyd Graduate Studies",
+    "longitude": -83.3757338,
+    "latitude": 33.9456712
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S07 — Life Sciences and Ecology",
+    "longitude": -83.3735506,
+    "latitude": 33.9433032
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S08 — Aderhold Hall and Forestry",
+    "longitude": -83.3725918,
+    "latitude": 33.9421835
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S09 — Pharmacy and Environmental Health",
+    "longitude": -83.3757749,
+    "latitude": 33.9447261
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S10 — McPhaul Child Development",
+    "longitude": -83.3774365,
+    "latitude": 33.9434646
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S11 — South Deck",
+    "longitude": -83.3769197,
+    "latitude": 33.9456017
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S12 — Hoke Smith Annex",
+    "longitude": -83.3792106,
+    "latitude": 33.9437299
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S13 — Butts-Mehre",
+    "longitude": -83.3812393,
+    "latitude": 33.9415133
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S14 — Foley Field and Tennis Complex",
+    "longitude": -83.3794751,
+    "latitude": 33.9411155
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S16 — Ag Drive and Coverdell Center",
+    "longitude": -83.3768428,
+    "latitude": 33.9398975
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S17 — Driftmeier Engineering Center and Vet Medicine",
+    "longitude": -83.3754695,
+    "latitude": 33.9384686
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S18 — University Village East",
+    "longitude": -83.3737588,
+    "latitude": 33.9366938
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S19 — University Village Central",
+    "longitude": -83.374693,
+    "latitude": 33.9368984
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S20 — University Village West",
+    "longitude": -83.3760629,
+    "latitude": 33.9364472
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S21 — Family and Graduate Housing Office",
+    "longitude": -83.3780522,
+    "latitude": 33.931487
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S22 — Family and Graduate Housing Brandon Oaks",
+    "longitude": -83.3795918,
+    "latitude": 33.9301784
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S23 — Rogers Road North",
+    "longitude": -83.3779785,
+    "latitude": 33.928279
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S24 — Rogers Road South",
+    "longitude": -83.3777292,
+    "latitude": 33.9264172
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E01 — Intramural Fields",
+    "longitude": -83.3706847,
+    "latitude": 33.9334317
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E02 — Animal Sciences",
+    "longitude": -83.3692824,
+    "latitude": 33.935883
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E03 — Ramsey Center East",
+    "longitude": -83.3694326,
+    "latitude": 33.9373428
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E04 — East Deck",
+    "longitude": -83.3693137,
+    "latitude": 33.9381319
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E05 — East Village Deck",
+    "longitude": -83.3662257,
+    "latitude": 33.9388494
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E06 — River Road South",
+    "longitude": -83.3676419,
+    "latitude": 33.9391342
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E07 — River Road East, Lamar Dodd and Hugh Hodgson",
+    "longitude": -83.3674644,
+    "latitude": 33.9410073
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E09 — Ramsey Center and Joe Frank Harris",
+    "longitude": -83.3720271,
+    "latitude": 33.9388045
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E10 — University Health Center and Visitors Center",
+    "longitude": -83.3726601,
+    "latitude": 33.9365097
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E11 — River Road North, Performing Arts, Lamar Dodd School of Art, and Hugh Hodgson School of Music",
+    "longitude": -83.3689757,
+    "latitude": 33.9426254
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E12 — East Campus Road, Greek Park",
+    "longitude": -83.3706154,
+    "latitude": 33.9458033
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E13 — Riverbend West, Research Labs, Central Food Storage, and Complex Carbohydrate Research Center",
+    "longitude": -83.3676201,
+    "latitude": 33.9285453
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E14 — Riverbend East, Greenhouses, and Applied Genetic Tech",
+    "longitude": -83.3632589,
+    "latitude": 33.9312782
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E15 — River’s Crossing",
+    "longitude": -83.359775,
+    "latitude": 33.9306264
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E20 — Performing Arts Center Deck",
+    "longitude": -83.370152,
+    "latitude": 33.9421998
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E21 — Intramural Fields Deck",
+    "longitude": -83.3723252,
+    "latitude": 33.9325087
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "E23 — College Station Road, Park & Ride",
+    "longitude": -83.3627627,
+    "latitude": 33.9361818
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W02 — Morris Hall",
+    "longitude": -83.3774702,
+    "latitude": 33.9539112
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W05 — Hull Deck",
+    "longitude": -83.3786613,
+    "latitude": 33.9528251
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W06 — Lumpkin Street North, Legion Pool, and Bolton Dining Commons",
+    "longitude": -83.3779469,
+    "latitude": 33.9501429
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W07 — Baxter Street, Creswell Hall, and Russell Hall",
+    "longitude": -83.3811575,
+    "latitude": 33.9503095
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W08 — Church Street",
+    "longitude": -83.3835501,
+    "latitude": 33.9487229
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W09 — West Deck",
+    "longitude": -83.3814541,
+    "latitude": 33.9485471
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W10 — Russell Hall",
+    "longitude": -83.3811361,
+    "latitude": 33.948981
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W11 — Oglethorpe House and Boggs Hall",
+    "longitude": -83.3790496,
+    "latitude": 33.9473203
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W12 — Lumpkin Street South, Oglethorpe Dining Commons and Auxiliary Services",
+    "longitude": -83.3801071,
+    "latitude": 33.9472553
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W13 — Newton Street and District Energy Plant #1",
+    "longitude": -83.379565,
+    "latitude": 33.9525558
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W14 — Lucy Cobb",
+    "longitude": -83.3898834,
+    "latitude": 33.9567513
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W15 — International Education Building",
+    "longitude": -83.3820763,
+    "latitude": 33.9438586
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "HSC — Health Sciences Campus",
+    "longitude": -83.4049691,
+    "latitude": 33.9640954
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "Vet Med Center Parking",
+    "longitude": -83.3447522,
+    "latitude": 33.9187972
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W16 – Broad Street",
+    "longitude": -83.3790657,
+    "latitude": 33.9565511
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "S15 — Carlton Street Deck",
+    "longitude": -83.3779457,
+    "latitude": 33.9411819
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "1PP — One Press Place",
+    "longitude": -83.372345,
+    "latitude": 33.9585389
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W01 - Wray Nicholson",
+    "longitude": -83.3785196,
+    "latitude": 33.9552852
+  },
+  {
+    "layer": "Parking Lots",
+    "name": "W17 - Broad Street",
+    "longitude": -83.3770425,
+    "latitude": 33.9568256
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "North Campus Parking Deck",
+    "longitude": -83.3725114,
+    "latitude": 33.9561224
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "Hull Street Parking Deck",
+    "longitude": -83.3786613,
+    "latitude": 33.9528251
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "West Campus Parking Deck",
+    "longitude": -83.3814541,
+    "latitude": 33.9485471
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "Tate Center Deck",
+    "longitude": -83.3765183,
+    "latitude": 33.950614
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "South Deck Parking Lot",
+    "longitude": -83.3769197,
+    "latitude": 33.9456017
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "Carlton Street Parking Deck S15",
+    "longitude": -83.3779457,
+    "latitude": 33.9411819
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "Performing Arts Center Parking Deck",
+    "longitude": -83.370134,
+    "latitude": 33.942109
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "East Campus Parking Deck",
+    "longitude": -83.3693137,
+    "latitude": 33.9381319
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "East Village Deck",
+    "longitude": -83.3662819,
+    "latitude": 33.938616
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "Intramural Fields Parking Deck",
+    "longitude": -83.3723252,
+    "latitude": 33.9325087
+  },
+  {
+    "layer": "Parking Decks",
+    "name": "STEM Parking Deck",
+    "longitude": -83.3719883,
+    "latitude": 33.9443715
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "South Deck Parking Lot",
+    "longitude": -83.3769197,
+    "latitude": 33.9456017
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "North Campus Parking Deck",
+    "longitude": -83.3725114,
+    "latitude": 33.9561224
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "Tate Center Deck",
+    "longitude": -83.3765183,
+    "latitude": 33.950614
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "East Campus Parking Deck",
+    "longitude": -83.3693137,
+    "latitude": 33.9381319
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "Performing Arts Center Parking Deck",
+    "longitude": -83.370134,
+    "latitude": 33.942109
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "Carlton Street Parking Deck S15",
+    "longitude": -83.3779457,
+    "latitude": 33.9411819
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "Hull Street Parking Deck",
+    "longitude": -83.3786613,
+    "latitude": 33.9528251
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "University Parking",
+    "longitude": -83.3777292,
+    "latitude": 33.9264172
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "Dooley Plaza Visitor Spaces",
+    "longitude": -83.3826833,
+    "latitude": 33.9420454
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "UGA Park & Ride Lot (E23)",
+    "longitude": -83.3627627,
+    "latitude": 33.9361818
+  },
+  {
+    "layer": "Visitor Parking",
+    "name": "Health Sciences Campus Foster Road Visitor Lot",
+    "longitude": -83.406396,
+    "latitude": 33.9630218
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-11-05T14:22:11.041Z",
+  "endpoint": "health",
+  "method": "GET",
+  "httpStatus": 200,
+  "allowedOrigin": "https://nandanpraveen.github.io",
+  "body": {
+    "app": "ArchRide",
+    "status": "ok",
+    "database": "connected",
+    "transit": "connected",
+    "feeds": [
+      {
+        "id": "uga-passio:static",
+        "freshness": "current",
+        "sourceTimestamp": null,
+        "lastSuccessAt": "2026-11-05T00:21:54.496Z",
+        "entityCount": 4878
+      },
+      {
+        "id": "uga-passio:alerts",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-05T14:21:42.000Z",
+        "lastSuccessAt": "2026-11-05T14:21:42.914Z",
+        "entityCount": 1
+      },
+      {
+        "id": "uga-passio:arrivals",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-05T14:21:52.000Z",
+        "lastSuccessAt": "2026-11-05T14:21:52.933Z",
+        "entityCount": 443
+      },
+      {
+        "id": "uga-passio:vehicles",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-05T14:22:08.000Z",
+        "lastSuccessAt": "2026-11-05T14:22:09.030Z",
+        "entityCount": 32
+      }
+    ]
+  },
+  "manualProviderRequests": 0,
+  "note": "Read-only public health endpoint. Feed timestamps are ordinary scheduled ingestion observations. No new provider polling was performed for this check."
+}

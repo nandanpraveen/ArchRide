@@ -21,8 +21,11 @@ test("stop detail filters stale and cancelled predictions and preserves planning
   await expect(details.getByText("Source prediction", { exact: false })).toHaveCount(1);
   await expect(details.getByRole("link", { name: "Walking directions" })).toHaveAttribute("href", /destination=33.948,-83.377&travelmode=walking/);
   await details.getByRole("link", { name: "Plan to this stop" }).click();
-  await expect(page.getByRole("heading", { name: "Destination: Memorial Hall" })).toBeVisible();
-  await expect(page.getByText("Trip recommendations are not available yet")).toBeVisible();
+  await expect(page).toHaveURL(url => url.pathname.replace(/\/$/, "") === "/plan" && url.searchParams.get("to") === "uga-passio:east" && (!url.searchParams.has("toType") || url.searchParams.get("toType") === "stop"));
+  await expect(page.getByRole("heading", { name: "Plan your trip", exact: true })).toBeVisible();
+  await expect(page.getByText("Choose a starting point to compare your trip options.", { exact: true })).toBeVisible();
+  await expect(page.getByRole("combobox", { name: "To", exact: true })).toHaveValue("Memorial Hall");
+  await expect(page.getByRole("combobox", { name: "From", exact: true })).toBeEmpty();
 });
 
 test("a stale bus is labeled by source observation time and missing predictions are not cancellations", async ({ page }) => {
@@ -32,7 +35,11 @@ test("a stale bus is labeled by source observation time and missing predictions 
   await page.goto("/map?vehicle=uga-passio%3Av");
   await expect(page.getByRole("region", { name: "Bus details" })).toContainText("stale position");
   await page.getByRole("link", { name: "Open reported stop" }).click();
-  await expect(page.getByText("No current source arrivals are available.", { exact: false })).toBeVisible();
+  const details = page.getByRole("region", { name: "Stop details" });
+  await expect(details).toContainText("Memorial Hall");
+  await expect(details.getByText("No current arrival estimates are available.", { exact: false })).toBeVisible();
+  await expect(details.getByText("Source prediction", { exact: false })).toHaveCount(0);
+  await expect(details.getByText(/cancelled|canceled/i)).toHaveCount(0);
 });
 
 test("WebGL failure keeps the accessible directory and stop details usable", async ({ page }) => {
@@ -46,6 +53,7 @@ test("WebGL failure keeps the accessible directory and stop details usable", asy
   await mockTransit(page);
   await page.goto("/map?stop=uga-passio%3Aeast");
   await expect(page.getByText("The map could not load.", { exact: false })).toBeVisible();
+  await page.getByText("Browse routes and stops", { exact: true }).click();
   await expect(page.getByRole("list", { name: "Routes", exact: true })).toBeVisible();
   await expect(page.getByRole("region", { name: "Stop details" })).toContainText("Memorial Hall");
   await expect(page.getByRole("button", { name: "Retry map" })).toBeVisible();
@@ -68,6 +76,6 @@ test("directory filtering, Back and mobile layout work without map tiles", async
   await page.getByRole("list", { name: "Boarding stops" }).getByRole("link").click();
   await expect(page).toHaveURL(/stop=uga-passio%3Asouth/);
   await page.goBack();
-  await expect(page).toHaveURL(/\/map$/);
+  await expect(page).toHaveURL(/\/map\/?$/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });

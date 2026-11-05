@@ -1,0 +1,130 @@
+{
+  "verifiedAt": "2026-11-03",
+  "lotCount": 88,
+  "enforcementCodes": [
+    "1PP",
+    "CSC",
+    "E01",
+    "E02",
+    "E03",
+    "E04",
+    "E05",
+    "E06",
+    "E07",
+    "E08",
+    "E09",
+    "E10",
+    "E11",
+    "E12",
+    "E13",
+    "E14",
+    "E15",
+    "E20",
+    "E21",
+    "E23",
+    "E24",
+    "E25",
+    "E26",
+    "HSC",
+    "N01",
+    "N02",
+    "N03",
+    "N04",
+    "N05",
+    "N06",
+    "N07",
+    "N08",
+    "N09",
+    "N10",
+    "N11",
+    "N12",
+    "N13",
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S05",
+    "S06",
+    "S07",
+    "S08",
+    "S09",
+    "S10",
+    "S11",
+    "S12",
+    "S13",
+    "S14",
+    "S15",
+    "S16",
+    "S17",
+    "S18",
+    "S19",
+    "S20",
+    "S21",
+    "S22",
+    "S23",
+    "S24",
+    "S25",
+    "S26",
+    "SSB",
+    "TSL",
+    "VMC",
+    "W02",
+    "W03",
+    "W05",
+    "W06",
+    "W07",
+    "W08",
+    "W09",
+    "W10",
+    "W11",
+    "W12",
+    "W13",
+    "W14",
+    "W15",
+    "W16",
+    "W17"
+  ],
+  "additionalMapOrGisCodes": [
+    "E16",
+    "HSCPPD",
+    "HSCVIS",
+    "N14",
+    "S27",
+    "VMCVIS",
+    "W18"
+  ],
+  "duplicateEnforcementRows": [
+    "S01 (north/south tables)"
+  ],
+  "legacyAliases": {
+    "W01": "W03",
+    "Tate Center Deck": "N11",
+    "STEM Parking Deck": "S06",
+    "Vet Med Center Parking": "VMC",
+    "University Parking": "S24"
+  },
+  "sourcePinCount": 92,
+  "excludedSourcePins": [
+    {
+      "name": "Dooley Plaza Visitor Spaces",
+      "reason": "Individual designated visitor spaces, not a separate TPS lot/deck; special-space rules apply."
+    }
+  ],
+  "polygonSubdivisionOverrides": {
+    "N13": [
+      1319
+    ],
+    "N14": [
+      23773
+    ],
+    "TSL": [
+      7271
+    ],
+    "E16": [
+      641
+    ]
+  },
+  "unmappedCodes": [],
+  "boundaryVertices": 1763,
+  "footprintComponentCount": 50
+}

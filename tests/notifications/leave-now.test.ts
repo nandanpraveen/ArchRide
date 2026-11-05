@@ -20,7 +20,7 @@ const estimate = (overrides: Partial<ArrivalEstimate> = {}): ArrivalEstimate => 
 test("prompts when the bus is closer than the lead time", () => {
   assert.equal(
     determineNotifSignaling(estimate({ countdownMinutes: 3 }), 5),
-    "Your bus is 3 minutes away. Leave now if you want to catch it!",
+    "Your bus is 3 minutes away.",
   );
 });
 
@@ -77,7 +77,7 @@ const remind = (est: ArrivalEstimate | null, handled: string[] = [], prefs = DEF
 test("creates a leave-now notification that lasts 10 minutes past the predicted arrival", () => {
   assert.deepEqual(remind(estimate({ countdownMinutes: 3 })), {
     type: "leave_now",
-    title: "Your bus is 3 minutes away. Leave now if you want to catch it!",
+    title: "Your bus is 3 minutes away.",
     body: "Route L at Tate Center",
     link: "/map?stop=stop-3",
     dedupeKey: "leave:run-1|stop-1",
