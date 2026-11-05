@@ -14,6 +14,7 @@ test("static direct URLs load assets under /archride and primary navigation pres
     expect(response?.status(), destination || "Home").toBe(200);
     await expect(page.locator("main")).toBeVisible();
     await expect(page.locator("main h1")).toHaveCount(1);
+    await readyForLayout(page, destination);
     await assertStudentNavigation(page);
   }
   await page.goto(root);
@@ -32,8 +33,8 @@ test("removed student account routes provide 404 or a useful account-free destin
     if (response?.status() !== 404) {
       await expect(page).toHaveURL(/\/archride\/(profile\/)?$/);
       await expect(page.locator("main")).toBeVisible();
+      await assertStudentNavigation(page);
     }
-    await assertStudentNavigation(page);
     await expect(page.getByLabel(/^Password\s*\*?$/)).toHaveCount(0);
     await expect(page.getByLabel(/^Email\s*\*?$/)).toHaveCount(0);
   }

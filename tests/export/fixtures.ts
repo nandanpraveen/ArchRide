@@ -36,6 +36,7 @@ export async function readyForLayout(page: Page, route: string) {
   }
   if (route.startsWith("plan/?")) await expect(page.getByRole("heading", { name: "Walk directly", exact: true })).toBeVisible();
   if (route.startsWith("map/?parking=")) await expect(page.getByRole("combobox", { name: "Event conditions", exact: true })).toBeEnabled();
+  else if (route.startsWith("map/")) await expect(page.getByRole("combobox", { name: "Route filter", exact: true })).toBeEnabled();
   await expect(page.locator("main .MuiSkeleton-root")).toHaveCount(0);
   await expect(page.getByText("Loading notifications…", { exact: true })).toHaveCount(0);
 }

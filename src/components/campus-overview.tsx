@@ -97,7 +97,7 @@ export function CampusOverview({
         }}
       >
         <Button
-          component={Link}
+          component={Link} prefetch={false}
           href="/map"
           variant="contained"
           endIcon={<ArrowOutwardRounded />}

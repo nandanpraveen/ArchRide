@@ -477,7 +477,7 @@ function MapContent() {
                   </Typography>
                   {vehicle.stop_id && (
                     <Button
-                      component={Link}
+                      component={Link} prefetch={false}
                       href={`/map?stop=${encodeURIComponent(vehicle.stop_id)}`}
                     >
                       Open reported stop
@@ -517,7 +517,7 @@ function MapContent() {
                     {shownRoutes.map((r) => (
                       <ListItem key={r.id} disablePadding>
                         <ListItemButton
-                          component={Link}
+                          component={Link} prefetch={false}
                           href={`/map?route=${encodeURIComponent(r.id)}`}
                           selected={r.id === routeId}
                           sx={{ gap: 1.5 }}
@@ -556,7 +556,7 @@ function MapContent() {
                     {shownStops.map((s) => (
                       <ListItem key={s.id} disablePadding>
                         <ListItemButton
-                          component={Link}
+                          component={Link} prefetch={false}
                           href={`/map?stop=${encodeURIComponent(s.id)}`}
                           selected={s.id === stopId}
                         >
@@ -582,7 +582,7 @@ function MapContent() {
                         {vehicles.map((v) => (
                           <ListItem key={v.id} disablePadding>
                             <ListItemButton
-                              component={Link}
+                              component={Link} prefetch={false}
                               href={`/map?vehicle=${encodeURIComponent(v.id)}`}
                             >
                               <ListItemText

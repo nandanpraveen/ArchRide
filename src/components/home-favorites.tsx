@@ -30,7 +30,7 @@ export function HomeFavorites() {
             {items.map((i) => (
               <ListItemButton
                 key={i.id}
-                component={Link}
+                component={Link} prefetch={false}
                 href={
                   i.kind === "stop"
                     ? `/map?stop=${encodeURIComponent(i.destination.id)}`
@@ -50,7 +50,7 @@ export function HomeFavorites() {
           </List>
         )}
         <Button
-          component={Link}
+          component={Link} prefetch={false}
           href="/saved"
           sx={{ alignSelf: "flex-start", px: 0 }}
         >
