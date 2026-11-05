@@ -1,0 +1,10 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.117.3",
+    "@/lib/supabase/database.types": "../../../src/lib/supabase/database.types.ts",
+    "../../../src/lib/transit/policy": "../../../src/lib/transit/policy.ts",
+    "../../../src/lib/transit/estimates": "../../../src/lib/transit/estimates.ts",
+    "../../../src/lib/transit/contracts": "../../../src/lib/transit/contracts.ts",
+    "pg": "npm:pg@8.23.1"
+  }
+}

@@ -1,16 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/lib/supabase/database.types";
-import { REALTIME_STALE_SECONDS, usableArrival, type Arrival } from "./contracts";
+import {
+  REALTIME_STALE_SECONDS,
+  usableArrival,
+  type Arrival,
+} from "./contracts";
 type Client = SupabaseClient<Database>;
 // All reads use the caller's public/session client. Never construct a service client here.
-export const readRoutes = (db: Client) =>
-  db.from("transit_routes").select("*").eq("active", true).order("long_name");
-export const readStops = (db: Client) =>
-  db.from("transit_stops").select("*").eq("active", true).order("name");
-export const readVehicles = (db: Client) =>
-  db.from("transit_vehicles").select("*");
-export const readFeedHealth = (db: Client) =>
-  db.from("feed_status").select("*").like("id", "uga-passio:%");
 export async function readStopArrivals(
   db: Client,
   stopId: string,
@@ -28,7 +24,10 @@ export async function readStopArrivals(
     .eq("provenance", "source")
     .gte("arrival_at", new Date(now).toISOString())
     .gt("valid_until", new Date(now).toISOString())
-    .gte("update_timestamp", new Date(now - REALTIME_STALE_SECONDS * 1000).toISOString())
+    .gte(
+      "update_timestamp",
+      new Date(now - REALTIME_STALE_SECONDS * 1000).toISOString(),
+    )
     .lte("update_timestamp", new Date(now + 120_000).toISOString())
     .order("arrival_at")
     .order("id")
@@ -60,24 +59,46 @@ export async function readHomeDepartures(
     ? AbortSignal.any([signal, AbortSignal.timeout(10_000)])
     : AbortSignal.timeout(10_000);
   const stops = [...new Set(stopIds.filter(Boolean))].slice(0, 3);
-  const results = await Promise.all(stops.map(async (stopId) => {
-    try {
-      const result = await readStopArrivals(db, stopId, now, boundedSignal);
-      return { stopId, arrivals: result.data ?? [], error: !!result.error };
-    } catch {
-      return { stopId, arrivals: [], error: true };
-    }
-  }));
-  const tripIds = [...new Set(results.flatMap((result) => result.arrivals.map((arrival) => arrival.trip_id)))];
+  const results = await Promise.all(
+    stops.map(async (stopId) => {
+      try {
+        const result = await readStopArrivals(db, stopId, now, boundedSignal);
+        return { stopId, arrivals: result.data ?? [], error: !!result.error };
+      } catch {
+        return { stopId, arrivals: [], error: true };
+      }
+    }),
+  );
+  const tripIds = [
+    ...new Set(
+      results.flatMap((result) =>
+        result.arrivals.map((arrival) => arrival.trip_id),
+      ),
+    ),
+  ];
   const trips = tripIds.length
-    ? await db.from("transit_trips").select("id,route_id,headsign,direction_id").in("id", tripIds).eq("active", true).limit(10).abortSignal(boundedSignal)
+    ? await db
+        .from("transit_trips")
+        .select("id,route_id,headsign,direction_id")
+        .in("id", tripIds)
+        .eq("active", true)
+        .limit(10)
+        .abortSignal(boundedSignal)
     : { data: [], error: null };
   return results.map((result) => ({
     ...result,
     error: result.error || (result.arrivals.length > 0 && !!trips.error),
     arrivals: result.arrivals.map((arrival) => {
-      const trip = trips.data?.find((candidate) => candidate.id === arrival.trip_id && candidate.route_id === arrival.route_id);
-      return { ...arrival, headsign: trip?.headsign ?? null, direction_id: trip?.direction_id ?? null };
+      const trip = trips.data?.find(
+        (candidate) =>
+          candidate.id === arrival.trip_id &&
+          candidate.route_id === arrival.route_id,
+      );
+      return {
+        ...arrival,
+        headsign: trip?.headsign ?? null,
+        direction_id: trip?.direction_id ?? null,
+      };
     }),
   }));
 }

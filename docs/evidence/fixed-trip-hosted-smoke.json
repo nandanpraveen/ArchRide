@@ -1,0 +1,48 @@
+{
+  "deployment": {
+    "project": "yivnryjbzhampecphlgr",
+    "function": "transit-ingest",
+    "version": 10,
+    "updatedAt": "2026-11-05T14:10:58.095Z"
+  },
+  "checked_at": "2026-11-05T14:13:45.851Z",
+  "feed": {
+    "id": "uga-passio:arrivals",
+    "state": "healthy",
+    "error_code": null,
+    "updated_at": "2026-11-05T14:13:29.643+00:00",
+    "entity_count": 486,
+    "last_attempt_at": "2026-11-05T14:13:29.643+00:00",
+    "last_success_at": "2026-11-05T14:13:29.643+00:00",
+    "next_attempt_at": null,
+    "source_timestamp": "2026-11-05T14:13:29+00:00"
+  },
+  "arrivals": {
+    "totalRows": 800,
+    "latestUpdate": "2026-11-05T14:12:25+00:00",
+    "currentSourcePredictions": 276,
+    "currentFixedTripPredictions": 113
+  },
+  "subsequent_jobs": [
+    {
+      "outcome": "success",
+      "error_code": null,
+      "started_at": "2026-11-05T14:13:29.643967+00:00",
+      "entity_count": 486
+    },
+    {
+      "outcome": "success",
+      "error_code": null,
+      "started_at": "2026-11-05T14:12:58.60284+00:00",
+      "entity_count": 486
+    },
+    {
+      "outcome": "success",
+      "error_code": null,
+      "started_at": "2026-11-05T14:12:19.35978+00:00",
+      "entity_count": 488
+    }
+  ],
+  "manualProviderRequests": 0,
+  "ordinaryScheduledRunObserved": true
+}

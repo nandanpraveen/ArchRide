@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-11-04T02:11:25Z",
+  "scope": "Guest-only student app with server-enforced network admission",
+  "checks": {
+    "anonymous_public_proxy_reads": true,
+    "direct_data_api_bypass_denied": true,
+    "private_table_proxy_denied": true,
+    "relation_embedding_denied": true,
+    "oversized_public_read_denied": true,
+    "proxy_mutation_denied": true,
+    "gateway_rejects_cf_header_spoof": true,
+    "spoofed_forwarding_and_bucket_cannot_reset_limit": true,
+    "read_429_has_bounded_retry_after": true,
+    "same_network_stays_limited": true,
+    "read_recovers_after_controlled_probe": true,
+    "anonymous_report_requires_no_auth": true,
+    "unmatched_report_is_excluded_from_training": true,
+    "report_client_bucket_field_rejected": true,
+    "report_network_limit_enforced": true,
+    "report_retry_after_bounded": true,
+    "hosted_cross_instance_concurrency_gate_verified": true,
+    "public_health_after_anon_grant_revoke": true,
+    "no_accounts_created_or_emails_sent": true
+  },
+  "observed": {
+    "readRetryAfterSeconds": 46
+  },
+  "health": {
+    "app": "ArchRide",
+    "status": "ok",
+    "database": "connected",
+    "transit": "degraded",
+    "feeds": [
+      {
+        "id": "uga-passio:static",
+        "freshness": "current",
+        "sourceTimestamp": null,
+        "lastSuccessAt": "2026-11-04T00:21:44.128Z",
+        "entityCount": 4878
+      },
+      {
+        "id": "uga-passio:vehicles",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-04T02:11:21.000Z",
+        "lastSuccessAt": "2026-11-04T02:11:21.716Z",
+        "entityCount": 5
+      },
+      {
+        "id": "uga-passio:arrivals",
+        "freshness": "stale",
+        "sourceTimestamp": "2026-11-04T01:18:24.000Z",
+        "lastSuccessAt": "2026-11-04T01:18:24.290Z",
+        "entityCount": 174
+      },
+      {
+        "id": "uga-passio:alerts",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-04T02:11:22.000Z",
+        "lastSuccessAt": "2026-11-04T02:11:22.742Z",
+        "entityCount": 0
+      }
+    ]
+  },
+  "controlledCounterProbesRestored": true,
+  "syntheticRejectedReportRemoved": true,
+  "rawNetworkIdentifiersLogged": false
+}

@@ -1,6 +1,8 @@
 import { parse } from "csv-parse/sync";
 import { unzipSync, strFromU8 } from "fflate";
 import GtfsRealtime from "gtfs-realtime-bindings";
+import { campusDeadline, operatesOn } from "../../src/lib/transit/service-times";
+import type { Tables } from "../../src/lib/supabase/database.types";
 
 export const SOURCE = "uga-passio";
 export const PREFIX = `${SOURCE}:`;
@@ -207,8 +209,24 @@ export type Context = {
   stops: Set<string>;
   routes: Set<string>;
   occurrences: Map<string, string>;
+  frequencyTrips: Set<string>;
+  services: Map<string, Row>;
+  fixedBounds: Map<string, { start: number; end: number }>;
 };
 export function context(c: Catalog): Context {
+  const fixedBounds: Context["fixedBounds"] = new Map();
+  const grouped = new Map<string, Row[]>();
+  for (const row of c.transit_stop_times) {
+    const list = grouped.get(String(row.trip_id)) ?? [];
+    list.push(row); grouped.set(String(row.trip_id), list);
+  }
+  for (const [trip, rows] of grouped) {
+    rows.sort((a, b) => Number(a.stop_sequence) - Number(b.stop_sequence));
+    const first = rows[0].departure_seconds;
+    const values = rows.flatMap(r => [r.arrival_seconds, r.departure_seconds]).filter((n): n is number => typeof n === "number" && Number.isFinite(n));
+    if (typeof first === "number" && Number.isFinite(first) && values.length)
+      fixedBounds.set(trip, { start: first, end: Math.max(...values) });
+  }
   return {
     trips: new Map(c.transit_trips.map((t) => [t.id, t])),
     stops: new Set(c.transit_stops.map((s) => s.id)),
@@ -216,6 +234,9 @@ export function context(c: Catalog): Context {
     occurrences: new Map(
       c.transit_stop_times.map((s) => [s.id, String(s.stop_id)]),
     ),
+    frequencyTrips: new Set((c.transit_frequencies ?? []).map(f => String(f.trip_id))),
+    services: new Map((c.transit_services ?? []).map(service => [service.id, service])),
+    fixedBounds,
   };
 }
 function timestamp(n: unknown, now: number): string {
@@ -226,23 +247,55 @@ function timestamp(n: unknown, now: number): string {
   );
   return new Date(v * 1000).toISOString();
 }
+const campusClock = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+function campusDay(iso: string) {
+  const parts = Object.fromEntries(campusClock.formatToParts(Date.parse(iso)).map(p => [p.type, p.value]));
+  // An implicit descriptor must not silently choose either repeated DST hour.
+  return campusDeadline(`${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`)
+    ? `${parts.year}${parts.month}${parts.day}` : null;
+}
 function tripInfo(
   t: TripDescriptor | null | undefined,
   c: Context,
-  vehicleId?: string | null,
+  vehicleId: string | null | undefined,
+  sourceTime: string,
+  evidenceTimes: string[],
+  colliding: boolean,
 ) {
   if (!t?.tripId) return null;
   const trip = c.trips.get(id(t.tripId));
   assert(trip, "unknown_trip");
   assert(!t.routeId || trip.route_id === id(t.routeId), "trip_route_mismatch");
-  assert(!t.startDate || /^\d{8}$/.test(t.startDate), "invalid_service_date");
+  assert(!t.startDate || (/^\d{8}$/.test(t.startDate) &&
+    campusDeadline(`${t.startDate.slice(0, 4)}-${t.startDate.slice(4, 6)}-${t.startDate.slice(6)}T12:00`)), "invalid_service_date");
   if (t.startTime) seconds(t.startTime);
+  let date = t.startDate || "", start = t.startTime || "";
+  if (!date || !start) {
+    const bounds = c.fixedBounds.get(trip.id), service = c.services.get(String(trip.service_id));
+    // GTFS permits omitted instance fields for fixed scheduled trips. Frequency
+    // templates still require both fields; never guess a repeated departure.
+    if (c.frequencyTrips.has(trip.id) || (colliding && !date) || !bounds || !service)
+      return { trip, instance: null };
+    if (!date) {
+      const day = campusDay(sourceTime), days = [...new Set(evidenceTimes)].map(campusDay);
+      // Restrict inference to one verified same-day fixed service. Overnight,
+      // cross-date predictions, DST folds and duplicate descriptors need dates.
+      if (!day || !days.length || days.some(d => d !== day) || bounds.start >= 86400 || bounds.end >= 86400 ||
+          !operatesOn(service as Tables<"transit_services">, day) ||
+          (start && seconds(start) !== bounds.start)) return { trip, instance: null };
+      date = day;
+    }
+    if (!start) {
+      const hours = Math.floor(bounds.start / 3600), minutes = Math.floor(bounds.start % 3600 / 60), secs = bounds.start % 60;
+      start = [hours, minutes, secs].map(n => String(n).padStart(2, "0")).join(":");
+    }
+  }
   return {
     trip,
     instance: [
       id(t.tripId),
-      t.startDate || "",
-      t.startTime || "",
+      date,
+      start,
       ...(vehicleId ? ["vehicle:" + vehicleId] : []),
     ].join("|"),
   };
@@ -289,6 +342,11 @@ export function normalize(
     entityCount: m.entity.length,
   };
   const ids = new Set<string>();
+  const descriptorCounts = new Map<string, number>();
+  for (const entity of m.entity) {
+    const descriptor = feed === "arrivals" ? entity.tripUpdate?.trip : entity.vehicle?.trip;
+    if (descriptor?.tripId) descriptorCounts.set(descriptor.tripId, (descriptorCounts.get(descriptor.tripId) ?? 0) + 1);
+  }
   for (const e of m.entity) {
     try {
       assert(e.id && !ids.has(e.id), "duplicate_entity");
@@ -302,7 +360,8 @@ export function normalize(
             Object.hasOwn(v.position, "longitude"),
           "missing_coordinate",
         );
-        const t = tripInfo(v.trip, c, v.vehicle?.id),
+        const positionTime = v.timestamp ? timestamp(v.timestamp, now) : stamp;
+        const t = tripInfo(v.trip, c, v.vehicle?.id, positionTime, [positionTime], (descriptorCounts.get(v.trip?.tripId ?? "") ?? 0) > 1),
           raw = v.vehicle?.id || e.id;
         const route =
           t?.trip.route_id || (v.trip?.routeId ? id(v.trip.routeId) : null);
@@ -314,7 +373,6 @@ export function normalize(
             c.occurrences.get(`${t.trip.id}:${v.currentStopSequence}`) === stop,
             "stop_sequence_mismatch",
           );
-        const positionTime = v.timestamp ? timestamp(v.timestamp, now) : stamp;
         const row: Row = {
           id: id(raw),
           source_id: SOURCE,
@@ -349,7 +407,7 @@ export function normalize(
         assert(row.speed === null || Number(row.speed) >= 0, "invalid_speed");
         result.rows.push(row);
         // Feed-level time does not prove a fresh stop observation.
-        if (row.current_status === "STOPPED_AT" && stop && v.timestamp)
+        if (row.current_status === "STOPPED_AT" && stop && v.timestamp && t?.instance)
           result.events.push({
             id: `${row.id}:${t?.instance || ""}:${v.currentStopSequence ?? stop}:${positionTime}`,
             vehicle_id: row.id,
@@ -364,11 +422,12 @@ export function normalize(
       } else if (feed === "arrivals") {
         const u = e.tripUpdate;
         assert(u, "missing_trip_update");
-        const t = tripInfo(u.trip, c, u.vehicle?.id);
-        assert(t, "missing_trip");
-        // Frequency trips need an instance start time; otherwise simultaneous runs collide.
-        assert(u.trip.startDate && u.trip.startTime, "ambiguous_trip_instance");
         const updateTime = u.timestamp ? timestamp(u.timestamp, now) : stamp;
+        const evidenceTimes = (u.stopTimeUpdate ?? []).flatMap(s => [s.arrival?.time, s.departure?.time])
+          .filter(n => n && Number(n) > 0).map(n => new Date(Number(n) * 1000).toISOString());
+        const t = tripInfo(u.trip, c, u.vehicle?.id, updateTime, evidenceTimes, (descriptorCounts.get(u.trip?.tripId ?? "") ?? 0) > 1);
+        assert(t, "missing_trip");
+        assert(t.instance, "ambiguous_trip_instance");
         const canceled =
           u.trip.scheduleRelationship === 3 ||
           u.trip.scheduleRelationship === 7;

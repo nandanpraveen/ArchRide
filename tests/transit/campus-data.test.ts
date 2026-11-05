@@ -29,3 +29,19 @@ test("Home contract search supports whitespace, aliases, accents, duplicate name
     30,
   );
 });
+
+test("explicitly archived source stops cannot become ordinary trip choices", () => {
+  const stops: Place[] = [
+    { id: "old", name: "xARCHIVE_Tate", type: "stop", locationLabel: "Source archive" },
+    { id: "current", name: "Tate Center", type: "stop", locationLabel: "Boarding stop" },
+  ];
+  assert.deepEqual(matchPlaces(stops, "Tate").map((p) => p.id), ["current"]);
+});
+
+test("word matches rank above incidental substrings in campus search", () => {
+  const places: Place[] = [
+    { id: "garden", name: "State Botanical Gardens", type: "stop", locationLabel: "Campus" },
+    { id: "tate", name: "Tate Student Center", type: "building", locationLabel: "Campus" },
+  ];
+  assert.deepEqual(matchPlaces(places, "Tate").map((place) => place.id), ["tate", "garden"]);
+});

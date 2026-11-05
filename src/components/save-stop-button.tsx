@@ -1,37 +1,33 @@
 "use client";
-import { useState } from "react";
 import { Button, Typography } from "@mui/material";
 import BookmarkBorderRounded from "@mui/icons-material/BookmarkBorderRounded";
 import BookmarkRounded from "@mui/icons-material/BookmarkRounded";
-import { saveStop, unsaveStop } from "@/lib/saved";
-import { useSavedStops } from "@/lib/use-saved-stops";
-
+import { usePersonal } from "./personal-provider";
 export function SaveStopButton({
   stop,
 }: {
   stop: { id: string; name: string };
 }) {
-  const saved = useSavedStops().some((item) => item.id === stop.id);
-  const [failed, setFailed] = useState(false);
-
-  function toggle() {
-    const result = saved ? unsaveStop(stop.id) : saveStop(stop);
-    setFailed(!result.ok);
-  }
-
+  const data = usePersonal(),
+    existing = data.items.find((i) => i.key === `stop:${stop.id}`);
   return (
     <>
       <Button
         variant="outlined"
-        aria-pressed={saved}
-        startIcon={saved ? <BookmarkRounded /> : <BookmarkBorderRounded />}
-        onClick={toggle}
+        aria-pressed={!!existing}
+        disabled={!data.ready || data.busy}
+        startIcon={existing ? <BookmarkRounded /> : <BookmarkBorderRounded />}
+        onClick={() =>
+          void (existing
+            ? data.removeItem(existing)
+            : data.saveItem({ ...stop, type: "stop" }))
+        }
       >
-        {saved ? "Saved" : "Save stop"}
+        {existing ? "Saved" : "Save stop"}
       </Button>
-      {failed && (
-        <Typography role="status" color="error" variant="caption">
-          Couldn&apos;t save on this device. Storage may be full or blocked.
+      {data.error && (
+        <Typography color="error" variant="caption" role="status">
+          {data.error}
         </Typography>
       )}
     </>

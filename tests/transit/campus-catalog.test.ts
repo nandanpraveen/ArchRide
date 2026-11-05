@@ -70,7 +70,7 @@ test("catalog SQL is atomic, replay-safe, preserves quoted names and denies olde
     await engine.exec("rollback;");
     assert.equal((await engine.query("select * from public.transit_buildings")).rows.length, 1);
     await engine.exec("set role anon;");
-    assert.equal((await engine.query("select * from public.transit_buildings")).rows.length, 1);
+    await assert.rejects(engine.query("select * from public.transit_buildings"), /permission denied/);
     await assert.rejects(engine.exec("delete from public.transit_buildings"), /permission denied/);
     await engine.exec("reset role;");
   } finally { await engine.close(); }

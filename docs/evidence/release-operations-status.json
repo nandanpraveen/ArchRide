@@ -1,0 +1,449 @@
+{
+  "checkedAt": "2026-11-05T14:24:27.743143+00:00",
+  "cronJobs": [
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 12,
+      "jobname": "archride-anonymous-report-validation",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T13:29:00.069029+00:00",
+      "runs_last_hour": 1,
+      "schedule": "29 * * * *",
+      "succeeded_last_hour": 1
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 4,
+      "jobname": "archride-arrival-evaluation-retention",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:20:02.631429+00:00",
+      "runs_last_hour": 6,
+      "schedule": "*/10 * * * *",
+      "succeeded_last_hour": 6
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 7,
+      "jobname": "archride-cron-log-retention",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:23:00.601107+00:00",
+      "runs_last_hour": 1,
+      "schedule": "23 * * * *",
+      "succeeded_last_hour": 1
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 11,
+      "jobname": "archride-operations-retention",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T13:53:00.047098+00:00",
+      "runs_last_hour": 1,
+      "schedule": "53 * * * *",
+      "succeeded_last_hour": 1
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 10,
+      "jobname": "archride-predictor-evaluation",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T13:37:00.068363+00:00",
+      "runs_last_hour": 1,
+      "schedule": "37 * * * *",
+      "succeeded_last_hour": 1
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 13,
+      "jobname": "archride-public-limit-retention",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:24:00.023271+00:00",
+      "runs_last_hour": 60,
+      "schedule": "* * * * *",
+      "succeeded_last_hour": 60
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 2,
+      "jobname": "archride-realtime-refresh",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:24:19.209232+00:00",
+      "runs_last_hour": 358,
+      "schedule": "10 seconds",
+      "succeeded_last_hour": 358
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 9,
+      "jobname": "archride-report-validation",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:23:00.074959+00:00",
+      "runs_last_hour": 1,
+      "schedule": "23 * * * *",
+      "succeeded_last_hour": 1
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 8,
+      "jobname": "archride-rider-retention",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:17:00.066684+00:00",
+      "runs_last_hour": 1,
+      "schedule": "17 * * * *",
+      "succeeded_last_hour": 1
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 1,
+      "jobname": "archride-static-refresh",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:17:00.054146+00:00",
+      "runs_last_hour": 1,
+      "schedule": "17 * * * *",
+      "succeeded_last_hour": 1
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 3,
+      "jobname": "archride-transit-retention",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:20:02.709378+00:00",
+      "runs_last_hour": 6,
+      "schedule": "*/10 * * * *",
+      "succeeded_last_hour": 6
+    },
+    {
+      "active": true,
+      "failed_last_hour": 0,
+      "jobid": 16,
+      "jobname": "archride-walking-cache-budget",
+      "last_failure_at": null,
+      "last_success_at": "2026-11-05T14:20:00.088766+00:00",
+      "runs_last_hour": 6,
+      "schedule": "*/10 * * * *",
+      "succeeded_last_hour": 6
+    }
+  ],
+  "cronLastHour": {
+    "failed": 0,
+    "lastSuccessAt": "2026-11-05T14:24:19.209232+00:00",
+    "runs": 443,
+    "succeeded": 443
+  },
+  "databaseBytes": 115259059,
+  "feeds": [
+    {
+      "entityCount": 1,
+      "errorCode": null,
+      "id": "uga-passio:alerts",
+      "lastAttemptAt": "2026-11-05T14:23:50.121+00:00",
+      "lastSuccessAt": "2026-11-05T14:23:50.121+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": "2026-11-05T14:23:50+00:00",
+      "state": "healthy"
+    },
+    {
+      "entityCount": 438,
+      "errorCode": null,
+      "id": "uga-passio:arrivals",
+      "lastAttemptAt": "2026-11-05T14:24:00.205+00:00",
+      "lastSuccessAt": "2026-11-05T14:24:00.205+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": "2026-11-05T14:24:00+00:00",
+      "state": "healthy"
+    },
+    {
+      "entityCount": 4878,
+      "errorCode": null,
+      "id": "uga-passio:static",
+      "lastAttemptAt": "2026-11-05T00:21:54.496+00:00",
+      "lastSuccessAt": "2026-11-05T00:21:54.496+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": null,
+      "state": "healthy"
+    },
+    {
+      "entityCount": 32,
+      "errorCode": null,
+      "id": "uga-passio:vehicles",
+      "lastAttemptAt": "2026-11-05T14:24:22.913+00:00",
+      "lastSuccessAt": "2026-11-05T14:24:22.913+00:00",
+      "nextAttemptAt": null,
+      "sourceTimestamp": "2026-11-05T14:24:22+00:00",
+      "state": "healthy"
+    }
+  ],
+  "history": {
+    "arrivalEvents": {
+      "oldestReceivedAt": null,
+      "pastTimeLimitRows": 0,
+      "rows": 0
+    },
+    "jobs": {
+      "oldestFinishedAt": "2026-11-02T14:20:01.318694+00:00",
+      "pastTimeLimitRows": 38,
+      "rows": 36256,
+      "oldestPastCutoffSeconds": 266.424
+    },
+    "observations": {
+      "oldestReceivedAt": "2026-11-05T02:20:00.195+00:00",
+      "pastTimeLimitRows": 107,
+      "rows": 24846,
+      "oldestPastCutoffSeconds": 267.548
+    },
+    "predictionHistory": {
+      "oldestCapturedAt": "2026-11-05T11:31:52.757156+00:00",
+      "pastTimeLimitRows": 0,
+      "rows": 31843
+    },
+    "walkingCache": {
+      "expiredRows": 0,
+      "largestGeometryBytes": 2390,
+      "rows": 19
+    }
+  },
+  "largestTables": [
+    {
+      "heap_bytes": 8159232,
+      "index_bytes": 36880384,
+      "last_autoanalyze": "2026-11-05T14:21:37.908597+00:00",
+      "last_autovacuum": "2026-11-05T14:18:37.612735+00:00",
+      "n_dead_tup": 0,
+      "n_live_tup": 31843,
+      "relname": "arrival_predictions",
+      "schemaname": "archride_private",
+      "total_bytes": 45080576
+    },
+    {
+      "heap_bytes": 6422528,
+      "index_bytes": 18718720,
+      "last_autoanalyze": "2026-11-05T14:14:38.098301+00:00",
+      "last_autovacuum": "2026-11-05T14:07:39.004619+00:00",
+      "n_dead_tup": 670,
+      "n_live_tup": 24872,
+      "relname": "transit_observations",
+      "schemaname": "public",
+      "total_bytes": 25182208
+    },
+    {
+      "heap_bytes": 10395648,
+      "index_bytes": 7004160,
+      "last_autoanalyze": "2026-11-05T10:50:27.811507+00:00",
+      "last_autovacuum": "2026-11-05T07:10:18.199409+00:00",
+      "n_dead_tup": 3595,
+      "n_live_tup": 36258,
+      "relname": "transit_job_runs",
+      "schemaname": "public",
+      "total_bytes": 17440768
+    },
+    {
+      "heap_bytes": 548864,
+      "index_bytes": 712704,
+      "last_autoanalyze": "2026-11-05T14:23:37.621127+00:00",
+      "last_autovacuum": "2026-11-05T14:23:37.60783+00:00",
+      "n_dead_tup": 308,
+      "n_live_tup": 599,
+      "relname": "transit_arrivals",
+      "schemaname": "public",
+      "total_bytes": 1302528
+    },
+    {
+      "heap_bytes": 425984,
+      "index_bytes": 802816,
+      "last_autoanalyze": "2026-11-05T00:21:58.023108+00:00",
+      "last_autovacuum": "2026-11-05T00:21:57.983345+00:00",
+      "n_dead_tup": 0,
+      "n_live_tup": 4351,
+      "relname": "transit_stop_times",
+      "schemaname": "public",
+      "total_bytes": 1269760
+    },
+    {
+      "heap_bytes": 8192,
+      "index_bytes": 32768,
+      "last_autoanalyze": "2026-11-03T00:22:40.104237+00:00",
+      "last_autovacuum": null,
+      "n_dead_tup": 44,
+      "n_live_tup": 22,
+      "relname": "transit_shapes",
+      "schemaname": "public",
+      "total_bytes": 376832
+    },
+    {
+      "heap_bytes": 270336,
+      "index_bytes": 49152,
+      "last_autoanalyze": "2026-10-21T04:28:08.081815+00:00",
+      "last_autovacuum": null,
+      "n_dead_tup": 0,
+      "n_live_tup": 354,
+      "relname": "transit_buildings",
+      "schemaname": "public",
+      "total_bytes": 352256
+    },
+    {
+      "heap_bytes": 98304,
+      "index_bytes": 131072,
+      "last_autoanalyze": "2026-11-05T00:21:57.963001+00:00",
+      "last_autovacuum": "2026-11-05T00:21:57.958409+00:00",
+      "n_dead_tup": 0,
+      "n_live_tup": 229,
+      "relname": "transit_trips",
+      "schemaname": "public",
+      "total_bytes": 270336
+    },
+    {
+      "heap_bytes": 40960,
+      "index_bytes": 81920,
+      "last_autoanalyze": "2026-11-05T00:21:57.953741+00:00",
+      "last_autovacuum": "2026-11-05T00:21:57.947596+00:00",
+      "n_dead_tup": 0,
+      "n_live_tup": 161,
+      "relname": "transit_stops",
+      "schemaname": "public",
+      "total_bytes": 163840
+    },
+    {
+      "heap_bytes": 32768,
+      "index_bytes": 81920,
+      "last_autoanalyze": "2026-11-05T14:23:37.628629+00:00",
+      "last_autovacuum": "2026-11-05T14:23:37.623607+00:00",
+      "n_dead_tup": 82,
+      "n_live_tup": 50,
+      "relname": "transit_vehicles",
+      "schemaname": "public",
+      "total_bytes": 155648
+    }
+  ],
+  "manualProviderRequests": 0,
+  "readOnly": true,
+  "recentIngestionLastHour": [
+    {
+      "error_code": null,
+      "feed_id": "uga-passio:alerts",
+      "latest_at": "2026-11-05T14:23:50.122109+00:00",
+      "outcome": "success",
+      "runs": 30
+    },
+    {
+      "error_code": "partial_rejection",
+      "feed_id": "uga-passio:arrivals",
+      "latest_at": "2026-11-05T14:10:47.798251+00:00",
+      "outcome": "failed",
+      "runs": 89
+    },
+    {
+      "error_code": null,
+      "feed_id": "uga-passio:arrivals",
+      "latest_at": "2026-11-05T14:24:00.205492+00:00",
+      "outcome": "success",
+      "runs": 25
+    },
+    {
+      "error_code": null,
+      "feed_id": "uga-passio:vehicles",
+      "latest_at": "2026-11-05T14:24:22.914017+00:00",
+      "outcome": "success",
+      "runs": 356
+    }
+  ],
+  "requestControl": {
+    "activeLeases": 0,
+    "expiredLeases": 0,
+    "expiredNetworkBuckets": 0,
+    "networkBuckets": 2
+  },
+  "retention": {
+    "event_days": 14,
+    "id": true,
+    "job_days": 3,
+    "job_max_rows": 60000,
+    "observation_hours": 12,
+    "observation_max_rows": 200000,
+    "prediction_hours": 6,
+    "prediction_max_rows": 200000
+  },
+  "scope": "Read-only storage, retention and operational status; no cleanup, deployment, configuration change or provider request.",
+  "retentionCronLast24Hours": [
+    {
+      "active": true,
+      "failures_last_24_hours": 0,
+      "jobname": "archride-arrival-evaluation-retention",
+      "last_success_at": "2026-11-05 14:20:02.631429+00",
+      "runs_last_24_hours": 144,
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "active": true,
+      "failures_last_24_hours": 0,
+      "jobname": "archride-public-limit-retention",
+      "last_success_at": "2026-11-05 14:25:00.072081+00",
+      "runs_last_24_hours": 1440,
+      "schedule": "* * * * *"
+    },
+    {
+      "active": true,
+      "failures_last_24_hours": 0,
+      "jobname": "archride-transit-retention",
+      "last_success_at": "2026-11-05 14:20:02.709378+00",
+      "runs_last_24_hours": 144,
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "active": true,
+      "failures_last_24_hours": 0,
+      "jobname": "archride-walking-cache-budget",
+      "last_success_at": "2026-11-05 14:20:00.088766+00",
+      "runs_last_24_hours": 144,
+      "schedule": "*/10 * * * *"
+    }
+  ],
+  "rowCapChecks": {
+    "observations": {
+      "rows": 24846,
+      "configuredCap": 200000,
+      "withinCap": true
+    },
+    "predictionHistory": {
+      "rows": 31843,
+      "configuredCap": 200000,
+      "withinCap": true
+    },
+    "jobs": {
+      "rows": 36256,
+      "configuredCap": 60000,
+      "withinCap": true
+    },
+    "walkingCache": {
+      "rows": 19,
+      "configuredCap": 2000,
+      "withinCap": true
+    }
+  },
+  "storageBudget": {
+    "freeDatabaseBytes": 500000000,
+    "investigateAtBytes": 400000000,
+    "reduceEligibleRetentionBeforeBytes": 450000000,
+    "databasePercentOfFreeQuota": 23.05,
+    "belowInvestigateThreshold": true,
+    "previousSnapshotBytes": 147199667,
+    "changeFromPreviousSnapshotBytes": -31940608
+  },
+  "interpretation": [
+    "All measured history/cache row counts are below their configured caps.",
+    "107 observations and 38 job rows are about 267 seconds beyond rolling time cutoffs, within the ten-minute cleanup interval; latest scheduled history cleanup completed at 14:20 UTC.",
+    "All 12 ArchRide cron jobs are active; 443 recorded SQL cron runs succeeded in the preceding hour. The four retention/counter jobs show zero failures across 24 hours.",
+    "Cron dispatch success does not itself prove ingestion success. All four current feed statuses independently report healthy; the prior-hour arrival failures predate the fixed-trip v10 deployment at 14:10:58 UTC.",
+    "Storage is 23.05% of the 500 MB quota and decreased 31,940,608 bytes since the previous snapshot. Existing table/index free pages can be reused; this snapshot does not guarantee future storage or invocation/egress capacity.",
+    "Two nonexpired network counter rows are expected after the public health read; no network hash or client address is included."
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "checkedAt": "2026-11-03T22:48:54Z",
+  "project": "yivnryjbzhampecphlgr",
+  "checks": {
+    "admin_anonymous_denied": true,
+    "delete_invalid_token_denied": true,
+    "editable_admin_metadata_denied": true,
+    "private_owner_insert": true,
+    "second_user_cannot_read_private_item": true,
+    "ownership_reassignment_denied": true,
+    "trusted_admin_status": true,
+    "admin_status_excludes_personal_rows": true,
+    "invalid_notice_rejected": true,
+    "bounded_retry_gate_enforced": true,
+    "retry_double_click_rate_limited": true,
+    "revoked_admin_old_jwt_denied": true,
+    "revoked_session_old_jwt_denied": true,
+    "authenticated_account_deleted": true,
+    "deleted_account_old_token_reads_no_rows": true,
+    "deleted_account_old_token_cannot_recreate_data": true,
+    "deleted_account_old_token_cannot_delete_again": true,
+    "unrelated_account_survives_deletion": true,
+    "public_health_live": true
+  },
+  "health": {
+    "app": "ArchRide",
+    "status": "ok",
+    "database": "connected",
+    "transit": "degraded",
+    "feeds": [
+      {
+        "id": "uga-passio:static",
+        "freshness": "current",
+        "sourceTimestamp": null,
+        "lastSuccessAt": "2026-11-03T00:21:43.501+00:00",
+        "entityCount": 4878
+      },
+      {
+        "id": "uga-passio:alerts",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-03T22:48:12+00:00",
+        "lastSuccessAt": "2026-11-03T22:48:12.98+00:00",
+        "entityCount": 0
+      },
+      {
+        "id": "uga-passio:arrivals",
+        "freshness": "stale",
+        "sourceTimestamp": "2026-11-03T11:30:16+00:00",
+        "lastSuccessAt": "2026-11-03T11:30:16.316+00:00",
+        "entityCount": 0
+      },
+      {
+        "id": "uga-passio:vehicles",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-03T22:48:51+00:00",
+        "lastSuccessAt": "2026-11-03T22:48:51.59+00:00",
+        "entityCount": 24
+      }
+    ]
+  },
+  "temporaryAccountsRemoved": true,
+  "emailsSent": false
+}

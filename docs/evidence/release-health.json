@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-11-05T19:30:15.017Z",
+  "endpoint": "health",
+  "method": "GET",
+  "httpStatus": 200,
+  "allowedOrigin": "https://nandanpraveen.github.io",
+  "body": {
+    "app": "ArchRide",
+    "status": "ok",
+    "database": "connected",
+    "transit": "connected",
+    "feeds": [
+      {
+        "id": "uga-passio:static",
+        "freshness": "current",
+        "sourceTimestamp": null,
+        "lastSuccessAt": "2026-11-05T00:21:54.496Z",
+        "entityCount": 4878
+      },
+      {
+        "id": "uga-passio:arrivals",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-05T19:29:55.000Z",
+        "lastSuccessAt": "2026-11-05T19:29:55.431Z",
+        "entityCount": 421
+      },
+      {
+        "id": "uga-passio:alerts",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-05T19:29:55.000Z",
+        "lastSuccessAt": "2026-11-05T19:29:55.679Z",
+        "entityCount": 1
+      },
+      {
+        "id": "uga-passio:vehicles",
+        "freshness": "current",
+        "sourceTimestamp": "2026-11-05T19:30:14.000Z",
+        "lastSuccessAt": "2026-11-05T19:30:14.550Z",
+        "entityCount": 29
+      }
+    ]
+  }
+}

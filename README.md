@@ -1,53 +1,61 @@
 # ArchRide
 
-A mobile-first campus transit app for UGA students, built as a KTP pledge project with **Next.js, TypeScript, Material UI, Tailwind CSS, and Supabase**.
+[Open ArchRide](https://nandanpraveen.github.io/archride/)
 
-ArchRide will help a student choose between walking and a direct bus trip, identify the correct boarding stop/direction, and understand when to leave and whether a class deadline looks achievable. Home and Map use the shared public Supabase catalog for verified campus places, routes, stops, source predictions and alerts. The remaining planning and personalized features follow the project roadmap.
+A student-built UGA campus travel app for desktop and mobile browsers. Compare verified walking paths with reachable direct bus journeys, find boarding stops and campus parking, and plan around classes.
 
-[GitHub project and draft issues](https://github.com/users/nandanpraveen/projects/1) · [Delivery plan](docs/ROADMAP.md) · [Full app brief](docs/APP_BRIEF.md) · [Design system](DESIGN.md) · [Development notes](docs/DEVELOPMENT.md)
+**No account is required.** Saved journeys, classes, preferences, active trips, and reminders stay in the current browser. They do not sync across devices. Backend request limits protect shared services without student accounts.
 
-## Start locally
+[Project board](https://github.com/users/nandanpraveen/projects/1) · [Release verification](docs/RELEASE.md) · [Development](docs/DEVELOPMENT.md) · [Design](DESIGN.md) · [Parking sources and audit](docs/parking/README.md)
 
-Use Node.js 24 and pnpm 12.5.1. Dependencies and the public Supabase configuration are already set up on the bootstrap machine at `/Users/nandanpraveen/Documents/ArchRide`.
+## Run locally
+
+Use Node.js 24 and pnpm 12.5.1. Python 3 serves static files during browser tests.
 
 ```sh
 pnpm install --frozen-lockfile
+cp .env.example .env.local
 pnpm dev
 ```
 
-Open [localhost:3000](http://localhost:3000). For a fresh clone, first copy `.env.example` to `.env.local` and obtain the ArchRide project URL and **publishable** key from the project owner or your authorized Supabase dashboard. Never put a secret/service-role key in a `NEXT_PUBLIC_` variable.
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to the authorized ArchRide project configuration. These values are public client configuration. Never put a secret or service-role key in a `NEXT_PUBLIC_` variable.
 
-```sh
-cp .env.example .env.local
-```
+Open [localhost:3000](http://localhost:3000). Public campus reads and walking requests use deployed Supabase Edge Functions. The site itself exports to static files for GitHub Pages.
 
-The Material shell includes Home, Map, Plan, Saved, and Profile, responsive navigation and keyboard skip links. Home supports manual/GPS origins, destination selection, nearby stops and valid source departures. Plan preserves the chosen places while journey recommendations remain pending. Public browsing does not require location permission or an account.
+## Features
 
-## Check your work
+- Home search, manual or optional GPS origins, nearby departures, saved shortcuts, and next-class planning.
+- Complete walking and direct-bus comparisons with boarding direction, walking legs, safety buffers, and campus-time deadlines.
+- Active-trip steps, current-source revalidation, missed-bus recovery, and clearly separated agency and maintainer notices.
+- Guest parking maps and searchable lists with sourced rules, explicit unknown conditions, and a geographic three-mile campus buffer.
+- Device-local saved trips, classes, appearance, quiet hours, watched buses, and in-app notification history.
+
+Transit and walking times are estimates. Missing or expired source information has no live countdown. Reminders require the app to remain open; background push is not enabled. Parking information never replaces posted signs or TPS event rules. Student accounts and email delivery are outside the current scope.
+
+The adaptive-prediction pipeline remains evidence-gated. Official predictions remain the serving baseline; replay tests alone do not establish improved accuracy. See the release evidence for current coverage and limits.
+
+## Verify
 
 ```sh
 pnpm lint
 pnpm typecheck
 pnpm test:transit
-pnpm exec playwright install chromium # first test run on a new machine
+pnpm test:classes
+pnpm test:notifications
+pnpm test:planner
+pnpm test:personal
+pnpm test:parking
 pnpm test
-pnpm build
+pnpm build:pages
+pnpm test:export
 ```
 
-`pnpm test` runs the desktop/mobile browser suite against an isolated app server on port 3100 and a local Auth protocol fixture on port 3101. It does not reuse a developer server, send email, or need shared secrets/provider access. `pnpm test:transit` exercises public read contracts, ingestion, catalog import, auth redirect safety and PostgreSQL security. CI also checks lint, types, the generated worker bundle and production build.
+Browser tests build a static export with deterministic test data and serve it on port 3100. Run `pnpm build:pages` afterward before publishing. Live backend and static-export checks are recorded separately in [release verification](docs/RELEASE.md). Tests do not send email or use private student accounts.
 
-`GET /api/health` checks database connectivity and source-clock freshness separately. The database can be healthy while realtime transit is degraded; source predictions remain unavailable when stale or absent.
+## Deployment
 
-## Transit ingestion (Week 1)
+`pnpm build:pages` exports the app with `/archride` as its base path. Publish only the contents of `out/` into `archride/` in the existing `nandanpraveen.github.io` repository. Preserve the portfolio and resume at the repository root. The root `.nojekyll` file keeps `_next` assets available.
 
-See the [implementation, source evidence, team contracts, and activation runbook](docs/transit/README.md). Run `pnpm test:transit` for isolated PostgreSQL ingestion/security tests. The hosted ingestion function, static refresh, and retention jobs are deployed. Passio has confirmed vehicle positions every 10 seconds, trip updates every 30 seconds, service alerts every two minutes, and indefinite caching permission. The deployed central worker enforces those intervals independently with persisted cooldowns. See the [confirmed policy and handoff](docs/transit/CONFIRMED_POLICY.md) for current retention, verification and Ivan's planner dependency.
+Supabase hosts central ingestion, public read admission, walking routing, optional rider reports, health checks, and restricted maintenance. Browser code contains no worker or administrator secret. Existing private database records are retained under their ownership policies; removing student sign-in does not delete historical records.
 
-## Backend
-
-[ArchRide Supabase dashboard](https://supabase.com/dashboard/project/yivnryjbzhampecphlgr) · Free plan · US East/North Virginia.
-
-The backend has typed browser/server Supabase clients, session refresh, email sign-up/sign-in, confirmation/resend, password recovery, sign-out and a server-verified account email in Profile. Public browsing stays available without an account. Existing profiles remain owner-only; the wider preference/private-feature schema and account deletion remain project acceptance work. A protected Edge Function performs central ingestion; hosted cron handles static refresh and retention. See [development notes](docs/DEVELOPMENT.md) for linking, migrations, type generation, auth configuration and optional local Docker workflows.
-
-## Campus places and Home data
-
-The reviewed hosted catalog includes 354 buildings and 86 mapped automatic-door points from official UGA GIS sources, alongside the transit stop catalog. See [Home integration and acceptance](docs/home-data-integration.md) and [campus source/import runbook](docs/campus/README.md). Campus locations use UGA Office of University Architects attribution; transit keeps its UGA/Passio attribution. GPS coordinates stay only in Home memory. Automatic doors do not establish accessible walking routes.
+ArchRide is not affiliated with or endorsed by the University of Georgia. Transit: UGA / Passio. Campus geometry: UGA Office of University Architects. Maps and walking paths: OpenStreetMap contributors / FOSSGIS.

@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-04T02:08:14.275Z",
+  "scope": "Live public static catalog and health only. This is not an Auth/private-data/Vault disaster-recovery drill.",
+  "source": "https://yivnryjbzhampecphlgr.supabase.co",
+  "sha256": "5c749e8f89b429fd3b0a705a67d28deaec29707b67667bbc21319583d986b349",
+  "counts": {
+    "transit_sources": 1,
+    "transit_buildings": 354,
+    "transit_entrances": 86,
+    "transit_routes": 19,
+    "transit_stops": 161,
+    "transit_shapes": 22,
+    "transit_services": 6,
+    "transit_trips": 229,
+    "transit_stop_times": 4351,
+    "transit_frequencies": 90,
+    "feed_status": 6
+  },
+  "restoredInto": "Fresh disposable PGlite PostgreSQL with all portable checked-in migrations",
+  "admittedPublicExportVerified": true,
+  "directAnonymousReadDenied": true,
+  "anonymousWriteDenied": true,
+  "productionWrites": false,
+  "snapshotPath": ".secrets/public-catalog-recovery.json"
+}

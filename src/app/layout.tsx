@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Roboto } from "next/font/google";
+import localFont from "next/font/local";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { Providers } from "@/components/providers";
 import { AppShell } from "@/components/app-shell";
 import "./globals.css";
-const roboto = Roboto({
+const roboto = localFont({
+  src: "../fonts/roboto-latin.woff2",
   variable: "--font-roboto",
-  subsets: ["latin"],
   display: "swap",
 });
 export const metadata: Metadata = {
@@ -28,8 +29,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={roboto.variable}>
+    <html lang="en" className={roboto.variable} suppressHydrationWarning>
       <body>
+        <InitColorSchemeScript attribute="class" modeStorageKey="archride.mode" />
         <Providers>
           <AppShell>{children}</AppShell>
         </Providers>

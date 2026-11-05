@@ -1,59 +1,62 @@
 "use client";
 import Link from "next/link";
 import {
+  Box,
   Button,
   List,
-  ListItem,
   ListItemButton,
   ListItemText,
-  Paper,
+  Stack,
   Typography,
 } from "@mui/material";
-import { useSavedStops } from "@/lib/use-saved-stops";
-
+import ArrowForwardRounded from "@mui/icons-material/ArrowForwardRounded";
+import { usePersonal } from "./personal-provider";
+import { planRefHref } from "@/lib/personal";
 export function HomeFavorites() {
-  const stops = useSavedStops().slice(0, 5);
+  const data = usePersonal(),
+    items = data.items.slice(0, 4);
   return (
-    <Paper
+    <Box
       component="section"
-      variant="outlined"
       aria-labelledby="favorites-heading"
-      sx={{ p: 3, bgcolor: "background.default" }}
+      sx={{ minWidth: 0 }}
     >
-      <Typography
-        component="h2"
-        variant="h3"
-        id="favorites-heading"
-        sx={{ mb: 1 }}
-      >
-        Favorites
-      </Typography>
-      {stops.length === 0 ? (
-        <Typography color="text.secondary">
-          Stops you save will appear here. Open a stop on the map and choose
-          Save stop.
+      <Stack spacing={2}>
+        <Typography component="h2" variant="h2" id="favorites-heading">
+          Your usual places
         </Typography>
-      ) : (
-        <List disablePadding>
-          {stops.map((stop) => (
-            <ListItem key={stop.id} disablePadding>
+        {!items.length ? null : (
+          <List disablePadding>
+            {items.map((i) => (
               <ListItemButton
-                component={Link}
-                href={`/map?stop=${encodeURIComponent(stop.id)}`}
-                sx={{ minHeight: 48 }}
+                key={i.id}
+                component={Link} prefetch={false}
+                href={
+                  i.kind === "stop"
+                    ? `/map?stop=${encodeURIComponent(i.destination.id)}`
+                    : planRefHref(i.origin, i.destination)
+                }
+                sx={{ px: 0 }}
               >
                 <ListItemText
-                  primary={stop.name}
-                  slotProps={{ primary: { sx: { overflowWrap: "anywhere" } } }}
+                  primary={i.name}
+                  secondary={
+                    i.kind === "stop" ? "Saved stop" : "Recalculate journey"
+                  }
                 />
+                <ArrowForwardRounded fontSize="small" color="action" />
               </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      )}
-      <Button component={Link} href="/saved" sx={{ mt: 1 }}>
-        Manage saved items
-      </Button>
-    </Paper>
+            ))}
+          </List>
+        )}
+        <Button
+          component={Link} prefetch={false}
+          href="/saved"
+          sx={{ alignSelf: "flex-start", px: 0 }}
+        >
+          Manage saved items
+        </Button>
+      </Stack>
+    </Box>
   );
 }

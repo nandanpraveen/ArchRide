@@ -5,12 +5,8 @@ import {
   activeNotifications,
   isInAppLink,
   isValidBusLeadMinutes,
-  notificationFromRow,
-  preferencesFromRow,
   readDeviceNotifications,
   readDevicePreferences,
-  rowFromNotification,
-  rowFromPreferences,
   validatePreferences,
   writeDeviceNotifications,
   writeDevicePreferences,
@@ -33,20 +29,6 @@ const entry = (overrides: Partial<NotificationEntry> = {}): NotificationEntry =>
   ...overrides,
 });
 
-const row = (overrides: Record<string, unknown> = {}) => ({
-  id: "n1",
-  user_id: "user-1",
-  type: "leave_now",
-  title: "Route L is about 5 min away",
-  body: "",
-  link: "/",
-  dedupe_key: "leave:trip-1:stop-1",
-  created_at: "2026-10-30T12:00:00.000Z",
-  expires_at: "2026-10-30T12:10:00.000Z",
-  read_at: null,
-  ...overrides,
-});
-
 // A stand-in for the browser's localStorage, which Node does not have.
 let store: Map<string, string>;
 let failWrites = false;
@@ -66,57 +48,6 @@ beforeEach(() => {
 });
 afterEach(() => {
   Reflect.deleteProperty(globalThis, "localStorage");
-});
-
-test("a database row becomes an app notification with the app's field names", () => {
-  assert.deepEqual(notificationFromRow(row({ read_at: "2026-10-30T12:03:00.000Z" })), {
-    id: "n1",
-    type: "leave_now",
-    title: "Route L is about 5 min away",
-    body: "",
-    link: "/",
-    dedupeKey: "leave:trip-1:stop-1",
-    createdAt: "2026-10-30T12:00:00.000Z",
-    expiresAt: "2026-10-30T12:10:00.000Z",
-    readAt: "2026-10-30T12:03:00.000Z",
-  });
-});
-
-test("a row with a type this app does not know is skipped", () => {
-  assert.equal(notificationFromRow(row({ type: "something_new" })), null);
-});
-
-test("a new notification is saved without an owner, id, or read time", () => {
-  const { id, createdAt, readAt, ...fields } = entry();
-  assert.deepEqual(rowFromNotification(fields), {
-    type: "leave_now",
-    title: "Route L is about 5 min away",
-    body: "",
-    link: "/",
-    dedupe_key: "leave:trip-1:stop-1",
-    expires_at: "2026-10-30T12:10:00.000Z",
-  });
-  assert.ok(!("user_id" in rowFromNotification(fields)));
-  assert.ok(id && createdAt && readAt === null);
-});
-
-test("a student with no saved settings gets the defaults, as a copy", () => {
-  const prefs = preferencesFromRow(null);
-  assert.deepEqual(prefs, DEFAULT_PREFERENCES);
-  assert.notEqual(prefs, DEFAULT_PREFERENCES);
-  assert.equal(prefs.busLeadMinutes, 5);
-});
-
-test("settings convert to a row and back without losing anything", () => {
-  const prefs = { ...DEFAULT_PREFERENCES, leaveNowEnabled: false, busLeadMinutes: 9 };
-  const saved = rowFromPreferences(prefs);
-  assert.equal(saved.bus_lead_minutes, 9);
-  assert.equal(saved.leave_now_enabled, false);
-  assert.ok(!("user_id" in saved));
-  assert.deepEqual(
-    preferencesFromRow({ ...saved, user_id: "user-1", created_at: "", updated_at: "" } as Parameters<typeof preferencesFromRow>[0]),
-    prefs,
-  );
 });
 
 test("expired notifications are hidden and the rest are newest first", () => {

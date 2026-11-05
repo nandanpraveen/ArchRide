@@ -1,0 +1,54 @@
+{
+  "capturedAt": "2026-11-04T17:58:57.457Z",
+  "sourceHeaderTime": "2026-11-04T17:58:57.000Z",
+  "sha256": "c45968d003a1438f2be5d963d74d793e39d96215fccfbdba9887ff8635796b39",
+  "replayedAt": "2026-11-04T18:07:41.087Z",
+  "sourceEntities": 67,
+  "before": {
+    "acceptedStopRows": 353,
+    "rejectedEntities": 21,
+    "rejectionReasons": {
+      "ambiguous_trip_instance": 21
+    },
+    "states": {
+      "stale": 31,
+      "passed": 17,
+      "valid": 305
+    }
+  },
+  "after": {
+    "acceptedStopRows": 531,
+    "rejectedEntities": 0,
+    "rejectionReasons": {},
+    "states": {
+      "valid": 459,
+      "stale": 47,
+      "passed": 25
+    }
+  },
+  "discardedFieldsSummary": {
+    "entities": 21,
+    "missingDate": 21,
+    "missingTime": 21,
+    "missingBoth": 21,
+    "emptyStopUpdates": 0,
+    "totalStopUpdates": 178,
+    "absoluteArrivalTimes": 178,
+    "absoluteDepartureTimes": 178,
+    "futureAbsoluteArrivals": 170,
+    "frequencyEntities": 0,
+    "nonFrequencyEntities": 21,
+    "unknownTripIds": 0,
+    "canceled": 0
+  },
+  "normalizationMilliseconds": 67.98629200000005,
+  "sourceEtasAndClocksUnchanged": true,
+  "rawFeedIncludedInRepository": false,
+  "reference": "https://gtfs.org/documentation/realtime/reference/#message-tripdescriptor",
+  "hostedVerification": "fixed-trip-hosted-smoke.json",
+  "regressionTests": {
+    "file": "tests/transit/fixed-trip-instance.test.ts",
+    "cases": 5,
+    "completeTransitSuitePassed": 58
+  }
+}

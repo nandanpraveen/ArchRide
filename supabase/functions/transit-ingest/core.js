@@ -21,6 +21,60 @@ function retryDelayMs(feed, previousFailures, retryAfterAt, now = Date.now()) {
 import { parse } from "csv-parse/sync";
 import { unzipSync, strFromU8 } from "fflate";
 import GtfsRealtime from "gtfs-realtime-bindings";
+
+// src/lib/transit/service-times.ts
+function operatesOn(service, date) {
+  if (!/^\d{8}$/.test(date)) return false;
+  const day = `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6)}`;
+  if (!campusDeadline(`${day}T12:00`)) return false;
+  const exceptions = Array.isArray(service.exceptions) ? service.exceptions : [];
+  const exception = exceptions.find(
+    (e) => e && typeof e === "object" && !Array.isArray(e) && e.date === date
+  );
+  if (exception && typeof exception === "object" && !Array.isArray(exception))
+    return String(exception.exception_type) === "1";
+  const calendar = service.calendar;
+  if (!calendar || typeof calendar !== "object" || Array.isArray(calendar))
+    return false;
+  if (typeof calendar.start_date !== "string" || typeof calendar.end_date !== "string" || date < calendar.start_date || date > calendar.end_date)
+    return false;
+  const weekday = [
+    "sunday",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday"
+  ][(/* @__PURE__ */ new Date(`${day}T12:00:00Z`)).getUTCDay()];
+  return String(calendar[weekday]) === "1";
+}
+function campusDeadline(local, choice) {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(local)) return null;
+  const anchor = Date.parse(`${local}:00Z`);
+  if (!Number.isFinite(anchor)) return null;
+  const formatter = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23"
+  });
+  const matches = [-4, -5].map((offset) => anchor - offset * 36e5).filter((value) => {
+    const parts = Object.fromEntries(
+      formatter.formatToParts(value).map((part) => [part.type, part.value])
+    );
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}` === local;
+  }).sort();
+  if (!matches.length || matches.length > 1 && !choice) return null;
+  return new Date(
+    choice === "later" ? matches.at(-1) : matches[0]
+  ).toISOString();
+}
+
+// scripts/transit/model.ts
 var SOURCE = "uga-passio";
 var PREFIX = `${SOURCE}:`;
 var id = (raw) => PREFIX + raw;
@@ -199,13 +253,30 @@ function staticCatalog(bytes) {
 }
 var decode = (b) => GtfsRealtime.transit_realtime.FeedMessage.decode(b);
 function context(c) {
+  const fixedBounds = /* @__PURE__ */ new Map();
+  const grouped = /* @__PURE__ */ new Map();
+  for (const row of c.transit_stop_times) {
+    const list = grouped.get(String(row.trip_id)) ?? [];
+    list.push(row);
+    grouped.set(String(row.trip_id), list);
+  }
+  for (const [trip, rows] of grouped) {
+    rows.sort((a, b) => Number(a.stop_sequence) - Number(b.stop_sequence));
+    const first = rows[0].departure_seconds;
+    const values = rows.flatMap((r) => [r.arrival_seconds, r.departure_seconds]).filter((n) => typeof n === "number" && Number.isFinite(n));
+    if (typeof first === "number" && Number.isFinite(first) && values.length)
+      fixedBounds.set(trip, { start: first, end: Math.max(...values) });
+  }
   return {
     trips: new Map(c.transit_trips.map((t) => [t.id, t])),
     stops: new Set(c.transit_stops.map((s) => s.id)),
     routes: new Set(c.transit_routes.map((r) => r.id)),
     occurrences: new Map(
       c.transit_stop_times.map((s) => [s.id, String(s.stop_id)])
-    )
+    ),
+    frequencyTrips: new Set((c.transit_frequencies ?? []).map((f) => String(f.trip_id))),
+    services: new Map((c.transit_services ?? []).map((service) => [service.id, service])),
+    fixedBounds
   };
 }
 function timestamp(n, now) {
@@ -216,19 +287,39 @@ function timestamp(n, now) {
   );
   return new Date(v * 1e3).toISOString();
 }
-function tripInfo(t, c, vehicleId) {
+var campusClock = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" });
+function campusDay(iso) {
+  const parts = Object.fromEntries(campusClock.formatToParts(Date.parse(iso)).map((p) => [p.type, p.value]));
+  return campusDeadline(`${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`) ? `${parts.year}${parts.month}${parts.day}` : null;
+}
+function tripInfo(t, c, vehicleId, sourceTime, evidenceTimes, colliding) {
   if (!t?.tripId) return null;
   const trip = c.trips.get(id(t.tripId));
   assert(trip, "unknown_trip");
   assert(!t.routeId || trip.route_id === id(t.routeId), "trip_route_mismatch");
-  assert(!t.startDate || /^\d{8}$/.test(t.startDate), "invalid_service_date");
+  assert(!t.startDate || /^\d{8}$/.test(t.startDate) && campusDeadline(`${t.startDate.slice(0, 4)}-${t.startDate.slice(4, 6)}-${t.startDate.slice(6)}T12:00`), "invalid_service_date");
   if (t.startTime) seconds(t.startTime);
+  let date = t.startDate || "", start = t.startTime || "";
+  if (!date || !start) {
+    const bounds = c.fixedBounds.get(trip.id), service = c.services.get(String(trip.service_id));
+    if (c.frequencyTrips.has(trip.id) || colliding && !date || !bounds || !service)
+      return { trip, instance: null };
+    if (!date) {
+      const day = campusDay(sourceTime), days = [...new Set(evidenceTimes)].map(campusDay);
+      if (!day || !days.length || days.some((d) => d !== day) || bounds.start >= 86400 || bounds.end >= 86400 || !operatesOn(service, day) || start && seconds(start) !== bounds.start) return { trip, instance: null };
+      date = day;
+    }
+    if (!start) {
+      const hours = Math.floor(bounds.start / 3600), minutes = Math.floor(bounds.start % 3600 / 60), secs = bounds.start % 60;
+      start = [hours, minutes, secs].map((n) => String(n).padStart(2, "0")).join(":");
+    }
+  }
   return {
     trip,
     instance: [
       id(t.tripId),
-      t.startDate || "",
-      t.startTime || "",
+      date,
+      start,
       ...vehicleId ? ["vehicle:" + vehicleId] : []
     ].join("|")
   };
@@ -251,6 +342,11 @@ function normalize(feed, b, c, now = Date.now()) {
     entityCount: m.entity.length
   };
   const ids = /* @__PURE__ */ new Set();
+  const descriptorCounts = /* @__PURE__ */ new Map();
+  for (const entity of m.entity) {
+    const descriptor = feed === "arrivals" ? entity.tripUpdate?.trip : entity.vehicle?.trip;
+    if (descriptor?.tripId) descriptorCounts.set(descriptor.tripId, (descriptorCounts.get(descriptor.tripId) ?? 0) + 1);
+  }
   for (const e of m.entity) {
     try {
       assert(e.id && !ids.has(e.id), "duplicate_entity");
@@ -263,7 +359,8 @@ function normalize(feed, b, c, now = Date.now()) {
           Object.hasOwn(v.position, "latitude") && Object.hasOwn(v.position, "longitude"),
           "missing_coordinate"
         );
-        const t = tripInfo(v.trip, c, v.vehicle?.id), raw = v.vehicle?.id || e.id;
+        const positionTime = v.timestamp ? timestamp(v.timestamp, now) : stamp;
+        const t = tripInfo(v.trip, c, v.vehicle?.id, positionTime, [positionTime], (descriptorCounts.get(v.trip?.tripId ?? "") ?? 0) > 1), raw = v.vehicle?.id || e.id;
         const route = t?.trip.route_id || (v.trip?.routeId ? id(v.trip.routeId) : null);
         assert(!route || c.routes.has(String(route)), "unknown_route");
         const stop = v.stopId ? id(v.stopId) : null;
@@ -273,7 +370,6 @@ function normalize(feed, b, c, now = Date.now()) {
             c.occurrences.get(`${t.trip.id}:${v.currentStopSequence}`) === stop,
             "stop_sequence_mismatch"
           );
-        const positionTime = v.timestamp ? timestamp(v.timestamp, now) : stamp;
         const row = {
           id: id(raw),
           source_id: SOURCE,
@@ -299,7 +395,7 @@ function normalize(feed, b, c, now = Date.now()) {
         );
         assert(row.speed === null || Number(row.speed) >= 0, "invalid_speed");
         result.rows.push(row);
-        if (row.current_status === "STOPPED_AT" && stop && v.timestamp)
+        if (row.current_status === "STOPPED_AT" && stop && v.timestamp && t?.instance)
           result.events.push({
             id: `${row.id}:${t?.instance || ""}:${v.currentStopSequence ?? stop}:${positionTime}`,
             vehicle_id: row.id,
@@ -314,10 +410,11 @@ function normalize(feed, b, c, now = Date.now()) {
       } else if (feed === "arrivals") {
         const u = e.tripUpdate;
         assert(u, "missing_trip_update");
-        const t = tripInfo(u.trip, c, u.vehicle?.id);
-        assert(t, "missing_trip");
-        assert(u.trip.startDate && u.trip.startTime, "ambiguous_trip_instance");
         const updateTime = u.timestamp ? timestamp(u.timestamp, now) : stamp;
+        const evidenceTimes = (u.stopTimeUpdate ?? []).flatMap((s) => [s.arrival?.time, s.departure?.time]).filter((n) => n && Number(n) > 0).map((n) => new Date(Number(n) * 1e3).toISOString());
+        const t = tripInfo(u.trip, c, u.vehicle?.id, updateTime, evidenceTimes, (descriptorCounts.get(u.trip?.tripId ?? "") ?? 0) > 1);
+        assert(t, "missing_trip");
+        assert(t.instance, "ambiguous_trip_instance");
         const canceled = u.trip.scheduleRelationship === 3 || u.trip.scheduleRelationship === 7;
         const updates = canceled ? [...c.occurrences].filter(([k]) => k.startsWith(t.trip.id + ":")).map(([k, s]) => ({
           stopSequence: Number(k.slice(k.lastIndexOf(":") + 1)),
@@ -517,13 +614,17 @@ async function loadContext(db, tripIds) {
   const c = {};
   for (const table of ["transit_routes", "transit_stops", "transit_trips"])
     c[table] = (await db.query(
-      `select ${table === "transit_trips" ? "id,route_id" : "id"} from public.${table} where source_id=$1 and active${table === "transit_trips" && tripIds ? " and id=any($2::text[])" : ""}`,
+      `select ${table === "transit_trips" ? "id,route_id,service_id" : "id"} from public.${table} where source_id=$1 and active${table === "transit_trips" && tripIds ? " and id=any($2::text[])" : ""}`,
       table === "transit_trips" && tripIds ? [SOURCE, tripIds] : [SOURCE]
     )).rows;
   c.transit_stop_times = (await db.query(
-    `select s.id,s.stop_id from public.transit_stop_times s join public.transit_trips t on t.id=s.trip_id where t.source_id=$1 and t.active${tripIds ? " and t.id=any($2::text[])" : ""}`,
+    `select s.id,s.stop_id,s.trip_id,s.stop_sequence,s.arrival_seconds,s.departure_seconds from public.transit_stop_times s join public.transit_trips t on t.id=s.trip_id where t.source_id=$1 and t.active${tripIds ? " and t.id=any($2::text[])" : ""}`,
     tripIds ? [SOURCE, tripIds] : [SOURCE]
   )).rows;
+  [c.transit_services, c.transit_frequencies] = await Promise.all([
+    db.query(`select s.* from public.transit_services s where s.id in (select service_id from public.transit_trips where source_id=$1 and active${tripIds ? " and id=any($2::text[])" : ""})`, tripIds ? [SOURCE, tripIds] : [SOURCE]).then((r) => r.rows),
+    db.query(`select f.trip_id from public.transit_frequencies f join public.transit_trips t on t.id=f.trip_id where t.source_id=$1 and t.active${tripIds ? " and t.id=any($2::text[])" : ""}`, tripIds ? [SOURCE, tripIds] : [SOURCE]).then((r) => r.rows)
+  ]);
   assert(
     c.transit_routes.length && c.transit_stops.length && (tripIds !== void 0 || c.transit_trips.length),
     "static_not_configured"

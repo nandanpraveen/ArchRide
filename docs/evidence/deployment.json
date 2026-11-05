@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-11-05T19:54:58.842507+00:00",
+  "url": "https://nandanpraveen.github.io/archride/",
+  "version": "0.1.0",
+  "sourceCodeCommit": "9bdf9e65e7abb78b6e5c8ae9feb5eb94dbb59539",
+  "sourceReleaseTag": "v0.1.0",
+  "sourcePullRequest": "https://github.com/nandanpraveen/ArchRide/pull/15",
+  "sourceChecks": "https://github.com/nandanpraveen/ArchRide/pull/15/checks",
+  "siteRepository": "nandanpraveen/nandanpraveen.github.io",
+  "siteCommit": "d1bfc0a4dcffd62c7be7643afe46b7ec69dfe721",
+  "applicationDeploymentCommit": "7370e970449d96cb83cc3441d13092fccdb73b40",
+  "pagesSource": {
+    "branch": "main",
+    "path": "/"
+  },
+  "preservedRootFilesSha256": {
+    "index.html": "b260218103440a525ff901c7b93d541865d6ffedd9ca03c32497a0730db5dc43",
+    "resume.pdf": "21b94dd998919415585079c50de4ede34abb6b59ed2c1d392477b8da43b7acf6"
+  },
+  "retainedPreviousHashedAssets": [
+    "archride/_next/static/Xd7i43kVpO5LpzGgBgNvi/_buildManifest.js",
+    "archride/_next/static/Xd7i43kVpO5LpzGgBgNvi/_ssgManifest.js",
+    "archride/_next/static/chunks/934-b132aaf147c7d0f6.js",
+    "archride/_next/static/chunks/app/map/page-c41beafa8f37aaf3.js",
+    "archride/_next/static/chunks/app/page-3b910a367920c6b1.js"
+  ],
+  "liveBrowserChecks": {
+    "startTime": "2026-11-05T19:50:01.586Z",
+    "duration": 66046.527,
+    "expected": 34,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "manualProductionFlow": [
+    "Real MLC-to-Tate Student Center walking recommendation",
+    "Start trip",
+    "Navigate Home and resume trip",
+    "End trip; active section removed",
+    "Inspect live phone bus markers and controls"
+  ],
+  "rollbackEvidence": "frontend-rollback.json",
+  "physicalDevicesTested": false,
+  "remainingAcceptance": [
+    "Physical iPhone/Safari and Android/Chrome smoke tests",
+    "Real held-out end-to-end predictor improvement and independent departure/dwell evidence before calculated-model promotion"
+  ]
+}

@@ -1,0 +1,39 @@
+# Parking inventory and map boundary
+
+Checked November 3, 2026. Parking is bundled with the static app and has no runtime parking API or Supabase dependency.
+
+## Inventory and source reconciliation
+
+`src/lib/parking-data.json` has **88 unique locations**: all 81 distinct codes in the current [TPS enforcement tables](https://tps.uga.edu/parking/enforcement/), plus seven locations from current TPS maps or the [UGA OUA parking geometry](https://maps.itos.uga.edu/arcgis/rest/services/OUA/UGA_CampusMap_Base/MapServer/8). These include N14, E16, W18, Health Sciences visitor/facilities areas, VMC visitor parking and GIS S27. Rules for additions without a matching enforcement row remain unknown. Current main-campus, Health Sciences, College Station/East Side park-and-ride, Riverbend/Transit, Soccer/Softball and Club Sports locations are included.
+
+The checked-in [inventory audit](inventory-audit.json) lists every enforcement code, additional code, alias, duplicate and documented exclusion. The original 92 map-service pins repeat lots in parking, deck and visitor layers. They are not 92 distinct lots. S01 is repeated in two TPS enforcement tables. W01 in older geometry is the current W03. Tate is N11, STEM is S06, VMC is the Veterinary Medicine Center, and the older generic University Parking point is S24. Dooley Plaza's visitor **spaces** are documented as individual spaces rather than an additional lot/deck; the app does not map individual stalls.
+
+Each pin is an interior point of a published OUA lot polygon, never a road midpoint or an invented building centroid. The generator stores its source OBJECTID. Current [TPS permit maps](https://tps.uga.edu/navigating-campus/maps/permit-parking/) visually reconcile four newer subdivisions with older GIS attributes: N13 uses polygon 1319 (older N03), N14 uses 23773 (older N08), TSL uses 7271 (older N11), and E16 uses 641 (older E06). W03 uses older W01 polygons. This is a reviewed mapping, not automatic permission inference. Large multi-part zones have one representative pin and one stable lot code.
+
+Source snapshots in `sources/` contain factual table rows and GIS coordinates/IDs. Editor names and credentials are excluded. The current [non-resident map](https://tps.uga.edu/wp-content/uploads/Non-Resident-Parking_SP26.v2.pdf), [after-hours map](https://tps.uga.edu/wp-content/uploads/After-Hours-Parking_accessibility-map_SU26_vFIN.pdf) and [Health Sciences map](https://tps.uga.edu/wp-content/uploads/HSC-Parking_map_SP26.pdf) were checked alongside the enforcement tables and [visitor rules](https://tps.uga.edu/parking/visitors/).
+
+## Interpreting access
+
+Weekly windows use America/New_York, with half-open boundaries: the 5 PM rule starts exactly at 5 PM. DST repeats the same civil-time rule. Overnight periods not established by consistent sources stay unknown. TSL's weekday permit window starts at 4 AM; E24 gates close at 7 PM. Valid permits must match the lot. TPS registration means a student/staff/faculty vehicle is registered on a TPS account; registration, permits and visitor payment remain distinct.
+
+The live enforcement table and [published regulations](https://tps.uga.edu/wp-content/uploads/Parking-Rules-Regulations-Updated-8.6.2025-revised.pdf) disagree on housing after-hours rules and several weekend paid/registered windows. S18/S19/S20/S22/S23/S24 after 5 PM and affected weekend locations show unknown rather than choosing the more permissive source. Current after-hours maps add further overnight qualifications. A source conflict is useful information, not permission to park.
+
+Event conditions start **unverified**. Students can inspect the usual schedule or explicitly select an ordinary day after checking current notices. Event mode never supplies ordinary permission. The [TPS football rules](https://tps.uga.edu/parking/football/) supply the displayed Thursday/Friday/Saturday relocation notices. No home-game dates or complete event calendar are invented. Event/holiday status cannot be automatically established from a weekly timetable. Reserved, ADA, state-vehicle spaces and fire lanes retain separate restrictions. No green “you may park” claim is shown. Details refresh their campus-time interpretation each second and when the page becomes visible.
+
+## Geographic boundary
+
+The documented footprint is the union of supported Athens parcels from [UGA Property](https://services2.arcgis.com/PYn6bWCjT6bhw1z3/arcgis/rest/services/UGA_Property/FeatureServer/0), plus the included published lot components. It covers main campus, HSC, Chicopee, Riverbend/Transit, Lucy Cobb, Veterinary Medicine, Soccer/Softball and Club Sports. It is an application coverage footprint, not a legal university-boundary claim. The reviewed footprint is checked in as `campus-footprint.geojson`.
+
+`scripts/parking/rebuild.py` projects this footprint into a WGS84 local azimuthal equidistant coordinate system centered at latitude 33.945, longitude -83.375, then buffers outward by **4,828.032 meters (three statute miles)**. Circular arcs use 256 segments per quadrant and 0.05 m topology-preserving simplification; numerical projection/arc approximation is below a conservative two-meter tolerance across this local extent. This is a geographic meter-based buffer, not a latitude/longitude rectangle. The resulting polygon and bounding envelope are checked into `src/lib/campus-boundary.json`.
+
+Every app map uses the same MapLibre component. Native maxBounds, minimum zoom, disabled world copies, zero pitch and disabled rotation provide the first constraints. A synchronous `transformCameraUpdate` hook constrains all proposed camera updates before display, including gestures, keyboard, location, route fit, selected/deep-linked places and programmatic movements. It keeps a conservative viewport diagonal inside the polygon with a 25 m distance reserve, so rectangle corners do not leak. Resize applies the same constraint. No movement listener repeatedly snaps the map back. All 88 lots remain reachable at zoom 15. Outside-area GPS shows a manual-selection message.
+
+## Updating and rebuilding
+
+1. Read the current TPS enforcement/visitor/football pages and every current permit-map PDF. Compare all lot codes with `inventory-audit.json`; review additions, renames, deletions, event rules and conflicts. Never turn a source gap into “any vehicle.”
+2. Refresh the factual snapshots from the source URLs recorded in their JSON. ArcGIS query parameters: `where=1=1`, `outFields=*`, `returnGeometry=true`, `outSR=4326`, `f=json`. Retain lot geometry, lot codes, source OBJECTIDs and subtype only; retain supported Athens property names/geometries only. Exclude editorial personal fields. Review the four subdivision mappings whenever geometry or map labels change.
+3. Update the verification date, reviewed aliases/additions/conflicts in `scripts/parking/rebuild.py`. Its checked-in snapshots make regeneration deterministic without network access.
+4. In a temporary Python virtual environment install `shapely==2.2.0` and `pyproj==3.8.0`, then run `python scripts/parking/rebuild.py`. These are build tooling only, not app dependencies.
+5. Run `node --import tsx --test tests/parking/*.test.ts` and the desktop/mobile parking browser checks. Inspect every new/changed coordinate against the official map before publishing. Review TPS sources each semester and after announced construction or rule changes.
+
+Automated checks cover inventory reconciliation, unique IDs, all-day schedule coverage, exact time boundaries, DST, source conflicts, event gating, geographic corners, malformed/distant camera inputs, viewport sizes and reachability of every lot. Browser checks cover guest links, keyboard/history, full transit outage, event conditions, 320 px/large text and outside-area GPS. Chromium emulation does not replace physical iPhone/Safari or Android testing.

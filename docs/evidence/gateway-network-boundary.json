@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-11-04T01:55:00Z",
+  "target": "ArchRide hosted *.supabase.co gateway",
+  "cfHeaderStableAcrossForwardingSpoofs": true,
+  "directCfHeaderInjectionStatus": 403,
+  "clientAndForwardingHeadersIgnoredByLimiter": true,
+  "rawIdentifiersRecorded": false,
+  "temporaryProbeDeleted": true
+}

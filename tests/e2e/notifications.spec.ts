@@ -1,5 +1,7 @@
 import { test, expect, type Page } from "@playwright/test";
-import { mockTransit, transitFixtures } from "./transit-fixtures";
+import { mockTransit as mockPublicTransit, transitFixtures as baseTransitFixtures } from "./transit-fixtures";
+const transitFixtures = () => { const tables = baseTransitFixtures(); tables.transit_alerts = []; return tables; };
+const mockTransit: typeof mockPublicTransit = (page, tables = transitFixtures(), override) => mockPublicTransit(page, tables, override);
 
 const WATCHED_KEY = "archride.watched-buses.v1";
 const PREFERENCES_KEY = "archride.notification-preferences.v1";
@@ -40,16 +42,15 @@ function busDue(minutes: number, overrides: Partial<ReturnType<typeof transitFix
   return tables;
 }
 
-const leaveNowAlert = (page: Page) => page.getByRole("alert").filter({ hasText: "Leave now if you want to catch it" });
+const leaveNowAlert = (page: Page) => page.getByRole("alert").filter({ hasText: /Your bus is \d+ minutes? away/ });
 const bell = (page: Page) => page.getByRole("link", { name: "Notifications", exact: true });
 
 // Resolves once the reminder check has read the watched bus's arrival rows.
 const arrivalsChecked = (page: Page) =>
-  page.waitForResponse((response) => response.url().includes("/transit_arrivals") && response.ok());
+  page.waitForResponse((response) => decodeURIComponent(response.url()).includes("/transit_arrivals") && response.ok());
 
 async function chooseHomeOrigin(page: Page, name = "Student Center") {
-  await page.getByRole("button", { name: "Choose a building or stop" }).click();
-  const origin = page.getByRole("combobox", { name: "Choose your starting building or stop" });
+  const origin = page.getByRole("combobox", { name: "From", exact: true });
   await origin.fill(name);
   await page.getByRole("option").first().click();
   await origin.press("Escape");
@@ -81,7 +82,7 @@ test("a guest sees an empty notification center that says where notifications ar
   await mockTransit(page);
   await page.goto("/notifications");
   await expect(page.getByRole("heading", { name: "No notifications" })).toBeVisible();
-  await expect(page.getByText(/kept on this device only/)).toBeVisible();
+  await expect(page.getByText("Only while ArchRide is open. Saved on this device.", { exact: true })).toBeVisible();
   await expect(bell(page)).toBeVisible();
 });
 
@@ -89,6 +90,7 @@ test("reminder settings are saved on this device and are honest about in-app del
   await mockTransit(page);
   await page.goto("/profile");
   await expect(page.getByRole("heading", { name: "Leave-now reminders" })).toBeVisible();
+  await page.getByRole("region", { name: "Leave-now reminders" }).getByText("About reminders", { exact: true }).click();
   await expect(page.getByText(/not sent as texts, emails or phone notifications/)).toBeVisible();
 
   const toggle = page.getByLabel("Remind me when a watched bus is close");
@@ -98,7 +100,7 @@ test("reminder settings are saved on this device and are honest about in-app del
 
   await lead.click();
   await page.getByRole("option", { name: "10 minutes" }).click();
-  await expect(page.getByText("Saved on this device.")).toBeVisible();
+  await expect(page.getByRole("region", { name: "Leave-now reminders" }).getByText("Saved on this device.", { exact: true })).toBeVisible();
   await toggle.uncheck();
   await expect(toggle).not.toBeChecked();
 
@@ -117,13 +119,13 @@ test("a close watched bus creates one leave-now reminder that can be read, clear
   await expect(banner).toContainText("Campus Loop at Memorial Hall");
   await expect(page.getByRole("link", { name: "Notifications, 1 unread" })).toBeVisible();
 
-  await banner.getByRole("link", { name: "View" }).click();
+  await page.getByRole("link", { name: "Notifications, 1 unread", exact: true }).click();
   // The dev server compiles /notifications on first visit, which can take longer than the default 5 s.
-  await expect(page).toHaveURL(/\/notifications$/, { timeout: 15_000 });
+  await expect(page).toHaveURL(/\/notifications\/?$/, { timeout: 15_000 });
   const list = page.getByRole("region", { name: "Notification list" });
   await expect(list).toContainText(/Your bus is [23] minutes away/);
   await expect(list).toContainText("Campus Loop at Memorial Hall");
-  await expect(list.getByRole("link", { name: /^Open:/ })).toHaveAttribute("href", "/map?stop=uga-passio%3Aeast");
+  await expect(list.getByRole("link", { name: /^Open:/ })).toHaveAttribute("href", /\/map\/?\?stop=uga-passio%3Aeast/);
   await expect(page.getByText("1 unread", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: /^Mark read:/ }).click();
@@ -147,12 +149,12 @@ test("opening a reminder goes to its stop and marks it read", async ({ page }) =
   await seed(page, WATCHED_KEY, [watchedBus()]);
   await page.goto("/notifications");
   const open = page.getByRole("link", { name: /^Open:/ });
-  await expect(open).toHaveAttribute("href", "/map?stop=uga-passio%3Aeast");
+  await expect(open).toHaveAttribute("href", /\/map\/?\?stop=uga-passio%3Aeast/);
   await expect(page.getByRole("link", { name: "Notifications, 1 unread" })).toBeVisible();
 
   await open.click();
   // The dev server compiles /map on first visit, which can take longer than the default 5 s.
-  await expect(page).toHaveURL(/\/map\?stop=uga-passio%3Aeast$/, { timeout: 15_000 });
+  await expect(page).toHaveURL(/\/map\/\?stop=uga-passio%3Aeast$/, { timeout: 15_000 });
   await expect(bell(page)).toBeVisible();
 });
 

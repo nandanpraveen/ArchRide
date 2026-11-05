@@ -2,7 +2,11 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { WatchedBus } from "@/lib/leave-now";
 import type { Database } from "@/lib/supabase/database.types";
 import type { Arrival } from "@/lib/transit/contracts";
-import { arrivalEstimate, ESTIMATE_MAX_AGE_MS, type ArrivalEstimate } from "@/lib/transit/estimates";
+import {
+  arrivalEstimate,
+  ESTIMATE_MAX_AGE_MS,
+  type ArrivalEstimate,
+} from "@/lib/transit/estimates";
 import { freshness } from "@/lib/transit/contracts";
 
 export type WatchedBusEntry = WatchedBus & { addedAt: number };
@@ -58,10 +62,19 @@ export function pickWatchedEstimate(
   const estimates = rows.map((row) => {
     const estimate = arrivalEstimate(row, now, connected);
     // The shared UI can display an old cancellation, but dispatch requires current evidence.
-    if (estimate.state === "cancelled" && (!connected || row.provenance !== "source"
-      || freshness(row.update_timestamp, ESTIMATE_MAX_AGE_MS / 1000, now) !== "current"
-      || !(Date.parse(row.valid_until) > now))) {
-      return { ...estimate, state: "stale" as const, reason: "Cancellation evidence is expired or disconnected." };
+    if (
+      estimate.state === "cancelled" &&
+      (!connected ||
+        row.provenance !== "source" ||
+        freshness(row.update_timestamp, ESTIMATE_MAX_AGE_MS / 1000, now) !==
+          "current" ||
+        !(Date.parse(row.valid_until) > now))
+    ) {
+      return {
+        ...estimate,
+        state: "stale" as const,
+        reason: "Cancellation evidence is expired or disconnected.",
+      };
     }
     return estimate;
   });
@@ -109,7 +122,7 @@ export function pruneHandled(
   );
 }
 
-// Watched buses and handled reminders stay on this device, for guests and signed-in students alike.
+// Watched buses and handled reminders stay in this browser.
 const DEVICE_WATCHED_KEY = "archride.watched-buses.v1";
 const DEVICE_HANDLED_KEY = "archride.handled-reminders.v1";
 
@@ -128,14 +141,30 @@ function isWatchedEntry(item: unknown): item is WatchedBusEntry {
     isName(entry.routeName) &&
     isName(entry.stopName) &&
     typeof entry.addedAt === "number" &&
-    Number.isFinite(entry.addedAt)
+    Number.isFinite(entry.addedAt) &&
+    entry.addedAt <= Date.now() + 120000 &&
+    (entry.walkSeconds === undefined ||
+      (Number.isFinite(entry.walkSeconds) &&
+        entry.walkSeconds >= 0 &&
+        entry.walkSeconds <= 7200)) &&
+    (entry.safetySeconds === undefined ||
+      (Number.isFinite(entry.safetySeconds) &&
+        entry.safetySeconds >= 0 &&
+        entry.safetySeconds <= 1800)) &&
+    (entry.planLink === undefined ||
+      (typeof entry.planLink === "string" &&
+        entry.planLink.startsWith("/plan?"))) &&
+    (entry.activeTrip === undefined || typeof entry.activeTrip === "boolean") &&
+    (entry.instanceKey === undefined || isId(entry.instanceKey))
   );
 }
 
 export function readDeviceWatched(): WatchedBusEntry[] {
   try {
     const parsed: unknown = JSON.parse(
-      localStorage.getItem(DEVICE_WATCHED_KEY) ?? "[]",
+      localStorage.getItem(
+        DEVICE_WATCHED_KEY,
+      ) ?? "[]",
     );
     return Array.isArray(parsed)
       ? parsed.filter(isWatchedEntry).slice(-MAX_WATCHED_BUSES)
@@ -147,7 +176,10 @@ export function readDeviceWatched(): WatchedBusEntry[] {
 
 export function writeDeviceWatched(list: WatchedBusEntry[]) {
   try {
-    localStorage.setItem(DEVICE_WATCHED_KEY, JSON.stringify(list));
+    localStorage.setItem(
+      DEVICE_WATCHED_KEY,
+      JSON.stringify(list),
+    );
     return true;
   } catch {
     return false;
@@ -157,7 +189,9 @@ export function writeDeviceWatched(list: WatchedBusEntry[]) {
 export function readDeviceHandled(): HandledReminders {
   try {
     const parsed: unknown = JSON.parse(
-      localStorage.getItem(DEVICE_HANDLED_KEY) ?? "{}",
+      localStorage.getItem(
+        DEVICE_HANDLED_KEY,
+      ) ?? "{}",
     );
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
       return {};
@@ -174,7 +208,10 @@ export function readDeviceHandled(): HandledReminders {
 
 export function writeDeviceHandled(handled: HandledReminders) {
   try {
-    localStorage.setItem(DEVICE_HANDLED_KEY, JSON.stringify(handled));
+    localStorage.setItem(
+      DEVICE_HANDLED_KEY,
+      JSON.stringify(handled),
+    );
     return true;
   } catch {
     return false;

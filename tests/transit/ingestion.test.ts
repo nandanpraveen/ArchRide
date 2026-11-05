@@ -360,13 +360,13 @@ test("database integration: real migrations, replay, out-of-order, partial failu
     await engine.close();
   }
 });
-test("database security: guests read public transit; anon/authenticated cannot mutate or read diagnostics/history", async () => {
+test("database security: public transit reads require the admitted server; browser roles cannot bypass it or read history", async () => {
   const { db, engine } = await localDatabase();
   try {
     await saveStatic(db, catalog(), now);
     for (const role of ["anon", "authenticated"]) {
       await db.query("set role " + role);
-      assert.equal(await count(db, "transit_routes"), 1);
+      await assert.rejects(count(db, "transit_routes"), /permission denied/);
       for (const sql of [
         "insert into public.transit_routes(id) values('evil')",
         "update public.transit_stops set name='evil'",
@@ -378,6 +378,9 @@ test("database security: guests read public transit; anon/authenticated cannot m
         await assert.rejects(db.query(sql), /permission denied/);
       await db.query("reset role");
     }
+    await db.query("set role service_role");
+    assert.equal(await count(db, "transit_routes"), 1);
+    await db.query("reset role");
     const tables = (
       await db.query<{ tablename: string; rowsecurity: boolean }>(
         "select tablename,rowsecurity from pg_tables where schemaname='public'",

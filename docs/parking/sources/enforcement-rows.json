@@ -1,0 +1,652 @@
+[
+  [
+    "Lot #",
+    "Lot Name",
+    "Vehicles Allowed 7:00 AM - 5:00 PM",
+    "Vehicles Allowed 5:00 PM - 12:00 AM",
+    "Pay-Per-Hour Available"
+  ],
+  [
+    "1PP",
+    "One Press Place",
+    "Permit Only",
+    "Registered Vehicles",
+    ""
+  ],
+  [
+    "N01",
+    "Chicopee Complex",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "N02",
+    "Oconee Street",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (after 5:00 PM)"
+  ],
+  [
+    "N03",
+    "Thomas Street",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (after 5:00 PM)"
+  ],
+  [
+    "N04",
+    "Jackson Street",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (after 5:00 PM)"
+  ],
+  [
+    "N05",
+    "Herty Drive/Bocock Street",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (after 5:00 PM)"
+  ],
+  [
+    "N06",
+    "North Deck",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "N07",
+    "Baldwin Street",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "N08",
+    "East Campus Road North",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "N09",
+    "Psychology/Journalism",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "N10",
+    "Reed Hall",
+    "Permit Only",
+    "Permit Only",
+    ""
+  ],
+  [
+    "N11",
+    "Tate Center Deck",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "N12",
+    "O'Malley's",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "N13",
+    "Athens Plumbing/Oconee Street",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (after 5:00 PM)"
+  ],
+  [
+    "S01",
+    "Field Street",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "TSL",
+    "Tate Surface Lot",
+    "Permit Only (enforcement begins at 4:00 AM)",
+    "Registered Vehicles",
+    ""
+  ],
+  [
+    "HSC",
+    "Health Sciences Complex",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "Lot #",
+    "Lot Name",
+    "Vehicles Allowed 7:00 AM - 5:00 PM",
+    "Vehicles Allowed 5:00 PM - 12:00 AM",
+    "Pay-Per-Hour Available"
+  ],
+  [
+    "W02",
+    "Morris Hall",
+    "Permit Only",
+    "Permit Only",
+    ""
+  ],
+  [
+    "W03",
+    "Government Relations/Wray Nicholson",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "W05",
+    "Hull Street Deck",
+    "Permit Only",
+    "Any Vehicle",
+    "\u2714\ufe0f (Monday - Thursday after 1:00 PM) \u2714\ufe0f (Friday all day)"
+  ],
+  [
+    "W06",
+    "Lumpkin Street North",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "W07",
+    "Baxter Street",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "W08",
+    "Church Street",
+    "Permit Only",
+    "Permit Only",
+    ""
+  ],
+  [
+    "W09",
+    "West Campus Deck",
+    "Permit Only",
+    "Permit Only",
+    ""
+  ],
+  [
+    "W10",
+    "Russell Hall",
+    "Permit Only",
+    "Permit Only",
+    ""
+  ],
+  [
+    "W11",
+    "Oglethorpe House",
+    "Permit Only",
+    "Permit Only",
+    ""
+  ],
+  [
+    "W12",
+    "Lumpkin Street South",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "W13",
+    "Newton Street",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "W14",
+    "Lucy Cobb",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "W15",
+    "International Education",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "W16",
+    "Broad Street",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (after 5:00 PM)"
+  ],
+  [
+    "W17",
+    "Broad Street",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (after 5:00 PM)"
+  ],
+  [
+    "Lot #",
+    "Lot Name",
+    "Vehicles Allowed 7:00 AM - 5:00 PM",
+    "Vehicles Allowed 5:00 PM - 12:00 AM",
+    "Pay-Per-Hour Available"
+  ],
+  [
+    "S01",
+    "Field Street",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S02",
+    "Clark Howell",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S03",
+    "Dawson Hall",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S04",
+    "Conner Hall",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S05",
+    "Hardman Hall",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S06",
+    "STEM Deck",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S07",
+    "Life Sciences",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S08",
+    "Aderhold Hall",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S09",
+    "Pharmacy",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S10",
+    "McPhaul Center",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S11",
+    "South Deck",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "S12",
+    "Hoke Smith Annex",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S13",
+    "Butts/Mehre",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S14",
+    "Foley Field",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S15",
+    "Carlton Street Deck",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (Monday - Thursday after 1:00 PM) \u2714\ufe0f (Friday all day)"
+  ],
+  [
+    "S16",
+    "AG Drive",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S17",
+    "Engineering/Vet Med",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S18",
+    "University Village East",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S19",
+    "University Village Central",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S20",
+    "University Village West",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S21",
+    "Fam & Grad Housing",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S22",
+    "FGH Brandon Oaks",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S23",
+    "Rogers Road North",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S24",
+    "Rogers Road South",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S25",
+    "Carlton Street",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "S26",
+    "University Village",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "Lot #",
+    "Lot Name",
+    "Vehicles Allowed 7:00 AM - 5:00 PM",
+    "Vehicles Allowed 5:00 PM - 12:00 AM",
+    "Pay-Per-Hour Available"
+  ],
+  [
+    "E01",
+    "Intramural Fields",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E02",
+    "Animal Science",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E03",
+    "Ramsey Lot",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E04",
+    "East Deck",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "E05",
+    "East Village Deck",
+    "Permit Only",
+    "Permit Only",
+    ""
+  ],
+  [
+    "E06",
+    "River Road South",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E07",
+    "River Road East",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E08",
+    "River Road West",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E09",
+    "Ramsey Center West",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E10",
+    "University Health",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E11",
+    "River Road North",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E12",
+    "East Campus Road North",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E13",
+    "Riverbend West",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E14",
+    "Riverbend East",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E15",
+    "River's Crossing",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E20",
+    "PAC Deck",
+    "Permit Only",
+    "Registered Vehicles",
+    "\u2714\ufe0f (Monday - Thursday after 1:00 PM) \u2714\ufe0f (Friday all day)"
+  ],
+  [
+    "E21",
+    "Intramural Deck",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E23",
+    "College Station Park and Ride",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E24",
+    "Transit/Riverbend Farms",
+    "Permit Only (Gates Open at 6:00 AM)",
+    "Permit Only (Gates Closed at 7:00 PM)",
+    ""
+  ],
+  [
+    "E25",
+    "Rec Sports Park & Walk",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "E26",
+    "East Side Park & Ride",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "SSB",
+    "Soccer/Softball",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "CSC",
+    "Club Sports Complex",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "VMC",
+    "Veterinary Medicine Center",
+    "Permit Only",
+    "Any Vehicle",
+    ""
+  ],
+  [
+    "Lot #",
+    "Lot Name",
+    "Vehicles Allowed 7:00 AM - 11:00 PM",
+    "Pay-Per-Hour Available"
+  ],
+  [
+    "N02",
+    "Oconee Street",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "N03",
+    "Thomas Street",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "N04",
+    "Jackson Street",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "N05",
+    "Herty Drive/Bocock Street",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "N13",
+    "Athens Plumbing/Oconee Street",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "W16",
+    "Broad Street",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ],
+  [
+    "W17",
+    "Broad Street",
+    "Registered Vehicles",
+    "\u2714\ufe0f"
+  ]
+]

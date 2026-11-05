@@ -2,12 +2,18 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "@/theme";
+import { PersonalProvider } from "./personal-provider";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider
+        theme={theme}
+        defaultMode="system"
+        modeStorageKey="archride.mode"
+        disableTransitionOnChange
+      >
         <CssBaseline />
-        {children}
+        <PersonalProvider>{children}</PersonalProvider>
       </ThemeProvider>
     </AppRouterCacheProvider>
   );

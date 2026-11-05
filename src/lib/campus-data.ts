@@ -1,4 +1,5 @@
 import { publicTransitClient } from "./supabase/public";
+import { isPublicBoardingStop } from "./transit/contracts";
 
 // Drop-in implementation of the contract already used on task-1-home.
 export type PlaceType = "building" | "entrance" | "stop";
@@ -29,9 +30,14 @@ const normalize = (s: string) =>
 export function matchPlaces(places: Place[], query: string): Place[] {
   const words = normalize(query).split(" ").filter(Boolean);
   if (!words.length) return [];
+  const wordMatches = (place: Place) => words.filter((word) =>
+    [place.name, ...(place.aliases || [])].some((name) =>
+      normalize(name).split(/[\s—-]+/).some((part) => part.startsWith(word)),
+    ),
+  ).length;
   return places
     .filter((p) =>
-      words.every((word) =>
+      (p.type !== "stop" || isPublicBoardingStop(p)) && words.every((word) =>
         [p.name, ...(p.aliases || [])].some((name) =>
           normalize(name).includes(word),
         ),
@@ -39,6 +45,7 @@ export function matchPlaces(places: Place[], query: string): Place[] {
     )
     .sort(
       (a, b) =>
+        wordMatches(b) - wordMatches(a) ||
         a.name.localeCompare(b.name) ||
         a.type.localeCompare(b.type) ||
         a.id.localeCompare(b.id),

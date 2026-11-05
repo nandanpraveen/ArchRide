@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-11-03",
+  "samples": 1763,
+  "method": "Geodesic WGS84 distance from each generated boundary vertex to nearest projected reviewed-footprint point; source footprint simplified at 0.5 m for storage.",
+  "targetMeters": 4828.032,
+  "minimumMeters": 4827.971664226623,
+  "maximumMeters": 4828.032671990235,
+  "maximumAbsoluteDeviationMeters": 0.06033577337711904
+}

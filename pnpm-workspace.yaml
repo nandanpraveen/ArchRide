@@ -2,3 +2,7 @@ allowBuilds:
   esbuild: true
   sharp: false
   unrs-resolver: false
+
+# The binding ships precompiled JS; its unused generator pulls vulnerable glob tooling.
+overrides:
+  "gtfs-realtime-bindings>protobufjs-cli": "-"

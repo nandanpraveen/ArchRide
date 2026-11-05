@@ -120,16 +120,20 @@ export async function loadContext(
   for (const table of ["transit_routes", "transit_stops", "transit_trips"])
     c[table] = (
       await db.query<Row>(
-        `select ${table === "transit_trips" ? "id,route_id" : "id"} from public.${table} where source_id=$1 and active${table === "transit_trips" && tripIds ? " and id=any($2::text[])" : ""}`,
+        `select ${table === "transit_trips" ? "id,route_id,service_id" : "id"} from public.${table} where source_id=$1 and active${table === "transit_trips" && tripIds ? " and id=any($2::text[])" : ""}`,
         table === "transit_trips" && tripIds ? [SOURCE, tripIds] : [SOURCE],
       )
     ).rows;
   c.transit_stop_times = (
     await db.query<Row>(
-      `select s.id,s.stop_id from public.transit_stop_times s join public.transit_trips t on t.id=s.trip_id where t.source_id=$1 and t.active${tripIds ? " and t.id=any($2::text[])" : ""}`,
+      `select s.id,s.stop_id,s.trip_id,s.stop_sequence,s.arrival_seconds,s.departure_seconds from public.transit_stop_times s join public.transit_trips t on t.id=s.trip_id where t.source_id=$1 and t.active${tripIds ? " and t.id=any($2::text[])" : ""}`,
       tripIds ? [SOURCE, tripIds] : [SOURCE],
     )
   ).rows;
+  [c.transit_services, c.transit_frequencies] = await Promise.all([
+    db.query<Row>(`select s.* from public.transit_services s where s.id in (select service_id from public.transit_trips where source_id=$1 and active${tripIds ? " and id=any($2::text[])" : ""})`, tripIds ? [SOURCE, tripIds] : [SOURCE]).then(r => r.rows),
+    db.query<Row>(`select f.trip_id from public.transit_frequencies f join public.transit_trips t on t.id=f.trip_id where t.source_id=$1 and t.active${tripIds ? " and t.id=any($2::text[])" : ""}`, tripIds ? [SOURCE, tripIds] : [SOURCE]).then(r => r.rows),
+  ]);
   assert(
     c.transit_routes.length &&
       c.transit_stops.length &&
