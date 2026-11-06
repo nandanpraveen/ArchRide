@@ -7,6 +7,11 @@
 }
 html {
   min-width: 320px;
+  scroll-padding-block: 24px calc(88px + env(safe-area-inset-bottom));
+}
+summary {
+  min-height: 44px;
+  align-content: center;
 }
 body {
   margin: 0;
@@ -61,7 +66,7 @@ h3 {
 p {
   text-wrap: pretty;
 }
-:focus-visible {
+:focus-visible:not(.MuiInputBase-input) {
   outline: 3px solid var(--archride-primary);
   outline-offset: 4px;
 }

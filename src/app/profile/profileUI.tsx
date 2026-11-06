@@ -161,13 +161,13 @@ export default function ProfileUI() {
       setNotice("Your ArchRide data was cleared from this browser.");
     } catch { setNotice("This browser could not clear its saved data. Use your browser’s site-data settings."); }
   }
-  return <Stack spacing={4} sx={{ maxWidth: 1080 }}>
+  return <Stack spacing={4} sx={{ maxWidth: 1440, mx: "auto" }}>
     <Typography component="h1" variant="h1">Profile</Typography>
     {notice && <Alert severity="info" role="status">{notice}</Alert>}
     {personal.error && <Alert severity="error" action={<Button onClick={personal.reload} color="inherit">Retry</Button>}>{personal.error}</Alert>}
     <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0,1fr)", lg: "minmax(0,1.2fr) minmax(0,1fr)" }, gap: { xs: 4, lg: 6 }, alignItems: "start" }}>
       {personal.ready ? <TravelForm key={resetKey} /> : <Skeleton variant="rounded" height={400} />}
-      <Box sx={{ minWidth: 0, borderLeft: { lg: 1 }, borderTop: { xs: 1, lg: 0 }, borderColor: "divider", pl: { lg: 5 }, pt: { xs: 4, lg: 0 } }}>
+      <Box sx={{ minWidth: 0, borderLeft: { lg: "1px solid var(--mui-palette-divider)" }, borderTop: { xs: "1px solid var(--mui-palette-divider)", lg: 0 }, pl: { lg: 5 }, pt: { xs: 4, lg: 0 } }}>
         <NotificationSettings />
       </Box>
     </Box>

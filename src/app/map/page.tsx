@@ -313,13 +313,14 @@ function MapContent() {
           display: "grid",
           gridTemplateColumns: {
             xs: "minmax(0,1fr)",
-            lg: "minmax(0,1.6fr) minmax(300px,1fr)",
+            md: "minmax(0,1fr) minmax(320px,380px)",
+            xl: "minmax(0,1fr) 420px",
           },
           gap: 2.5,
           alignItems: "start",
         }}
       >
-        <Box sx={{ minWidth: 0, position: { lg: "sticky" }, top: 20 }}>
+        <Box sx={{ minWidth: 0, position: { md: "sticky" }, top: 24 }}>
           <Stack
             direction="row"
             sx={{
@@ -350,11 +351,16 @@ function MapContent() {
             >
               Skip map
             </a>
+            {(selected || parkingId) && (
+              <Button component="a" href="#map-details" sx={{ display: { xs: "inline-flex", md: "none" } }}>
+                View selected details
+              </Button>
+            )}
           </Stack>
           <Box
             sx={{
               position: "relative",
-              height: { xs: "min(42dvh,360px)", lg: "min(68dvh,680px)" },
+              height: { xs: "min(42dvh,360px)", md: "max(420px, calc(100dvh - 330px))" },
               minHeight: 280,
               borderRadius: "12px",
               overflow: "hidden",
@@ -405,8 +411,9 @@ function MapContent() {
           )}
         </Box>
         <Paper
+          id="map-details"
           variant="outlined"
-          sx={{ p: 2, minWidth: 0, borderRadius: "12px" }}
+          sx={{ p: 2, minWidth: 0, borderRadius: "12px", scrollMarginTop: 24 }}
         >
           {mode === "parking" ? (
             <ParkingDirectory

@@ -31,9 +31,10 @@ export default function SavedPage() {
   const [editing, setEditing] = useState<SavedItem | null>(null),
     [name, setName] = useState(""),
     [undo, setUndo] = useState<SavedItem | null>(null);
-  const groups = [{ kind: "journey", title: "Journeys" }, { kind: "stop", title: "Stops" }];
+  const groups = [{ kind: "journey", title: "Journeys" }, { kind: "stop", title: "Stops" }]
+    .filter((group) => data.items.some((item) => item.kind === group.kind));
   return (
-    <Stack spacing={4} sx={{ maxWidth: 1080 }}>
+    <Stack spacing={4} sx={{ maxWidth: groups.length > 1 ? 1600 : 1200, mx: "auto" }}>
       <Box>
         <Typography component="h1" variant="h1">Saved</Typography>
         <Typography color="text.secondary" variant="body2" sx={{ mt: 1 }}>Your journeys and stops stay on this device.</Typography>
@@ -49,7 +50,8 @@ export default function SavedPage() {
           <Button component={Link} href="/map">Find a stop</Button>
         </Stack>
       </Box>}
-      {groups.filter((group) => data.items.some((item) => item.kind === group.kind)).map((group) => <Box component="section" key={group.kind} aria-label={group.title}>
+      {!!groups.length && <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0,1fr)", lg: `repeat(${groups.length},minmax(0,1fr))` }, gap: { xs: 4, lg: 5 }, alignItems: "start" }}>
+      {groups.map((group) => <Box component="section" key={group.kind} aria-label={group.title} sx={{ minWidth: 0 }}>
         <Typography component="h2" variant="h2" sx={{ mb: 1.5 }}>{group.title}</Typography>
         <Box sx={{ borderTop: 1, borderColor: "divider" }}>
           {data.items.filter((item) => item.kind === group.kind).map((item) => {
@@ -76,6 +78,7 @@ export default function SavedPage() {
           })}
         </Box>
       </Box>)}
+      </Box>}
       <Dialog
         open={!!editing}
         onClose={() => setEditing(null)}

@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-06T23:20:13.697Z",
+  "project": "yivnryjbzhampecphlgr",
+  "publicRoutes": 19,
+  "publicStops": 161,
+  "directBypassAndPrivateReadStatuses": [
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401,
+    401
+  ],
+  "homeSearch": "passed",
+  "probes": {
+    "private_proxy_read": 400,
+    "relation_embedding": 400,
+    "unbounded_read": 400,
+    "proxy_mutation": 405,
+    "untrusted_origin": 403,
+    "unauthenticated_transit-ingest": 401,
+    "unauthenticated_predictor-update": 401,
+    "unauthenticated_admin-operations": 401,
+    "unauthenticated_delete-account": 401,
+    "public_health": 200
+  },
+  "scope": "Bounded public reads and rejection probes only; no records modified."
+}

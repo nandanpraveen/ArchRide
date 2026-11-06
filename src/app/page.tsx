@@ -19,12 +19,14 @@ export default function HomePage() {
   const [origin, setOrigin] = useState<HomeOrigin | null>(null);
   const desktop = useMediaQuery("(min-width: 900px)");
   return (
-    <Stack spacing={{ xs: 3, md: 3.5 }}>
+    <Stack spacing={3}>
       <Box>
         <Typography component="h1" variant="h1">
           Where are you headed?
         </Typography>
       </Box>
+      <HomeAlerts transit={transit} />
+      <ManualNotices />
       {personal.active && (
         <Box sx={{ py: 2, borderBottom: 1, borderColor: "divider" }}>
           <Stack
@@ -61,52 +63,57 @@ export default function HomePage() {
           display: "grid",
           gridTemplateColumns: {
             xs: "minmax(0,1fr)",
-            md: "minmax(300px,.8fr) minmax(0,1.5fr)",
+            md: "minmax(300px,360px) minmax(0,1fr)",
+            lg: "minmax(300px,360px) minmax(0,1fr) minmax(240px,280px)",
           },
-          gap: { xs: 3, md: 5 },
-          alignItems: "stretch",
+          gap: 3,
+          alignItems: "start",
         }}
       >
-        <Box sx={{ py: { md: 1 }, minWidth: 0 }}>
+        <Stack spacing={3} sx={{ minWidth: 0 }}>
           <JourneyForm
             initialFrom={personal.prefs.defaultOrigin}
             onOrigin={setOrigin}
           />
-        </Box>
+          {origin && (
+            <Box sx={{ borderTop: 1, borderColor: "divider", pt: 3 }}>
+              <HomeDepartures origin={origin} transit={transit} />
+            </Box>
+          )}
+        </Stack>
         {desktop && (
           <Box
+            component="section"
+            aria-label="Campus overview"
             sx={{
-              minHeight: { xs: 280, md: 380 },
-              height: { xs: "auto", md: "100%" },
+              minWidth: 0,
+              height: "max(520px, calc(100dvh - 280px))",
+              position: "sticky",
+              top: 24,
             }}
           >
-            <CampusOverview data={transit.data} />
+            <CampusOverview data={transit.data} unavailable={transit.status === "unavailable"} />
           </Box>
         )}
-      </Box>
-      <HomeAlerts transit={transit} />
-      <ManualNotices />
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "minmax(0,1fr)",
-            md: "minmax(0,1fr) minmax(0,1fr)",
-          },
-          gap: { xs: 3, md: 5 },
-          borderTop: 1,
-          borderColor: "divider",
-          pt: 3,
-        }}
-      >
-        <NextClassCard origin={origin} />
-        <HomeFavorites />
-      </Box>
-      {origin && (
-        <Box sx={{ borderTop: 1, borderColor: "divider", pt: 3 }}>
-          <HomeDepartures origin={origin} transit={transit} />
+        <Box
+          component="aside"
+          aria-label="Your campus day"
+          sx={{
+            minWidth: 0,
+            display: "grid",
+            gridColumn: { md: "1 / -1", lg: "auto" },
+            gridTemplateColumns: { xs: "minmax(0,1fr)", sm: "repeat(2,minmax(0,1fr))", lg: "minmax(0,1fr)" },
+            gap: 3,
+            borderTop: { xs: "1px solid var(--mui-palette-divider)", lg: 0 },
+            borderLeft: { lg: "1px solid var(--mui-palette-divider)" },
+            pt: { xs: 3, lg: 0 },
+            pl: { lg: 3 },
+          }}
+        >
+          <NextClassCard origin={origin} />
+          <HomeFavorites />
         </Box>
-      )}
+      </Box>
       <Box
         component="details"
         sx={{ borderTop: 1, borderColor: "divider", pt: 2 }}

@@ -11,7 +11,7 @@ const timeFormat = new Intl.DateTimeFormat("en-US", { timeZone: "America/New_Yor
 export default function NotificationsPage() {
   const { notifications, unreadCount, status, saveError, markRead, markAllRead, clear, reload } = useNotificationCenter();
   return (
-    <Stack spacing={3} sx={{ maxWidth: 960 }}>
+    <Stack spacing={3} sx={{ maxWidth: 1200, mx: "auto" }}>
       <Box>
         <Stack direction="row" spacing={2} sx={{ alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 1 }}>
           <Typography component="h1" variant="h1">Notifications</Typography>

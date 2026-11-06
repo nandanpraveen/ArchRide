@@ -14,9 +14,11 @@ const EMPTY: [number, number][] = [];
 export function CampusOverview({
   data,
   path = EMPTY,
+  unavailable = false,
 }: {
   data: PublicTransitData | null;
   path?: [number, number][];
+  unavailable?: boolean;
 }) {
   const [failed, setFailed] = useState(false),
     [version, setVersion] = useState(0),
@@ -31,7 +33,7 @@ export function CampusOverview({
   return (
     <Box
       sx={{
-        height: mapVisible ? "100%" : "auto",
+        height: "100%",
         minHeight: 340,
         display: "flex",
         flexDirection: "column",
@@ -69,7 +71,9 @@ export function CampusOverview({
             <Typography color="text.secondary" role="status">
               {failed
                 ? "Map tiles could not load. Open the directory or try again."
-                : "Loading map…"}
+                : unavailable
+                  ? "Campus map data is unavailable. Open the directory for stops and parking."
+                  : "Loading map…"}
             </Typography>
             {failed && (
               <Button

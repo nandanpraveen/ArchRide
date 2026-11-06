@@ -314,9 +314,7 @@ export function ActiveJourney({
       aria-label="Active trip"
       sx={{
         p: { xs: 2, sm: 3 },
-        borderColor: "divider",
-        borderLeft: "3px solid",
-        borderLeftColor: "primary.main",
+        borderColor: "primary.main",
         borderRadius: "12px",
       }}
     >

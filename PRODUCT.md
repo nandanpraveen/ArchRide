@@ -6,7 +6,7 @@ product
 
 ## Users
 
-UGA students checking a phone outdoors between classes, often in bright light and with little time. Guests can browse transit; accounts synchronize private travel information.
+UGA students checking a phone outdoors between classes, often in bright light and with little time, or planning their campus day on a laptop. The app is account-free; schedules, saved trips and preferences stay in the current browser.
 
 ## Product Purpose
 
