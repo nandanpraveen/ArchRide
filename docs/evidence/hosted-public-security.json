@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-07T01:19:01.014Z",
+  "checkedAt": "2026-11-07T15:45:19.657Z",
   "project": "yivnryjbzhampecphlgr",
-  "publicRoutes": 19,
-  "publicStops": 161,
+  "authenticatedRoutes": 19,
+  "authenticatedStops": 161,
   "directBypassAndPrivateReadStatuses": [
     401,
     401,
@@ -15,8 +15,62 @@
     401,
     401
   ],
+  "authenticatedDirectAccess": [
+    {
+      "table": "transit_routes",
+      "status": 403,
+      "ownedRows": 0
+    },
+    {
+      "table": "transit_stops",
+      "status": 403,
+      "ownedRows": 0
+    },
+    {
+      "table": "profiles",
+      "status": 200,
+      "ownedRows": 1
+    },
+    {
+      "table": "saved_items",
+      "status": 200,
+      "ownedRows": 0
+    },
+    {
+      "table": "classes",
+      "status": 200,
+      "ownedRows": 0
+    },
+    {
+      "table": "active_trips",
+      "status": 200,
+      "ownedRows": 0
+    },
+    {
+      "table": "notifications",
+      "status": 200,
+      "ownedRows": 0
+    },
+    {
+      "table": "transit_observations",
+      "status": 403,
+      "ownedRows": 0
+    },
+    {
+      "table": "transit_job_runs",
+      "status": 403,
+      "ownedRows": 0
+    },
+    {
+      "table": "transit_retention",
+      "status": 403,
+      "ownedRows": 0
+    }
+  ],
   "homeSearch": "passed",
   "probes": {
+    "signed_out_read": 401,
+    "forged_session_read": 401,
     "private_proxy_read": 400,
     "relation_embedding": 400,
     "unbounded_read": 400,
@@ -26,7 +80,8 @@
     "unauthenticated_predictor-update": 401,
     "unauthenticated_admin-operations": 401,
     "unauthenticated_delete-account": 401,
-    "public_health": 200
+    "public_health": 200,
+    "revoked_session_read": 401
   },
-  "scope": "Bounded public reads and rejection probes only; no records modified."
+  "scope": "Disposable account sign-in/out, bounded transit reads and rejection probes; no travel records modified."
 }

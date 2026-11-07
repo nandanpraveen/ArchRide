@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-11-07T15:44:46.705Z",
+  "accountReadLimitPerMinute": 360,
+  "preparedHits": 359,
+  "scope": "Isolated disposable-account counter setup; no rider reports submitted or personal travel records changed.",
+  "checks": [
+    {
+      "name": "unsigned_read",
+      "status": 401,
+      "retryAfter": null
+    },
+    {
+      "name": "forged_read",
+      "status": 401,
+      "retryAfter": null
+    },
+    {
+      "name": "unsigned_walking",
+      "status": 401,
+      "retryAfter": null
+    },
+    {
+      "name": "unsigned_report",
+      "status": 401,
+      "retryAfter": null
+    },
+    {
+      "name": "public_health",
+      "status": 200,
+      "retryAfter": null
+    },
+    {
+      "name": "read_360_allowed",
+      "status": 200,
+      "retryAfter": null
+    },
+    {
+      "name": "read_361_limited",
+      "status": 429,
+      "retryAfter": "14",
+      "error": "rate_limited"
+    },
+    {
+      "name": "new_session_still_limited",
+      "status": 429,
+      "retryAfter": "14",
+      "error": "rate_limited"
+    },
+    {
+      "name": "revoked_session_rejected",
+      "status": 401,
+      "retryAfter": null
+    }
+  ]
+}

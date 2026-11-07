@@ -48,3 +48,5 @@ Release order: apply the additive private admission migration; configure and val
 Real verification uses a disposable email account and `ARCHRIDE_TEST_EMAIL` / `ARCHRIDE_TEST_PASSWORD` environment variables. The hosted smoke verifies unsigned, forged, and revoked-session rejection; the real export test completes a walking journey. Delete the disposable account after verification. Fixture tests establish interface behavior, not hosted OAuth configuration or transit prediction accuracy.
 
 For rollback, restore the previous function bundle together with the previous frontend. Keep the additive migration and historical records; do not reset production data. Preserve the portfolio root and previous hashed assets as described in [development and deployment](DEVELOPMENT.md).
+
+Production Google and email flows, session rejection, rate-limit persistence across sessions, and the live responsive suite are recorded in [the authentication release evidence](evidence/auth-release.json).

@@ -46,6 +46,7 @@ test("confirmed clearing removes ArchRide device data and preserves unrelated si
   await expect(page.getByLabel("Arrival buffer (minutes)")).toHaveValue("9");
   await page.getByRole("button", { name: "Clear device data", exact: true }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Keep my data" }).click();
+  await expect(page.getByRole("dialog")).toBeHidden();
   await expect(page.getByLabel("Arrival buffer (minutes)")).toHaveValue("9");
   await page.getByRole("button", { name: "Clear device data", exact: true }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Clear device data", exact: true }).click();

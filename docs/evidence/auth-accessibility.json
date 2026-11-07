@@ -1,0 +1,50 @@
+[
+  {
+    "surface": "desktop/sign-in",
+    "violations": []
+  },
+  {
+    "surface": "desktop/create-account",
+    "violations": []
+  },
+  {
+    "surface": "mobile/sign-in",
+    "violations": []
+  },
+  {
+    "surface": "mobile/create-account",
+    "violations": []
+  },
+  {
+    "surface": "mobile-dark/sign-in",
+    "violations": []
+  },
+  {
+    "surface": "mobile-dark/create-account",
+    "violations": []
+  },
+  {
+    "surface": "tablet/sign-in",
+    "violations": []
+  },
+  {
+    "surface": "tablet/create-account",
+    "violations": []
+  },
+  {
+    "surface": "wide/sign-in",
+    "violations": []
+  },
+  {
+    "surface": "wide/create-account",
+    "violations": []
+  },
+  {
+    "surface": "small-200pct/sign-in",
+    "violations": []
+  },
+  {
+    "surface": "small-200pct/create-account",
+    "violations": []
+  }
+]

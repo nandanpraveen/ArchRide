@@ -33,7 +33,7 @@ Public read endpoints must allowlist tables, columns, operators, query complexit
 1. Run the complete checks and build `pnpm build:pages` with the authorized public configuration.
 2. Serve the exported files under `/archride/` and verify direct links, source reads, route requests, device storage, layout, and unavailable states.
 3. Scan the export for secrets. Only public configuration belongs in browser assets.
-4. In a clean checkout of `nandanpraveen.github.io`, replace only `archride/` with the verified export. Preserve root `index.html` and `resume.pdf`, and retain root `.nojekyll`. Keep the previous release’s missing hashed `_next/static/` files so already-open tabs can finish loading cached pages.
+4. In a clean checkout of `nandanpraveen.github.io`, replace only `archride/` with the verified export. Preserve root `index.html` and `resume.pdf`, and retain root `.nojekyll`. Keep the previous release’s missing hashed `_next/static/` files so already-open tabs can finish loading cached pages. Regenerate `archride/release.json` with the actual source commit, source PR, build time, and base path; do not retain a stale manifest.
 5. Commit and push the generated site. Verify the HTTPS production URL after the Pages build completes.
 6. To roll back the frontend, revert that site deployment commit. Backend migrations are additive and private historical data remains intact; never reset production tables as a deployment rollback.
 
