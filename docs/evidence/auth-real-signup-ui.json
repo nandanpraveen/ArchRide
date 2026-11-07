@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-11-07T15:58:53.864Z",
+  "production": true,
+  "signupWithoutVerification": true,
+  "normalizedEmail": true,
+  "requestedClassesPageRestored": true,
+  "sessionSurvivedReload": true,
+  "emailPasswordSignin": true,
+  "signout": true,
+  "disposableAccountRemoved": true
+}

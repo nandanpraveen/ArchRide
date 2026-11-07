@@ -45,7 +45,9 @@ test("event mode cannot present ordinary vehicle access as authorization", async
   await mockTransit(page);
   await page.goto("/map?parking=tsl");
   const details = page.getByRole("region", { name: "Parking details" });
-  await details.getByRole("combobox", { name: "Event conditions" }).focus();
+  const conditions = details.getByRole("combobox", { name: "Event conditions" });
+  await expect(conditions).toBeEnabled();
+  await conditions.focus();
   await page.keyboard.press("ArrowDown");
   await page.getByRole("option", { name: "Gameday or special event", exact: true }).click();
   await expect(details).toContainText("Restricted: check event instructions");

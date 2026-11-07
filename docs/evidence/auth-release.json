@@ -12,7 +12,8 @@
   "sourceCI": {
     "run": 42386343484,
     "status": "passed",
-    "note": "Two clear-data test retries were traced to reopening a still-closing dialog. An explicit close wait passed 20 consecutive desktop/mobile repetitions; follow-up CI covers that test-only change."
+    "note": "Implementation CI passed. Its clear-data dialog retry was fixed by waiting for close; a later parking retry was fixed by waiting for the client-clock-dependent control to enable. Both corrected cases passed 40 consecutive desktop/mobile repetitions. Final CI checks these test-only readiness corrections.",
+    "readinessFollowupRun": 42388739870
   },
   "checks": {
     "unitAndDatabase": 185,
@@ -31,7 +32,8 @@
     "secretPatternFindings": 0,
     "liveChromiumWebKit": 50,
     "liveRealEmailWalkingJourneys": 2,
-    "clearDialogRepeatedCases": 20
+    "clearDialogRepeatedCases": 20,
+    "interactionReadinessRepeatedCases": 40
   },
   "providers": {
     "google": {
@@ -56,7 +58,8 @@
       "enabled": true,
       "passwordMinimumLength": 8,
       "verificationRequired": false,
-      "signupAndSignin": "passed with disposable accounts"
+      "signupAndSignin": "passed with disposable accounts",
+      "productionSignupUiEvidence": "auth-real-signup-ui.json"
     }
   },
   "backend": {
