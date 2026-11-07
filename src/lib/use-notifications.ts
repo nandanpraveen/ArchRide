@@ -15,6 +15,7 @@ export function useNotifications() {
   const [state, setState] = useState<{ all: NotificationEntry[]; prefs: NotificationPreferences; status: NotificationsStatus }>({ all: [], prefs: DEFAULT_PREFERENCES, status: "loading" });
   const [saveError, setSaveError] = useState(""), [now, setNow] = useState(Date.now);
   const generation = useRef(0);
+  const cancelPending = useCallback(() => { generation.current++; }, []);
   const reload = useCallback(() => {
     setNow(Date.now());
     setState({ all: readDeviceNotifications(), prefs: readDevicePreferences(), status: "ready" });
@@ -31,13 +32,14 @@ export function useNotifications() {
     window.addEventListener("archride:device-data-cleared", cleared);
     return () => {
       active = false;
+      cancelPending();
       clearInterval(timer);
       window.removeEventListener("storage", storage);
       window.removeEventListener("focus", reload);
       window.removeEventListener(CHANGED, reload);
       window.removeEventListener("archride:device-data-cleared", cleared);
     };
-  }, [reload]);
+  }, [reload, cancelPending]);
   const notifications = useMemo(() => activeNotifications(state.all, now), [state.all, now]);
   const fail = useCallback((message = "This browser could not save your change. Storage may be full or blocked.") => { setSaveError(message); return false; }, []);
   const add = useCallback(async (draft: NewNotification): Promise<AddResult> => {

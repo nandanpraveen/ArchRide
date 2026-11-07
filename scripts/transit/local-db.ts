@@ -5,6 +5,7 @@ export async function localDatabase() {
   const engine = new PGlite();
   await engine.exec(`create role anon; create role authenticated; create role service_role bypassrls;
  create schema auth; create table auth.users(id uuid primary key);
+ create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id) on delete cascade,not_after timestamptz);
  create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
  grant usage on schema public, auth to anon, authenticated, service_role;`);
   for (const file of (await readdir("supabase/migrations"))

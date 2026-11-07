@@ -16,6 +16,9 @@ import PersonRounded from "@mui/icons-material/PersonRounded";
 import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
 import { NotificationBell } from "./notification-bell";
 import { NotificationsProvider } from "./notifications-provider";
+import { PersonalProvider } from "./personal-provider";
+import { AuthGate } from "./auth-gate";
+import { useAuth } from "./auth-provider";
 
 const destinations = [
   { label: "Home", href: "/", icon: HomeRounded },
@@ -209,9 +212,14 @@ function Shell({ children }: { children: React.ReactNode }) {
   );
 }
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const auth = useAuth();
   return (
+    <AuthGate publicContent={children}>
+    <PersonalProvider key={auth.user?.id}>
     <NotificationsProvider>
       <Shell>{children}</Shell>
     </NotificationsProvider>
+    </PersonalProvider>
+    </AuthGate>
   );
 }

@@ -1,8 +1,10 @@
 import { expect, type Page, type TestInfo } from "@playwright/test";
+import { mockAuth } from "../auth/fixtures";
 import { mockTransit, transitFixtures } from "../e2e/transit-fixtures";
 
 /** Deterministic synthetic data. These tests establish UI behavior, not real ETA quality. */
-export async function syntheticExportData(page: Page) {
+export async function syntheticExportData(page: Page, signedIn = true) {
+  await mockAuth(page, signedIn);
   const tables: Record<string, Record<string, unknown>[]> = transitFixtures();
   const now = Date.now(), stamp = new Date(now).toISOString();
   tables.transit_buildings.push({ ...tables.transit_buildings[0], id: "destination", name: "Science Library", latitude: 33.95 });

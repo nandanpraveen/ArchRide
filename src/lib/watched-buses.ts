@@ -1,3 +1,4 @@
+import { deviceKey } from "./device-storage";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { WatchedBus } from "@/lib/leave-now";
 import type { Database } from "@/lib/supabase/database.types";
@@ -163,7 +164,7 @@ export function readDeviceWatched(): WatchedBusEntry[] {
   try {
     const parsed: unknown = JSON.parse(
       localStorage.getItem(
-        DEVICE_WATCHED_KEY,
+        deviceKey(DEVICE_WATCHED_KEY),
       ) ?? "[]",
     );
     return Array.isArray(parsed)
@@ -177,7 +178,7 @@ export function readDeviceWatched(): WatchedBusEntry[] {
 export function writeDeviceWatched(list: WatchedBusEntry[]) {
   try {
     localStorage.setItem(
-      DEVICE_WATCHED_KEY,
+      deviceKey(DEVICE_WATCHED_KEY),
       JSON.stringify(list),
     );
     return true;
@@ -190,7 +191,7 @@ export function readDeviceHandled(): HandledReminders {
   try {
     const parsed: unknown = JSON.parse(
       localStorage.getItem(
-        DEVICE_HANDLED_KEY,
+        deviceKey(DEVICE_HANDLED_KEY),
       ) ?? "{}",
     );
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
@@ -209,7 +210,7 @@ export function readDeviceHandled(): HandledReminders {
 export function writeDeviceHandled(handled: HandledReminders) {
   try {
     localStorage.setItem(
-      DEVICE_HANDLED_KEY,
+      deviceKey(DEVICE_HANDLED_KEY),
       JSON.stringify(handled),
     );
     return true;

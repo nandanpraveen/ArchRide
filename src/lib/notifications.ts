@@ -1,3 +1,4 @@
+import { deviceKey } from "./device-storage";
 
 export type NotificationType = "leave_now" | "class" | "alert" | "trip";
 
@@ -105,7 +106,7 @@ export function isNotificationEntry(item: unknown): item is NotificationEntry {
 export function readDeviceNotifications(): NotificationEntry[] {
   try {
     const parsed: unknown = JSON.parse(
-      localStorage.getItem(DEVICE_NOTIFICATIONS_KEY) ?? "[]",
+      localStorage.getItem(deviceKey(DEVICE_NOTIFICATIONS_KEY)) ?? "[]",
     );
     return Array.isArray(parsed) ? parsed.filter(isNotificationEntry) : [];
   } catch {
@@ -116,7 +117,7 @@ export function readDeviceNotifications(): NotificationEntry[] {
 export function writeDeviceNotifications(notifications: NotificationEntry[]) {
   try {
     localStorage.setItem(
-      DEVICE_NOTIFICATIONS_KEY,
+      deviceKey(DEVICE_NOTIFICATIONS_KEY),
       JSON.stringify(notifications),
     );
     return true;
@@ -129,7 +130,7 @@ export function writeDeviceNotifications(notifications: NotificationEntry[]) {
 export function readDevicePreferences(): NotificationPreferences {
   try {
     const parsed: unknown = JSON.parse(
-      localStorage.getItem(DEVICE_PREFERENCES_KEY) ?? "{}",
+      localStorage.getItem(deviceKey(DEVICE_PREFERENCES_KEY)) ?? "{}",
     );
     if (!parsed || typeof parsed !== "object")
       return { ...DEFAULT_PREFERENCES };
@@ -156,7 +157,7 @@ export function readDevicePreferences(): NotificationPreferences {
 
 export function writeDevicePreferences(preferences: NotificationPreferences) {
   try {
-    localStorage.setItem(DEVICE_PREFERENCES_KEY, JSON.stringify(preferences));
+    localStorage.setItem(deviceKey(DEVICE_PREFERENCES_KEY), JSON.stringify(preferences));
     return true;
   } catch {
     return false;

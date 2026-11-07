@@ -1,10 +1,10 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./fixtures";
 import { mockTransit as mockPublicTransit, transitFixtures as baseTransitFixtures } from "./transit-fixtures";
 const transitFixtures = () => { const tables = baseTransitFixtures(); tables.transit_alerts = []; return tables; };
 const mockTransit: typeof mockPublicTransit = (page, tables = transitFixtures(), override) => mockPublicTransit(page, tables, override);
 
-const WATCHED_KEY = "archride.watched-buses.v1";
-const PREFERENCES_KEY = "archride.notification-preferences.v1";
+const WATCHED_KEY = "archride.watched-buses.v1:account:10000000-0000-0000-0000-000000000001";
+const PREFERENCES_KEY = "archride.notification-preferences.v1:account:10000000-0000-0000-0000-000000000001";
 
 // The fixture's one bus (a trip at the "Memorial Hall" stop), as a student would be watching it.
 const watchedBus = () => ({

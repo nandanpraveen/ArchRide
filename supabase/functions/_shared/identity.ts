@@ -6,3 +6,8 @@ export function tokenSessionId(token: string): string | null {
     return typeof value === "string" && /^[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(value) ? value : null;
   } catch { return null; }
 }
+
+export function bearerToken(request: Request): string | null {
+  const value = request.headers.get("authorization")?.match(/^Bearer (\S+)$/i)?.[1];
+  return value && value.length <= 8192 && tokenSessionId(value) ? value : null;
+}

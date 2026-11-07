@@ -1,19 +1,21 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fixtures";
 import { mockTransit, transitFixtures } from "./transit-fixtures";
+import { mockAuth } from "../auth/fixtures";
 
-const KEY = "archride.notifications.v1";
+const KEY = "archride.notifications.v1:account:10000000-0000-0000-0000-000000000001";
 const reminder = () => ({
   id: "device-reminder", type: "trip", title: "Review your trip", body: "Compare current options before leaving.",
   link: "/plan", dedupeKey: "trip:device-test", createdAt: new Date().toISOString(),
   expiresAt: new Date(Date.now() + 3600000).toISOString(), readAt: null,
 });
 async function mockDevice(page: Page) {
+  await mockAuth(page);
   const tables = transitFixtures();
   tables.transit_alerts = [];
   const privateRequests: string[] = [];
   page.on("request", (request) => {
     const url = decodeURIComponent(request.url());
-    if (/\/auth\/v1\//.test(url) || /\/rest\/v1\/(classes|notifications|notification_preferences|profiles|active_trips|saved_items)(\?|$)/.test(url)) privateRequests.push(url);
+    if (/\/rest\/v1\/(classes|notifications|notification_preferences|profiles|active_trips|saved_items)(\?|$)/.test(url)) privateRequests.push(url);
   });
   await mockTransit(page, tables);
   return privateRequests;
@@ -24,7 +26,7 @@ async function seed(page: Page) {
   }, [KEY, JSON.stringify([reminder()])]);
 }
 
-test("notification read and clear changes persist across tabs without accounts or private API requests", async ({ page, context }) => {
+test("notification read and clear changes persist across signed-in tabs without private API requests", async ({ page, context }) => {
   const requests = await mockDevice(page);
   await seed(page);
   await page.goto("/notifications");

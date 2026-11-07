@@ -67,6 +67,7 @@ export function NotificationsProvider({
   const [watched, setWatched] = useState<WatchedBusEntry[]>([]),
     [banner, setBanner] = useState<NewNotification | null>(null);
   const generation = useRef(0);
+  const cancelPending = useCallback(() => { generation.current++; }, []);
   const handled = useRef<HandledReminders>({}),
     checking = useRef(false);
   const latest = useRef({
@@ -122,12 +123,13 @@ export function NotificationsProvider({
     window.addEventListener("archride:device-data-cleared", cleared);
     return () => {
       active = false;
+      cancelPending();
       window.removeEventListener("storage", storage);
       window.removeEventListener("focus", refresh);
       window.removeEventListener("archride:watched-changed", refresh);
       window.removeEventListener("archride:device-data-cleared", cleared);
     };
-  }, []);
+  }, [cancelPending]);
   const watchBus = useCallback((bus: WatchedBus) => {
     const list = addWatched(pruneWatched(readDeviceWatched()), bus);
     writeDeviceWatched(list);

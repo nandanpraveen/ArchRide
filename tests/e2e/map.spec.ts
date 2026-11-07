@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { mockTransit, transitFixtures } from "./transit-fixtures";
 
 test("route selection preserves repeated boarding occurrences and source direction", async ({ page }) => {

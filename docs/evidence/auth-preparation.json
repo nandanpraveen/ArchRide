@@ -1,0 +1,164 @@
+{
+  "checkedAt": "2026-11-07T15:08:15.693Z",
+  "status": "prepared; provider configuration and deployment pending",
+  "sourceBranch": "codex/required-auth",
+  "checks": {
+    "unitAndDatabase": 185,
+    "functionalBrowser": 178,
+    "compiledFixtureBrowser": 48,
+    "realEmailWalkingJourneys": 2,
+    "authCasesAfterLabelFix": 22,
+    "compiledAuthMatricesAfterLabelFix": 2,
+    "axeSurfaces": 12,
+    "axeViolations": 0,
+    "denoFunctions": 4,
+    "lint": "passed",
+    "typecheck": "passed",
+    "productionDependencyVulnerabilities": 0,
+    "mechanicalDesignFindings": 0,
+    "secretPatternFindings": 0
+  },
+  "hosted": {
+    "emailSignup": "immediate session; verification disabled by owner",
+    "accountMigration": "20261107034414_authenticated_admission",
+    "accountLimitAndRevocation": "passed, rolled-back hosted transaction",
+    "directAccessChecks": [
+      {
+        "role": "anonymous",
+        "table": "transit_routes",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "transit_stops",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "profiles",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "saved_items",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "classes",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "active_trips",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "notifications",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "transit_observations",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "transit_job_runs",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "anonymous",
+        "table": "transit_retention",
+        "status": 401,
+        "result": "denied"
+      },
+      {
+        "role": "authenticated",
+        "table": "transit_routes",
+        "status": 403,
+        "result": "denied"
+      },
+      {
+        "role": "authenticated",
+        "table": "transit_stops",
+        "status": 403,
+        "result": "denied"
+      },
+      {
+        "role": "authenticated",
+        "table": "profiles",
+        "status": 200,
+        "result": "own-rows-only"
+      },
+      {
+        "role": "authenticated",
+        "table": "saved_items",
+        "status": 200,
+        "result": "own-rows-only"
+      },
+      {
+        "role": "authenticated",
+        "table": "classes",
+        "status": 200,
+        "result": "own-rows-only"
+      },
+      {
+        "role": "authenticated",
+        "table": "active_trips",
+        "status": 200,
+        "result": "own-rows-only"
+      },
+      {
+        "role": "authenticated",
+        "table": "notifications",
+        "status": 200,
+        "result": "own-rows-only"
+      },
+      {
+        "role": "authenticated",
+        "table": "transit_observations",
+        "status": 403,
+        "result": "denied"
+      },
+      {
+        "role": "authenticated",
+        "table": "transit_job_runs",
+        "status": 403,
+        "result": "denied"
+      },
+      {
+        "role": "authenticated",
+        "table": "transit_retention",
+        "status": 403,
+        "result": "denied"
+      }
+    ],
+    "privateProfileCrossAccountIsolation": "passed",
+    "google": "registration created; client approval pending",
+    "protectedFunctionCutover": "pending"
+  },
+  "design": {
+    "review": "sole enlarged-text label fix scored resolved; prepared UI scope only",
+    "documentation": "incumbent design preserved",
+    "screenshots": [
+      "auth-desktop.png",
+      "auth-mobile.png"
+    ]
+  },
+  "remaining": [
+    "Google OAuth client/provider configuration and actual Google login",
+    "Coordinated frontend and protected-function deployment, hosted HTTP rejection checks and live-site checks",
+    "Existing leaked-password-protection security warning; physical-device/student acceptance remains separate"
+  ]
+}

@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./fixtures";
 import { mockTransit, transitFixtures } from "./transit-fixtures";
 
 type FixtureTables = Record<string, Record<string, unknown>[]>;
@@ -36,7 +36,7 @@ async function startBus(page: Page) {
 test("guest trip survives reload, confirms boarding location and recovers without the missed instance", async ({ page }) => {
   await plannerFixture(page);
   let active = await startBus(page);
-  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("archride.personal.v1")!).active);
+  const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("archride.personal.v1:account:10000000-0000-0000-0000-000000000001")!).active);
   expect(saved.alightingSequence).toBe(2);
   expect(saved.tripId).toBe("uga-passio:trip");
   expect(JSON.stringify(saved)).not.toMatch(/latitude|longitude/);

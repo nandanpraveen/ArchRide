@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { mockTransit, transitFixtures } from "./transit-fixtures";
 
 async function status(page: import("@playwright/test").Page) {

@@ -6,7 +6,7 @@ product
 
 ## Users
 
-UGA students checking a phone outdoors between classes, often in bright light and with little time, or planning their campus day on a laptop. The app is account-free; schedules, saved trips and preferences stay in the current browser.
+UGA students checking a phone outdoors between classes, often in bright light and with little time, or planning their campus day on a laptop. Travel screens require Google or email/password sign-in. Schedules, saved trips and preferences stay in the current browser, separated by account.
 
 ## Product Purpose
 
@@ -25,7 +25,7 @@ Avoid crowded dashboards full of unexplained bus markers, decorative landing pag
 - Make the next useful action easy to find.
 - Show complete journeys, including both walks and the wait.
 - Expose freshness, provenance, outages, and uncertainty.
-- Keep browsing available without an account or location permission.
+- Keep sign-in simple; location permission remains optional and manual origins remain available.
 - Keep personal schedules and saved trips private.
 
 ## Accessibility & Inclusion

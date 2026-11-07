@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useColorScheme } from "@mui/material/styles";
+import { deviceKey } from "@/lib/device-storage";
 import { DEFAULT_TRAVEL, placeRef, readPersonalDevice, savedKey, validActive, validSaved, validTravel, type ActiveTrip, type PlaceRef, type SavedItem, type TravelPreferences } from "@/lib/personal";
 
 type State = { prefs: TravelPreferences; items: SavedItem[]; active: ActiveTrip | null; ready: boolean };
@@ -15,6 +16,7 @@ function usePersonalState() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const ready = useRef(false), generation = useRef(0);
+  const cancelPending = useCallback(() => { generation.current++; ready.current = false; }, []);
   const { setMode } = useColorScheme();
   const reload = useCallback(() => {
     ready.current = true;
@@ -24,7 +26,7 @@ function usePersonalState() {
   useEffect(() => {
     queueMicrotask(reload);
     const stored = (event: StorageEvent) => {
-      if (!event.key || event.key === "archride.personal.v1") {
+      if (!event.key || event.key === deviceKey("archride.personal.v1")) {
         if (event.newValue === null) generation.current++;
         reload();
       }
@@ -33,8 +35,8 @@ function usePersonalState() {
     window.addEventListener("archride:device-data-cleared", cleared);
     window.addEventListener("storage", stored);
     window.addEventListener("focus", reload);
-    return () => { window.removeEventListener("archride:device-data-cleared", cleared); window.removeEventListener("storage", stored); window.removeEventListener("focus", reload); };
-  }, [reload]);
+    return () => { cancelPending(); window.removeEventListener("archride:device-data-cleared", cleared); window.removeEventListener("storage", stored); window.removeEventListener("focus", reload); };
+  }, [reload, cancelPending]);
   useEffect(() => { if (state.ready) setMode(state.prefs.theme); }, [state.ready, state.prefs.theme, setMode]);
   const change = async (update: (current: State) => State) => {
     if (!ready.current) return false;
@@ -46,7 +48,7 @@ function usePersonalState() {
       if (stamp !== generation.current) return false;
       // Read at the write boundary so a change in another tab is retained.
       const next = update({ ...readPersonalDevice(), ready: true });
-      localStorage.setItem("archride.personal.v1", JSON.stringify({ prefs: next.prefs, items: next.items, active: next.active }));
+      localStorage.setItem(deviceKey("archride.personal.v1"), JSON.stringify({ prefs: next.prefs, items: next.items, active: next.active }));
       setState(next);
       return true;
       };

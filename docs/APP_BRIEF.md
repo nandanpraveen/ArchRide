@@ -1,5 +1,7 @@
 # ArchRide
 
+Current owner scope (November 6, 2026): require Google or email/password sign-in for all travel screens, retain server-side account/network/global rate limits, and keep personal travel data on each device separated by account. Email verification and cross-device sync are out of scope. This decision supersedes the guest/sync proposals in the original brief below. The implementation uses the established Material UI system; see [authentication operations](AUTHENTICATION.md).
+
 ## App idea
 
 ArchRide is a mobile-first campus transit web app for UGA students. It helps people decide which bus to take, when to leave for a stop, and whether they can reach their destination on time.

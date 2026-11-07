@@ -10,6 +10,7 @@ export function useClasses() {
   const [state, setState] = useState<{ classes: ClassEntry[]; status: ClassesStatus }>({ classes: [], status: "loading" });
   const [saveError, setSaveError] = useState("");
   const saving = useRef(false), generation = useRef(0);
+  const cancelPending = useCallback(() => { generation.current++; }, []);
   const reload = useCallback(() => setState({ classes: readDeviceClasses(), status: "ready" }), []);
   useEffect(() => {
     let active = true;
@@ -22,12 +23,13 @@ export function useClasses() {
     window.addEventListener("archride:device-data-cleared", cleared);
     return () => {
       active = false;
+      cancelPending();
       window.removeEventListener("storage", storage);
       window.removeEventListener("focus", reload);
       window.removeEventListener(CHANGED, reload);
       window.removeEventListener("archride:device-data-cleared", cleared);
     };
-  }, [reload]);
+  }, [reload, cancelPending]);
   const change = async (kind: "add" | "update" | "remove", id: string | null, draft?: ClassDraft) => {
     if (saving.current || state.status !== "ready") return false;
     if (draft && Object.keys(validateClass(draft)).length) {

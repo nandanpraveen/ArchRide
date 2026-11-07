@@ -1,5 +1,13 @@
 # ArchRide release verification
 
+## Required sign-in update — in preparation, November 6, 2026
+
+The owner restored mandatory Google or email/password sign-in and chose device-local data separated by account. This supersedes the account-free scope described in the historical release record below. See [authentication operations](AUTHENTICATION.md) for the implementation, Jadon Montgomery’s reused contribution, limits, and coordinated frontend/function cutover.
+
+Email signup without verification and the additive private account-admission migration are configured on the ArchRide Supabase project. Google registration is created; the prepared web OAuth client is waiting for credential/access approval and the provider is not configured yet. The new frontend and protected Edge Functions have not been deployed. Existing production request limits remain in place during preparation.
+
+Current checks: 185 unit/database tests, 178 functional desktop/mobile cases, 48 compiled fixture cases, and two real email-signin walking journeys passed. After the enlarged-text label correction, all 22 auth interaction cases and both compiled auth matrices passed again. Axe found zero violations on 12 auth surfaces. Four Edge Function Deno checks, lint, TypeScript, dependency audit, and a 419-file source/export credential scan passed. Hosted direct REST denial/ownership checks and server-role account-limit/revocation checks passed. The fresh UI reviewer scored its sole label fix resolved; the documenter confirmed this extension preserves the incumbent design. The existing leaked-password-protection advisor warning remains open; no paid-plan change was made. Current local evidence must not be presented as deployed OAuth verification.
+
 ## Scope and source of truth
 
 Reviewed all 14 items in [GitHub Projects](https://github.com/users/nandanpraveen/projects/1), including the parking addition and [adaptive-prediction issue 10](https://github.com/nandanpraveen/ArchRide/issues/10). Board status is not treated as proof of acceptance.

@@ -12,6 +12,7 @@ export type WalkingPath = {
   expiresAt: string;
 };
 const memory = new Map<string, WalkingPath>();
+export function clearWalkingCache() { memory.clear(); }
 export const inCampus = (p: Pick<LocatedPlace, "latitude" | "longitude">) =>
   Number.isFinite(p.latitude) &&
   Number.isFinite(p.longitude) &&
