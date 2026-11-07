@@ -67,9 +67,7 @@ function Shell({ children }: { children: React.ReactNode }) {
       >
         <Box
           sx={{
-            maxWidth: 1280,
-            mx: "auto",
-            px: { xs: 2.5, sm: 4 },
+            px: { xs: 2.5, sm: 4, xl: 5 },
             minHeight: 68,
             display: "flex",
             alignItems: "center",
@@ -122,11 +120,9 @@ function Shell({ children }: { children: React.ReactNode }) {
         tabIndex={-1}
         sx={{
           minWidth: 0,
-          maxWidth: 1280,
-          mx: "auto",
-          px: { xs: 2.5, sm: 4 },
+          px: { xs: 2.5, sm: 4, xl: 5 },
           pt: { xs: 3, md: 4 },
-          pb: { xs: 13, md: 4 },
+          pb: { xs: "calc(104px + env(safe-area-inset-bottom))", md: 4 },
         }}
       >
         {children}

@@ -35,7 +35,7 @@ const theme = createTheme({
   typography: {
     fontFamily: "var(--font-roboto), Arial, sans-serif",
     h1: {
-      fontSize: "clamp(1.75rem, 2.5vw, 2.25rem)",
+      fontSize: "1.875rem",
       fontWeight: 650,
       letterSpacing: "-0.035em",
       lineHeight: 1.12,
@@ -110,7 +110,16 @@ const theme = createTheme({
     MuiListItemButton: {
       styleOverrides: { root: { borderRadius: 12, minHeight: 48 } },
     },
-    MuiDialog: { styleOverrides: { paper: { borderRadius: 20 } } },
+    MuiDialog: { styleOverrides: { paper: { borderRadius: 16 } } },
+    MuiSnackbar: {
+      styleOverrides: {
+        root: {
+          bottom: "calc(80px + env(safe-area-inset-bottom))",
+          "@media (min-width: 600px)": { bottom: "calc(80px + env(safe-area-inset-bottom))" },
+          "@media (min-width: 900px)": { bottom: 24 },
+        },
+      },
+    },
   },
 });
 export default theme;

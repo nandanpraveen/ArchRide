@@ -25,7 +25,11 @@ export function HomeFavorites() {
         <Typography component="h2" variant="h2" id="favorites-heading">
           Your usual places
         </Typography>
-        {!items.length ? null : (
+        {!items.length ? (
+          <Typography variant="body2" color="text.secondary">
+            Save a journey or stop for a shortcut here.
+          </Typography>
+        ) : (
           <List disablePadding>
             {items.map((i) => (
               <ListItemButton
@@ -36,7 +40,7 @@ export function HomeFavorites() {
                     ? `/map?stop=${encodeURIComponent(i.destination.id)}`
                     : planRefHref(i.origin, i.destination)
                 }
-                sx={{ px: 0 }}
+                sx={{ px: 0, gap: 1.5, "& .MuiListItemText-root": { overflowWrap: "anywhere" } }}
               >
                 <ListItemText
                   primary={i.name}

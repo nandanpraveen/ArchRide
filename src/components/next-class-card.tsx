@@ -64,6 +64,11 @@ export function NextClassCard({ origin }: { origin: HomeOrigin | null }) {
         {status === "ready" && classes.length > 0 && !next && (
           <Typography color="text.secondary">No upcoming classes.</Typography>
         )}
+        {status === "ready" && !classes.length && (
+          <Typography variant="body2" color="text.secondary">
+            Add your schedule to plan around your next class.
+          </Typography>
+        )}
         {next && (
           <>
             <Typography variant="h6" sx={{ overflowWrap: "anywhere" }}>

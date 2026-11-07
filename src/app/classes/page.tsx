@@ -73,7 +73,7 @@ export default function ClassesPage() {
     if (ok) setEditing(null);
   }
   return (
-    <Stack spacing={3} sx={{ maxWidth: 1080 }}>
+    <Stack spacing={3} sx={{ maxWidth: 1200, mx: "auto" }}>
       <Stack direction="row" spacing={2} sx={{ alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", rowGap: 2 }}>
         <Box>
           <Typography component="h1" variant="h1">Classes</Typography>

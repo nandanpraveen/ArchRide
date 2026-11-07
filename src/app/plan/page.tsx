@@ -15,6 +15,7 @@ import {
   Skeleton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import DirectionsWalkRounded from "@mui/icons-material/DirectionsWalkRounded";
 import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
@@ -92,12 +93,9 @@ function JourneyCard({
       component="article"
       sx={{
         p: { xs: 2, sm: 3 },
-        borderColor: "divider",
+        borderColor: recommended ? "primary.main" : "divider",
         position: "relative",
         overflow: "hidden",
-        ...(recommended
-          ? { borderLeft: "3px solid", borderLeftColor: "primary.main" }
-          : {}),
       }}
     >
       <Stack spacing={2}>
@@ -292,6 +290,7 @@ function JourneyCard({
   );
 }
 function PlanContent() {
+  const desktop = useMediaQuery("(min-width: 900px)");
   const search = useSearchParams(),
     query = search.toString(),
     router = useRouter(),
@@ -488,32 +487,22 @@ function PlanContent() {
     : null;
   const formPanel = (
     <Box
+      id="journey-form"
+      component="section"
+      aria-label="Edit your journey"
       sx={{
-        display: "grid",
-        gap: 3,
-        gridTemplateColumns: {
-          xs: "minmax(0,1fr)",
-          lg: toRef ? "minmax(0,1fr)" : "minmax(300px,.8fr) minmax(0,1.5fr)",
-        },
-        gridColumn: { lg: toRef ? 1 : "1 / -1" },
-        gridRow: { lg: 1 },
+        minWidth: 0,
+        gridArea: "form",
+        scrollMarginTop: 24,
       }}
     >
-      <Box id="journey-form" sx={{ minWidth: 0, scrollMarginTop: 90 }}>
-        <JourneyForm
-          key={query}
-          initialFrom={selectedOrigin}
-          initialTo={data?.to ?? toRef}
-          initialDeadline={deadline}
-          initialGps={gps}
-        />
-      </Box>
-      <Box sx={{ minHeight: 300 }}>
-        <CampusOverview
-          data={transit.data}
-          path={first?.mode === "walk" ? mapPath : undefined}
-        />
-      </Box>
+      <JourneyForm
+        key={query}
+        initialFrom={selectedOrigin}
+        initialTo={data?.to ?? toRef}
+        initialDeadline={deadline}
+        initialGps={gps}
+      />
     </Box>
   );
   const optionsPanel = (
@@ -522,7 +511,7 @@ function PlanContent() {
       component="section"
       aria-label="Journey options"
       aria-busy={loading}
-      sx={{ minWidth: 0, gridColumn: { lg: 2 }, gridRow: { lg: 1 } }}
+      sx={{ minWidth: 0, gridArea: "options" }}
     >
       <Box
         sx={{
@@ -740,7 +729,13 @@ function PlanContent() {
           display: "grid",
           gridTemplateColumns: {
             xs: "minmax(0,1fr)",
-            lg: "minmax(310px,.8fr) minmax(0,1.35fr)",
+            md: toRef ? "minmax(280px,340px) minmax(0,1fr)" : "minmax(300px,360px) minmax(0,1fr)",
+            lg: toRef ? "minmax(280px,320px) minmax(0,1fr) minmax(360px,420px)" : "minmax(300px,360px) minmax(0,1fr)",
+          },
+          gridTemplateAreas: {
+            xs: toRef && (fromRef || gps) ? '"options" "form"' : toRef ? '"form" "options"' : '"form"',
+            md: toRef ? '"form options" "map options"' : '"form map"',
+            lg: toRef ? '"form map options"' : '"form map"',
           },
           gap: 3,
           alignItems: "start",
@@ -756,6 +751,21 @@ function PlanContent() {
             {formPanel}
             {toRef && optionsPanel}
           </>
+        )}
+        {desktop && (
+          <Box
+            component="section"
+            aria-label="Journey map"
+            sx={{
+              gridArea: "map",
+              minWidth: 0,
+              height: { md: "max(340px, 45dvh)", lg: "max(520px, calc(100dvh - 220px))" },
+              position: { lg: "sticky" },
+              top: 24,
+            }}
+          >
+            <CampusOverview data={transit.data} path={first?.mode === "walk" ? mapPath : undefined} unavailable={transit.status === "unavailable"} />
+          </Box>
         )}
       </Box>
     </Stack>

@@ -118,8 +118,7 @@ export function HomeDepartures({
         ) : (
           <>
             <Typography variant="body2" color="text.secondary">
-              Distances are approximate and measured in a straight line. Use
-              Plan to check walking paths and buses you can reach.
+              Use Plan to check walking paths and buses you can reach.
             </Typography>
             {liveState !== "current" && (
               <Alert severity="info">

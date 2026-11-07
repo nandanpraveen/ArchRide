@@ -33,6 +33,8 @@ The reviewers also identified missing operational budgets, email readiness, roll
 
 ## Verification record
 
+The November 6 responsive workspace update is verified separately in the [responsive review](RESPONSIVE_REVIEW.md). It expands desktop layouts and refines mobile interactions. Its local checks do not change the deployed November 5 release described below.
+
 The November 5 release uses a simpler header, open trip form, compact rows, disclosure controls for supporting text, and fixed-size SVG bus markers. Phone Home does not load the map renderer. Transit and Parking start with separate map layers. Safari trip actions keep their width during pointer focus.
 
 - 182 unit/database checks passed (58 transit and 124 classes/notifications/planner/personal/parking checks).

@@ -1,0 +1,69 @@
+{
+  "checkedAt": "2026-11-06T23:30:04.626Z",
+  "scope": "Local production static export; changes not deployed",
+  "build": "passed",
+  "lint": "zero warnings",
+  "typescript": "passed",
+  "unitAndDatabaseChecks": 182,
+  "functionalBrowserChecks": 156,
+  "productionPathBrowserChecks": {
+    "passed": 50,
+    "failed": 0,
+    "engines": [
+      "Chromium",
+      "WebKit"
+    ],
+    "widths": [
+      320,
+      375,
+      768,
+      900,
+      1200,
+      1440,
+      1920,
+      2560
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "enlargedText": [
+      150,
+      200
+    ],
+    "reducedMotion": true
+  },
+  "accessibility": {
+    "engine": "axe-core 4.14.0",
+    "standard": "WCAG A/AA automated rules",
+    "surfaces": 32,
+    "violations": 0
+  },
+  "security": {
+    "productionDependencies": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "exposedSecrets": {
+      "textFilesScanned": 136,
+      "matches": []
+    },
+    "publicTablesWithoutRls": 0,
+    "hostedSmoke": "hosted-public-security.json",
+    "advisories": [
+      {
+        "name": "auth_leaked_password_protection",
+        "level": "WARN",
+        "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+      }
+    ]
+  },
+  "limits": [
+    "Browser emulation, not physical-device or student acceptance",
+    "Synthetic fixtures do not establish real ETA accuracy",
+    "Existing leaked-password-protection warning remains; no paid-plan or Auth change"
+  ]
+}

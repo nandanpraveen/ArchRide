@@ -52,6 +52,8 @@ pnpm test:export
 
 Browser tests build a static export with deterministic test data and serve it on port 3100. Run `pnpm build:pages` afterward before publishing. Live backend and static-export checks are recorded separately in [release verification](docs/RELEASE.md). Tests do not send email or use private student accounts.
 
+`pnpm transit:hosted:smoke` checks the deployed public proxy and rejects direct/private access with the public configuration in `.env.local`. It does not modify hosted records. See the [responsive workspace review](docs/RESPONSIVE_REVIEW.md) for the latest layout and security verification.
+
 ## Deployment
 
 `pnpm build:pages` exports the app with `/archride` as its base path. Publish only the contents of `out/` into `archride/` in the existing `nandanpraveen.github.io` repository. Preserve the portfolio and resume at the repository root. The root `.nojekyll` file keeps `_next` assets available.

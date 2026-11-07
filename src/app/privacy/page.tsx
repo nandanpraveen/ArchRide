@@ -1,7 +1,7 @@
 import { Stack, Typography, Box, Link } from "@mui/material";
 export default function PrivacyPage() {
   return (
-    <Stack spacing={3} sx={{ maxWidth: 760 }}>
+    <Stack spacing={3} sx={{ maxWidth: 760, mx: "auto" }}>
       <Typography component="h1" variant="h1">
         Privacy & data
       </Typography>
