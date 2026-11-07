@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-07T15:08:15.693Z",
+  "checkedAt": "2026-11-07",
   "status": "prepared; provider configuration and deployment pending",
   "sourceBranch": "codex/required-auth",
   "checks": {
@@ -145,7 +145,7 @@
       }
     ],
     "privateProfileCrossAccountIsolation": "passed",
-    "google": "registration created; client approval pending",
+    "google": "configured, external production audience; real native Chrome PKCE sign-in/profile/sign-out passed on local production-path export",
     "protectedFunctionCutover": "pending"
   },
   "design": {
@@ -157,7 +157,6 @@
     ]
   },
   "remaining": [
-    "Google OAuth client/provider configuration and actual Google login",
     "Coordinated frontend and protected-function deployment, hosted HTTP rejection checks and live-site checks",
     "Existing leaked-password-protection security warning; physical-device/student acceptance remains separate"
   ]

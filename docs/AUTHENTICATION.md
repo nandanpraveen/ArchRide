@@ -26,6 +26,8 @@ Unverified email accounts do not establish verified identity or prevent multiple
 
 - Supabase project: `yivnryjbzhampecphlgr` only.
 - Google Cloud project: `archride`, display name ArchRide, project number `739139358325`.
+- OAuth audience: External, in production; only non-sensitive identity scopes are configured.
+- OAuth client: `ArchRide Web`, ID `739139358325-0s51gkdvausghjqlqjqsl7atpnpo6vti.apps.googleusercontent.com` (public identifier).
 - OAuth web origin: `https://nandanpraveen.github.io`.
 - Google redirect URI: `https://yivnryjbzhampecphlgr.supabase.co/auth/v1/callback`.
 - App callback: `https://nandanpraveen.github.io/archride/auth/callback/` with an internal allowlisted destination.
@@ -34,6 +36,8 @@ Unverified email accounts do not establish verified identity or prevent multiple
 - Keep anonymous sign-in disabled and refresh-token rotation enabled. Email confirmation is disabled by explicit owner request; email change protections and existing TOTP settings remain enabled.
 
 `supabase config push` applies the entire configuration immediately in this agent environment. It has no dry-run flag. Compare all local settings to the hosted configuration before using it; use targeted provider changes where possible. Preserve unrelated service settings.
+
+Google provider configuration uses `ARCHRIDE_GOOGLE_CLIENT_SECRET` only during an intentional configuration push. Keep its value in secure provider configuration, never source or frontend assets. The initial provider push changed only Google enablement/client credentials; email settings and other services were unchanged. Home and privacy URLs point to the production `/archride/` site. No sensitive/restricted Google scopes are configured.
 
 ## Device storage and release
 
