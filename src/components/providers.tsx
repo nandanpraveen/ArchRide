@@ -2,7 +2,7 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import theme from "@/theme";
-import { PersonalProvider } from "./personal-provider";
+import { AuthProvider } from "./auth-provider";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <AppRouterCacheProvider options={{ enableCssLayer: true }}>
@@ -13,7 +13,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         <CssBaseline />
-        <PersonalProvider>{children}</PersonalProvider>
+        <AuthProvider>{children}</AuthProvider>
       </ThemeProvider>
     </AppRouterCacheProvider>
   );

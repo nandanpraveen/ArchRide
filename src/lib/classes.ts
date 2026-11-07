@@ -1,3 +1,4 @@
+import { deviceKey } from "./device-storage";
 import type { ClassEntry } from "@/app/classes/next-class";
 
 export const MAX_MINUTES_EARLY = 60;
@@ -58,7 +59,7 @@ const DEVICE_KEY = "archride.classes.v1";
 export function readDeviceClasses(): ClassEntry[] {
   try {
     const parsed: unknown = JSON.parse(
-      localStorage.getItem(DEVICE_KEY) ?? "[]",
+      localStorage.getItem(deviceKey(DEVICE_KEY)) ?? "[]",
     );
     if (!Array.isArray(parsed)) return [];
     return parsed.filter((item): item is ClassEntry => {
@@ -81,7 +82,7 @@ export function readDeviceClasses(): ClassEntry[] {
 
 export function writeDeviceClasses(classes: ClassEntry[]) {
   try {
-    localStorage.setItem(DEVICE_KEY, JSON.stringify(classes));
+    localStorage.setItem(deviceKey(DEVICE_KEY), JSON.stringify(classes));
     return true;
   } catch {
     return false;

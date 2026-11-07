@@ -41,18 +41,38 @@ test("static direct URLs load assets under /archride and primary navigation pres
   expect(failedAssets).toEqual([]);
 });
 
-test("removed student account routes provide 404 or a useful account-free destination", async ({ page }) => {
-  await syntheticExportData(page);
-  for (const route of ["sign-in/", "create-account/", "forgot-password/", "reset-password/", "auth/callback/"]) {
-    const response = await page.goto(root + route);
-    if (response?.status() !== 404) {
-      await expect(page).toHaveURL(/\/archride\/(profile\/)?$/);
-      await expect(page.locator("main")).toBeVisible();
-      await assertStudentNavigation(page);
+test("static authentication routes load under the production base path and protect travel screens", async ({ page }, info) => {
+  await syntheticExportData(page, false);
+  const requests: string[] = [];
+  page.on("request", request => { if (request.url().includes("/functions/v1/")) requests.push(request.url()); });
+  for (const width of [320, 375, 768, 1440, 2560]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const colorScheme of ["light", "dark"] as const) {
+      await page.emulateMedia({ colorScheme, reducedMotion: "reduce" });
+      for (const route of ["sign-in/", "create-account/"]) {
+        const response = await page.goto(root + route);
+        expect(response?.status()).toBe(200);
+        await expect(page.getByRole("button", { name: "Continue with Google", exact: true })).toBeEnabled();
+        await expect(page.getByRole("textbox", { name: "Email", exact: true })).toBeVisible();
+        await noHorizontalOverflow(page);
+        if ([375, 1440].includes(width)) await snapshot(page, info, `${route.slice(0,-1)}-${width}-${colorScheme}`);
+        await page.addStyleTag({ content: "html { font-size: 32px !important; }" });
+        await noHorizontalOverflow(page);
+        if (route === "create-account/") {
+          const label = page.locator("label").filter({hasText:"Confirm password"});
+          expect(await label.evaluate(element => element.scrollWidth - element.clientWidth)).toBeLessThanOrEqual(1);
+        }
+      }
     }
-    await expect(page.getByLabel(/^Password\s*\*?$/)).toHaveCount(0);
-    await expect(page.getByLabel(/^Email\s*\*?$/)).toHaveCount(0);
   }
+  await page.goto(root + "auth/callback/?error=access_denied");
+  await expect(page.getByRole("heading", { name: "Sign-in didn’t finish", exact: true })).toBeVisible();
+  for (const route of ["", "saved/", "map/?stop=example", "classes/"]) {
+    await page.goto(root + route);
+    await expect(page).toHaveURL(/\/archride\/sign-in\/\?next=/);
+    await expect(page.getByRole("heading", { name: "Sign in to ArchRide", exact: true })).toBeVisible();
+  }
+  expect(requests).toEqual([]);
   const admin = await page.goto(root + "admin/");
   if (admin?.status() !== 404) {
     await expect(page.getByRole("button", { name: /retry ingestion|publish notice|save correction/i })).toHaveCount(0);
@@ -101,14 +121,14 @@ for (const colorScheme of ["light", "dark"] as const) test(`375px ${colorScheme}
   expect(overflow).toEqual([]);
 });
 
-test("synthetic complete guest journey: Home search, verified walk, saved journey, resume and arrival", async ({ page }, info) => {
+test("synthetic complete signed-in journey: Home search, verified walk, saved journey, resume and arrival", async ({ page }, info) => {
   await syntheticExportData(page);
   await page.setViewportSize({ width: 375, height: 812 });
   const privateRequests: string[] = [];
   page.on("request", request => {
     const url = new URL(request.url());
     const target = url.pathname.endsWith("/public-read") ? url.searchParams.get("path") ?? "" : url.pathname;
-    if (/\/rest\/v1\/(profiles|favorites|classes|active_trips|notification_preferences|notifications|reminder_jobs)(\?|$)/.test(target) || url.pathname.includes("/auth/v1/")) privateRequests.push(request.url());
+    if (/\/rest\/v1\/(profiles|favorites|classes|active_trips|notification_preferences|notifications|reminder_jobs)(\?|$)/.test(target)) privateRequests.push(request.url());
   });
   await page.goto(root);
   await page.getByRole("combobox", { name: "From", exact: true }).fill("Student Center");
@@ -138,7 +158,8 @@ test("synthetic complete guest journey: Home search, verified walk, saved journe
   expect(privateRequests).toEqual([]);
 });
 
-test("unavailable transit keeps guest planning feedback, navigation and offline parking useful", async ({ page }) => {
+test("unavailable transit keeps signed-in planning feedback, navigation and offline parking useful", async ({ page }) => {
+  await syntheticExportData(page);
   await page.route("https://tile.openstreetmap.org/**", route => route.abort());
   await page.route("**/functions/v1/public-read?**", route => route.abort());
   await page.goto(root);
@@ -172,7 +193,7 @@ test("a late agency notice keeps End trip in place and never prevents ending a w
   expect(Math.abs(after!.y - before!.y)).toBeLessThanOrEqual(1);
   await end.click();
   await expect(active).toHaveCount(0);
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("archride.personal.v1")!).active)).toBeNull();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("archride.personal.v1:account:10000000-0000-0000-0000-000000000001")!).active)).toBeNull();
 });
 
 test("phone bus markers stay compact at enlarged text and retain touch targets", async ({ page }) => {

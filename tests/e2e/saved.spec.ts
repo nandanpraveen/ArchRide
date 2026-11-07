@@ -1,11 +1,11 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "./fixtures";
 import { mockTransit } from "./transit-fixtures";
 
 test.beforeEach(async ({ page }) => {
   await mockTransit(page);
 });
 
-const KEY = "archride:saved:v1";
+const KEY = "archride:saved:v1:account:10000000-0000-0000-0000-000000000001";
 const stops = [
   { id: "s1", name: "Tate Center", savedAt: "2026-10-20T12:00:00.000Z" },
   { id: "s2", name: "Library", savedAt: "2026-10-20T12:01:00.000Z" },

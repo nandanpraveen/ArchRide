@@ -1,4 +1,6 @@
 "use client";
+import { isCurrentDeviceKey } from "@/lib/device-storage";
+import { useAuth } from "@/components/auth-provider";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -144,6 +146,7 @@ function TravelForm() {
   );
 }
 export default function ProfileUI() {
+  const auth = useAuth();
   const personal = usePersonal();
   const [clearing, setClearing] = useState(false);
   const [notice, setNotice] = useState("");
@@ -152,7 +155,7 @@ export default function ProfileUI() {
     try {
       for (const storage of [localStorage, sessionStorage]) {
         for (const key of Object.keys(storage))
-          if (key.startsWith("archride.") || key.startsWith("archride:")) storage.removeItem(key);
+          if (isCurrentDeviceKey(key)) storage.removeItem(key);
       }
       window.dispatchEvent(new Event("archride:device-data-cleared"));
       personal.reload();
@@ -162,7 +165,10 @@ export default function ProfileUI() {
     } catch { setNotice("This browser could not clear its saved data. Use your browser’s site-data settings."); }
   }
   return <Stack spacing={4} sx={{ maxWidth: 1440, mx: "auto" }}>
-    <Typography component="h1" variant="h1">Profile</Typography>
+    <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ alignItems: { sm: "center" }, justifyContent: "space-between" }}>
+      <Box><Typography component="h1" variant="h1">Profile</Typography><Typography color="text.secondary" variant="body2" sx={{ mt: 1, overflowWrap: "anywhere" }}>{auth.user?.email}</Typography></Box>
+      <Button variant="outlined" onClick={async () => { if (!await auth.signOut()) setNotice("Couldn’t sign out. Check your connection and try again."); }}>Sign out</Button>
+    </Stack>
     {notice && <Alert severity="info" role="status">{notice}</Alert>}
     {personal.error && <Alert severity="error" action={<Button onClick={personal.reload} color="inherit">Retry</Button>}>{personal.error}</Alert>}
     <Box sx={{ display: "grid", gridTemplateColumns: { xs: "minmax(0,1fr)", lg: "minmax(0,1.2fr) minmax(0,1fr)" }, gap: { xs: 4, lg: 6 }, alignItems: "start" }}>

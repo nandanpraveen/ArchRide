@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./fixtures";
 import { mockTransit, transitFixtures } from "./transit-fixtures";
 
 async function manualOrigin(page: Page, name = "Student Center") {

@@ -1,4 +1,4 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect, type Page } from "./fixtures";
 import { mockTransit } from "./transit-fixtures";
 
 async function addClass(page: Page, title: string, day: string) {
@@ -44,7 +44,7 @@ test("the editor reports missing details instead of saving", async ({ page }) =>
   await expect(page.getByText("Choose a campus building.")).toBeVisible();
   await expect(page.getByText("Choose at least one weekday.")).toBeVisible();
   await expect(page.getByRole("dialog", { name: "Add a class" })).toBeVisible();
-  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("archride.classes.v1") ?? "[]").length)).toBe(0);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem("archride.classes.v1:account:10000000-0000-0000-0000-000000000001") ?? "[]").length)).toBe(0);
 });
 
 test("deleting a class asks for confirmation and can be undone", async ({ page }) => {
@@ -89,7 +89,7 @@ async function seedGuestClasses(page: Page, classes: object[]) {
     ([key, value]) => {
       if (!localStorage.getItem(key)) localStorage.setItem(key, value);
     },
-    ["archride.classes.v1", JSON.stringify(classes)],
+    ["archride.classes.v1:account:10000000-0000-0000-0000-000000000001", JSON.stringify(classes)],
   );
 }
 

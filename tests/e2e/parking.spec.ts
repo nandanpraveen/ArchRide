@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { mockTransit } from "./transit-fixtures";
 
 test("parking has guest-accessible deep links, weekly rules and separate payment conditions", async ({ page }) => {
@@ -45,7 +45,8 @@ test("event mode cannot present ordinary vehicle access as authorization", async
   await mockTransit(page);
   await page.goto("/map?parking=tsl");
   const details = page.getByRole("region", { name: "Parking details" });
-  await details.getByRole("combobox", { name: "Event conditions" }).click();
+  await details.getByRole("combobox", { name: "Event conditions" }).focus();
+  await page.keyboard.press("ArrowDown");
   await page.getByRole("option", { name: "Gameday or special event", exact: true }).click();
   await expect(details).toContainText("Restricted: check event instructions");
   await details.getByText("Events & special spaces", { exact: true }).click();

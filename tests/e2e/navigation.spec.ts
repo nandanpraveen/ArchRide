@@ -1,9 +1,9 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 test.beforeEach(async ({ page }) => {
   await page.route("**/functions/v1/public-read?**", (route) => route.fulfill({ json: [] }));
   await page.route("https://tile.openstreetmap.org/**", (route) => route.abort());
 });
-test("a guest can visit all destinations without invented arrivals", async ({
+test("a signed-in student can visit all destinations without invented arrivals", async ({
   page,
 }) => {
   await page.goto("/");
@@ -32,6 +32,7 @@ test("a guest can visit all destinations without invented arrivals", async ({
 });
 test("keyboard users can skip directly to main content", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByRole("button", { name: "Find a trip", exact: true })).toBeEnabled();
   await page.keyboard.press("Tab");
   await expect(
     page.getByRole("link", { name: "Skip to content" }),

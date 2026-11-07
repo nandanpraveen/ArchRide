@@ -1,19 +1,21 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { DEFAULT_TRAVEL } from "../../src/lib/personal";
 import { mockTransit } from "./transit-fixtures";
 
 test.beforeEach(async ({ page }) => { await mockTransit(page); });
 
-test("all student features are available without an Auth request or account entry", async ({ page }) => {
+test("signed-in student features verify Auth without requesting account setup again", async ({ page }) => {
   const authRequests: string[] = [];
   page.on("request", request => { if (request.url().includes("/auth/v1/")) authRequests.push(request.url()); });
   for (const path of ["/", "/map", "/plan", "/saved", "/classes", "/notifications", "/profile"]) {
     const response = await page.goto(path);
     expect(response?.status()).toBe(200);
     await expect(page.getByRole("main")).toBeVisible();
+    await expect(page.getByRole("navigation", { name: "Primary navigation", exact: true }).filter({ visible: true })).toBeVisible();
     await expect(page.getByRole("link", { name: /^(Sign in|Create account|Create an account)$/i })).toHaveCount(0);
   }
-  expect(authRequests).toEqual([]);
+  expect(authRequests.length).toBeGreaterThan(0);
+  expect(authRequests.every(url => new URL(url).pathname.endsWith("/user"))).toBe(true);
 });
 
 test("travel preferences and appearance persist only in the current browser", async ({ page }) => {
@@ -37,8 +39,8 @@ test("confirmed clearing removes ArchRide device data and preserves unrelated si
   await page.goto("/");
   await page.evaluate((prefs) => {
     localStorage.setItem("unrelated-site-data", "preserve");
-    localStorage.setItem("archride.personal.v1", JSON.stringify({ prefs: { ...prefs, buffer: 9 }, active: null, items: [{ id: "saved-test", key: "stop:uga-passio:east", kind: "stop", name: "My boarding stop", origin: null, destination: { id: "uga-passio:east", name: "Memorial Hall", type: "stop" }, position: 0, updatedAt: new Date().toISOString() }] }));
-    localStorage.setItem("archride.notification-preferences.v1", JSON.stringify({ leaveNowEnabled: false, classRemindersEnabled: true, alertsEnabled: true, tripUpdatesEnabled: true, busLeadMinutes: 10 }));
+    localStorage.setItem("archride.personal.v1:account:10000000-0000-0000-0000-000000000001", JSON.stringify({ prefs: { ...prefs, buffer: 9 }, active: null, items: [{ id: "saved-test", key: "stop:uga-passio:east", kind: "stop", name: "My boarding stop", origin: null, destination: { id: "uga-passio:east", name: "Memorial Hall", type: "stop" }, position: 0, updatedAt: new Date().toISOString() }] }));
+    localStorage.setItem("archride.notification-preferences.v1:account:10000000-0000-0000-0000-000000000001", JSON.stringify({ leaveNowEnabled: false, classRemindersEnabled: true, alertsEnabled: true, tripUpdatesEnabled: true, busLeadMinutes: 10 }));
   }, DEFAULT_TRAVEL);
   await page.goto("/profile");
   await expect(page.getByLabel("Arrival buffer (minutes)")).toHaveValue("9");
@@ -73,8 +75,8 @@ test("clearing another tab cancels a personal write already waiting for its lock
   await second.goto("/profile");
   await second.getByRole("button", { name: "Clear device data", exact: true }).click();
   await second.getByRole("dialog").getByRole("button", { name: "Clear device data", exact: true }).click();
-  await expect.poll(() => page.evaluate(() => localStorage.getItem("archride.personal.v1"))).toBeNull();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem("archride.personal.v1:account:10000000-0000-0000-0000-000000000001"))).toBeNull();
   await page.evaluate(() => (window as unknown as { releasePersonal: () => void }).releasePersonal());
   await expect(page.getByRole("button", { name: "Save preferences", exact: true })).toBeEnabled();
-  expect(await page.evaluate(() => localStorage.getItem("archride.personal.v1"))).toBeNull();
+  expect(await page.evaluate(() => localStorage.getItem("archride.personal.v1:account:10000000-0000-0000-0000-000000000001"))).toBeNull();
 });

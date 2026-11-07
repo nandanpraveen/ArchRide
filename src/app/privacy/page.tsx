@@ -16,7 +16,7 @@ export default function PrivacyPage() {
         ],
         [
           "Saved on your device",
-          "ArchRide does not require an account. Preferences, saved places, classes, active trips, and notifications are stored in this browser, with no cross-device syncing. Use Clear device data in Profile, or clear this site’s data in your browser settings, to remove them. Someone with access to this browser may see its saved data.",
+          "An account is required to use ArchRide. Preferences, saved places, classes, active trips, and notifications stay in this browser, separated by signed-in account, with no cross-device syncing. Existing device data moves to the first account used after this update. Clear device data in Profile removes the current account’s device data. Browser storage is not encrypted against someone with access to the browser or device.",
         ],
         [
           "Estimates & reminders",
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
         ],
         [
           "Third-party services",
-          "Map tiles are provided by OpenStreetMap. Walking routes are calculated by FOSSGIS's OpenStreetMap routing service, whose servers receive the selected route endpoints and may log requests. GitHub Pages hosts the public app and may log visitor IP addresses. Supabase hosts the public transit data and protected routing and reporting endpoints. Short-lived, salted network hashes enforce request limits without storing a raw IP address in ArchRide’s rate-limit tables. Hosting providers may maintain their own operational logs.",
+          "Google sign-in shares your basic profile and email with Supabase Auth to establish your account. Email signup stores your email and a protected password hash in Supabase Auth. Authentication sessions and short-lived account counters enforce access and request limits. Map tiles come from OpenStreetMap. FOSSGIS calculates walking routes and receives selected endpoints. GitHub Pages and these providers may maintain operational logs. Short-lived salted network hashes enforce additional limits without storing raw IP addresses in ArchRide’s rate-limit tables. We do not request access to your Google mail, files, calendar, or contacts.",
         ],
       ].map(([title, body]) => (
         <Box component="section" key={title} sx={{ pt: 1 }}>

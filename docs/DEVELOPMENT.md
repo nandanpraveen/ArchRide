@@ -2,7 +2,7 @@
 
 ## Current scope
 
-On November 3, 2026, the project owner removed student sign-up and sign-in. Accounts had been requested for rate limiting; backend admission now owns that protection. Personal travel data stays in browser storage. There is no student session, email confirmation, password reset, or cross-device sync in the app.
+On November 6, 2026, the project owner restored mandatory sign-in with Google or email/password for rate limiting. Email verification is disabled by request. Personal travel data stays in browser storage, separated by account; cross-device sync is out of scope. See [authentication operations](AUTHENTICATION.md).
 
 Existing Auth users and private tables are retained securely. Do not drop them to remove a frontend feature. Restricted maintenance uses authorized operator access, separately from the student app.
 
@@ -16,7 +16,7 @@ Read `AGENTS.md` and relevant installed Next.js guides before implementation. Th
 
 ## Checks
 
-Run the commands in the root README. Browser tests compile a static root-path export with test-only public configuration and serve it on port 3100 using Python. This avoids development hot reloads during interactions. Stop a development server using the same Next build directory first. Rebuild with `pnpm build:pages` after these tests to restore the real public configuration and production base path before deployment. After removing routes, remove stale generated Next type directories before `pnpm typecheck` if old route references persist. Do not remove source or user data to resolve generated-type errors.
+Run the commands in the root README. Browser tests compile a static root-path export with test-only public configuration and serve it on port 3100 using Python. This avoids development hot reloads during interactions. Stop a development server using the same Next build directory first. Never run another build while browser tests are serving `out/`; the files belong to the active test run. Rebuild with `pnpm build:pages` after these tests to restore the real public configuration and production base path before deployment. After removing routes, remove stale generated Next type directories before `pnpm typecheck` if old route references persist. Do not remove source or user data to resolve generated-type errors.
 
 `pnpm transit:edge:build` generates the ingestion worker, predictor core, and dataset module from shared sources. Commit those generated files together with their inputs; CI checks drift.
 
@@ -24,9 +24,9 @@ Tests exercise device persistence, timing, planner feasibility, source validity,
 
 ## Database changes
 
-Discover CLI commands with `supabase --help` and the relevant subcommand's help. Inspect the linked schema before changing it. Create migration files with `supabase migration new`, test them against the isolated database, inspect the dry-run, apply to the authorized linked project, regenerate types, and rerun advisors. Keep ownership checks and explicit minimal grants on all exposed tables.
+Discover CLI commands with `supabase --help` and the relevant subcommand's help. `supabase config push` applies immediately in this agent environment; it is not a preview. Align the full configuration with the hosted state before pushing, and verify service differences afterward. Inspect the linked schema before changing it. Create migration files with `supabase migration new`, test them against the isolated database, inspect the dry-run, apply to the authorized linked project, regenerate types, and rerun advisors. Keep ownership checks and explicit minimal grants on all exposed tables.
 
-Public read endpoints must allowlist tables, columns, operators, query complexity, and response size. A publishable key, caller-supplied device ID, CORS policy, or hidden button is not an authorization or abuse-control boundary. Direct anonymous REST grants must not bypass the admission layer. Retain the upstream routing limiter and central ingestion cadence independently of visitor limits.
+Public read endpoints must allowlist tables, columns, operators, query complexity, and response size. A publishable key, caller-supplied device ID, CORS policy, or hidden button is not an authorization or abuse-control boundary. Direct anonymous or authenticated REST grants must not bypass the admission layer. JWT signature/expiry and active sessions are checked before account/network/global admission. Retain the upstream routing limiter and central ingestion cadence independently of visitor limits.
 
 ## Publish and roll back
 

@@ -1,3 +1,4 @@
+import { deviceKey } from "./device-storage";
 import type { Place } from "./campus-data";
 export type PlaceRef = Pick<Place, "id" | "name" | "type">;
 export const placeRef = (p: PlaceRef): PlaceRef => ({
@@ -163,10 +164,10 @@ export function quietNow(
 }
 export function readPersonalDevice() {
   try {
-    const raw = localStorage.getItem("archride.personal.v1");
+    const raw = localStorage.getItem(deviceKey("archride.personal.v1"));
     const data = JSON.parse(raw ?? "{}");
     if (!raw) {
-      const old = JSON.parse(localStorage.getItem("archride:saved:v1") ?? "{}");
+      const old = JSON.parse(localStorage.getItem(deviceKey("archride:saved:v1")) ?? "{}");
       if (old.version === 1 && Array.isArray(old.stops))
         data.items = old.stops
           .filter(
