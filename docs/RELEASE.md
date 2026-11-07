@@ -33,7 +33,7 @@ The reviewers also identified missing operational budgets, email readiness, roll
 
 ## Verification record
 
-The November 6 responsive workspace update is verified separately in the [responsive review](RESPONSIVE_REVIEW.md). It expands desktop layouts and refines mobile interactions. Its local checks do not change the deployed November 5 release described below.
+The November 6 responsive workspace update is deployed at the existing ArchRide URL after [PR #16](https://github.com/nandanpraveen/ArchRide/pull/16) passed GitHub CI and merged. All 50 production-path Chromium/WebKit checks passed on the live site. The [responsive review](RESPONSIVE_REVIEW.md), [deployment evidence](evidence/responsive-deployment.json), and [rollback drill](evidence/responsive-rollback.json) record the source/site commits, byte-for-byte portfolio preservation, retained assets, and verification. The November 5 release evidence below remains the historical baseline.
 
 The November 5 release uses a simpler header, open trip form, compact rows, disclosure controls for supporting text, and fixed-size SVG bus markers. Phone Home does not load the map renderer. Transit and Parking start with separate map layers. Safari trip actions keep their width during pointer focus.
 

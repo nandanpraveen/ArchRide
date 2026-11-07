@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-11-07T01:21:20.025Z",
+  "url": "https://nandanpraveen.github.io/archride/",
+  "sourceCodeCommit": "a63bd9d8d5b583a29c0517eac5df27ff2386c908",
+  "sourceMainMergeCommit": "15c6a139b006ecbc7e6eb6b77be83badface241e",
+  "sourcePullRequest": "https://github.com/nandanpraveen/ArchRide/pull/16",
+  "sourceCi": {
+    "url": "https://github.com/nandanpraveen/ArchRide/actions/runs/42322694627",
+    "conclusion": "success"
+  },
+  "siteRepository": "nandanpraveen/nandanpraveen.github.io",
+  "siteCommit": "43f86d951414777d2316db878fad83e7ec2fb47d",
+  "pagesDeployment": {
+    "url": "https://github.com/nandanpraveen/nandanpraveen.github.io/actions/runs/42323352181",
+    "conclusion": "success",
+    "source": {
+      "branch": "main",
+      "path": "/"
+    }
+  },
+  "release": {
+    "version": "0.1.0",
+    "revision": "responsive-workspace",
+    "sourceCommit": "a63bd9d8d5b583a29c0517eac5df27ff2386c908",
+    "sourcePullRequest": "https://github.com/nandanpraveen/ArchRide/pull/16",
+    "builtAt": "2026-11-07T01:14:46.063907+00:00",
+    "basePath": "/archride"
+  },
+  "liveHomeHtmlSha256": "05001fe6ce35a1a831a81abe5e0b5cff78238b1761bd48a2c7634fc49b0f4d5b",
+  "matchesVerifiedExport": true,
+  "preservedRootFilesSha256": {
+    "index.html": "b260218103440a525ff901c7b93d541865d6ffedd9ca03c32497a0730db5dc43",
+    "resume.pdf": "21b94dd998919415585079c50de4ede34abb6b59ed2c1d392477b8da43b7acf6",
+    ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "livePortfolioUnchanged": true,
+  "retainedPriorHashedAssetCount": 18,
+  "liveBrowserChecks": {
+    "engines": [
+      "Chromium",
+      "WebKit"
+    ],
+    "startTime": "2026-11-07T01:19:48.247Z",
+    "duration": 63356.37,
+    "expected": 50,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "actualPublicHomeVisualChecks": [
+    {
+      "width": 375,
+      "pageErrors": [],
+      "horizontalOverflow": false
+    },
+    {
+      "width": 1920,
+      "pageErrors": [],
+      "horizontalOverflow": false
+    }
+  ],
+  "hostedSecurityEvidence": "hosted-public-security.json",
+  "rollbackEvidence": "responsive-rollback.json",
+  "physicalDevicesTested": false
+}

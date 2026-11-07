@@ -1,0 +1,9 @@
+{
+  "checkedAt": "2026-11-07T01:14:56.727253+00:00",
+  "scope": "Isolated Git worktree; production unchanged",
+  "revertedSiteCommit": "43f86d951414777d2316db878fad83e7ec2fb47d",
+  "restoredPriorCommit": "d1bfc0a4dcffd62c7be7643afe46b7ec69dfe721",
+  "verifiedPriorArtifactFiles": 107,
+  "rootFilesUnchanged": true,
+  "passed": true
+}
