@@ -1,5 +1,6 @@
 "use client";
 import { isCurrentDeviceKey } from "@/lib/device-storage";
+import { disableBrowserPush } from "@/lib/browser-push";
 import { useAuth } from "@/components/auth-provider";
 import Link from "next/link";
 import { useState } from "react";
@@ -151,8 +152,9 @@ export default function ProfileUI() {
   const [clearing, setClearing] = useState(false);
   const [notice, setNotice] = useState("");
   const [resetKey, setResetKey] = useState(0);
-  function clearDevice() {
+  async function clearDevice() {
     try {
+      await disableBrowserPush();
       for (const storage of [localStorage, sessionStorage]) {
         for (const key of Object.keys(storage))
           if (isCurrentDeviceKey(key)) storage.removeItem(key);
@@ -162,7 +164,7 @@ export default function ProfileUI() {
       setResetKey(n => n + 1);
       setClearing(false);
       setNotice("Your ArchRide data was cleared from this browser.");
-    } catch { setNotice("This browser could not clear its saved data. Use your browser’s site-data settings."); }
+    } catch { setNotice("Couldn’t turn off reminders and clear data. Check your connection and retry."); }
   }
   return <Stack spacing={4} sx={{ maxWidth: 1440, mx: "auto" }}>
     <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ alignItems: { sm: "center" }, justifyContent: "space-between" }}>
@@ -185,8 +187,8 @@ export default function ProfileUI() {
       </Stack>
       <Stack direction={{ xs: "column", sm: "row" }} spacing={1} sx={{ alignItems: { xs: "start", sm: "center" }, justifyContent: "space-between", mt: 2 }}>
         <Box component="details" sx={{ minWidth: 0 }}>
-          <Box component="summary" sx={{ cursor: "pointer", py: 1.5, fontSize: ".875rem", color: "text.secondary" }}>Your data stays on this device</Box>
-          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: "60ch", mb: 1 }}>Saved journeys, classes, preferences, and notifications stay in this browser. They do not sync to other devices. GPS location is never saved as a default.</Typography>
+          <Box component="summary" sx={{ cursor: "pointer", py: 1.5, fontSize: ".875rem", color: "text.secondary" }}>Device data and browser reminders</Box>
+          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: "60ch", mb: 1 }}>Saved journeys, classes, and preferences stay in this browser. Browser notifications share upcoming reminder times and watched buses only when enabled. GPS location is never saved as a default.</Typography>
           <Button component={Link} href="/privacy" sx={{ ml: -1.5 }}>Privacy & data</Button>
         </Box>
         <Button color="error" onClick={() => setClearing(true)} sx={{ flexShrink: 0 }}>Clear device data</Button>

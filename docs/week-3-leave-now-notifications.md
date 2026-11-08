@@ -1,5 +1,7 @@
 # Week 3: leave-now reminders and notification center
 
+Historical implementation notes below. Browser push, walking-aware bus timing, and building leave-time reminders are now implemented in source; see [current browser notification setup and limits](browser-notifications.md). The in-app-only scope and account/guest storage descriptions below describe the earlier milestone.
+
 Status: built, in-app only. Updated 2026-11-01.
 
 ## What students get

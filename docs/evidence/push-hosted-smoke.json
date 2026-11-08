@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-11-08T02:02:48.696Z",
+  "project": "yivnryjbzhampecphlgr",
+  "checks": {
+    "public_key": 200,
+    "bad_origin": 403,
+    "bad_token": 400,
+    "unsafe_endpoint": 400,
+    "sync": 200,
+    "update": 200,
+    "forged_job": 400,
+    "authorized_dispatch": 200,
+    "disable": 200,
+    "disable_idempotent": 200
+  },
+  "dispatch": {
+    "checked": 1,
+    "sent": 0
+  }
+}

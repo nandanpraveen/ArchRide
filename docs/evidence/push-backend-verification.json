@@ -1,0 +1,38 @@
+{
+  "anonRead": false,
+  "checkedAt": "2026-11-08T02:04:15.594622+00:00",
+  "devicesAfterSmoke": 0,
+  "httpResponses": [
+    {
+      "content": "{\"checked\":0,\"sent\":0}",
+      "createdAt": "2026-11-08T02:04:01.263644+00:00",
+      "error": null,
+      "status": 200
+    },
+    {
+      "content": "{\"checked\":0,\"sent\":0}",
+      "createdAt": "2026-11-08T02:03:00.039498+00:00",
+      "error": null,
+      "status": 200
+    }
+  ],
+  "job": {
+    "active": true,
+    "id": 18,
+    "schedule": "* * * * *"
+  },
+  "migrationApplied": true,
+  "privateRls": true,
+  "project": "yivnryjbzhampecphlgr",
+  "runs": [
+    {
+      "started": "2026-11-08T02:04:00.050833+00:00",
+      "status": "succeeded"
+    },
+    {
+      "started": "2026-11-08T02:03:00.033685+00:00",
+      "status": "succeeded"
+    }
+  ],
+  "studentRead": false
+}

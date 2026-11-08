@@ -20,11 +20,11 @@ export default function PrivacyPage() {
         ],
         [
           "Estimates & reminders",
-          "Transit information comes from UGA / Passio. Walking paths use OpenStreetMap data. Arrival and walking times are estimates, not guarantees. Reminders work while ArchRide is open; browsers may delay them in background tabs. Background push is not enabled.",
+          "Transit information comes from UGA / Passio. Walking paths use OpenStreetMap data. Arrival and walking times are estimates, not guarantees. In-app reminders work while ArchRide is open. If you enable browser notifications, ArchRide stores this browser’s push subscription, watched buses, upcoming reminder times and destinations, notification preferences, and quiet hours in private server storage. This allows reminders when the app is closed. Your full class schedule and precise GPS coordinates are not uploaded for push. Reminder times use the starting point selected when planning, or your default origin for classes. We do not track background location. Device settings and connectivity can delay delivery.",
         ],
         [
           "Retention",
-          "Active trips expire after three hours. Expired notifications are removed after seven days. Raw vehicle observations are retained for up to 12 hours, raw predictions for up to 6 hours, and verified stop events for 14 days. Volume caps can shorten raw history. Rider reports are used for validation and prediction evaluation; no continuous rider location trail is collected.",
+          "Active trips and bus watches expire after three hours. Push subscriptions and reminder data expire eight days after the last sync; reopen ArchRide weekly to refresh the next seven days of reminders. Turning off browser notifications or clearing device data removes this browser’s server reminders. If you clear site storage through your browser instead, use its notification settings to revoke permission too. Raw vehicle observations are retained for up to 12 hours, raw predictions for up to 6 hours, and verified stop events for 14 days. Volume caps can shorten raw history. Rider reports are used for validation and prediction evaluation; no continuous rider location trail is collected.",
         ],
         [
           "Third-party services",

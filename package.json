@@ -16,6 +16,7 @@
     "test:transit": "node --import tsx --test tests/transit/*.test.ts",
     "test:classes": "node --import tsx --test tests/classes/*.test.ts",
     "test:notifications": "node --import tsx --test tests/notifications/*.test.ts",
+    "push:build": "node scripts/build-push.mjs",
     "db:types:local": "node --import tsx scripts/transit/generate-types.ts",
     "transit:edge:build": "node scripts/transit/build-edge.mjs",
     "transit:hosted:smoke": "node --env-file=.env.local --import tsx scripts/transit/hosted-smoke.ts",

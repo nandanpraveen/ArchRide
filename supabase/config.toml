@@ -459,3 +459,9 @@ import_map = "./functions/public-read/deno.json"
 verify_jwt = false
 entrypoint = "./functions/rider-report/index.ts"
 import_map = "./functions/rider-report/deno.json"
+
+[functions.push-reminders]
+# Public sync uses an unguessable device capability; cron uses a separate job secret.
+verify_jwt = false
+entrypoint = "./functions/push-reminders/index.ts"
+import_map = "./functions/push-reminders/deno.json"

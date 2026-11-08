@@ -18,13 +18,19 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: pnpm
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: "2.9.2"
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm transit:edge:build
+      - run: pnpm push:build
+      - run: git diff --exit-code -- supabase/functions/push-reminders/core.js
       - run: git diff --exit-code -- supabase/functions/transit-ingest/core.js supabase/functions/predictor-update/core.js supabase/functions/predictor-update/dataset.js
       - run: pnpm test:transit
       - run: pnpm test:classes
       - run: pnpm test:notifications
+      - run: deno test --allow-env --config supabase/functions/push-reminders/deno.json supabase/functions/push-reminders/runtime.test.ts
       - run: pnpm test:planner
       - run: pnpm test:personal
       - run: pnpm test:parking

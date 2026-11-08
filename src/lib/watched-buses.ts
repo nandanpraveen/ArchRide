@@ -132,7 +132,7 @@ const isName = (value: unknown) =>
 const isId = (value: unknown) =>
   typeof value === "string" && value.length > 0 && value.length <= 200;
 
-function isWatchedEntry(item: unknown): item is WatchedBusEntry {
+export function isWatchedEntry(item: unknown, now = Date.now()): item is WatchedBusEntry {
   if (!item || typeof item !== "object") return false;
   const entry = item as WatchedBusEntry;
   return (
@@ -143,7 +143,7 @@ function isWatchedEntry(item: unknown): item is WatchedBusEntry {
     isName(entry.stopName) &&
     typeof entry.addedAt === "number" &&
     Number.isFinite(entry.addedAt) &&
-    entry.addedAt <= Date.now() + 120000 &&
+    entry.addedAt <= now + 120000 &&
     (entry.walkSeconds === undefined ||
       (Number.isFinite(entry.walkSeconds) &&
         entry.walkSeconds >= 0 &&
@@ -168,7 +168,7 @@ export function readDeviceWatched(): WatchedBusEntry[] {
       ) ?? "[]",
     );
     return Array.isArray(parsed)
-      ? parsed.filter(isWatchedEntry).slice(-MAX_WATCHED_BUSES)
+      ? parsed.filter(item => isWatchedEntry(item)).slice(-MAX_WATCHED_BUSES)
       : [];
   } catch {
     return [];

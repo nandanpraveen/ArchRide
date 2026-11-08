@@ -5,6 +5,7 @@ import { authClient } from "@/lib/supabase/auth";
 import { setDeviceAccount } from "@/lib/device-storage";
 import { clearLocation } from "@/lib/location";
 import { clearWalkingCache } from "@/lib/planner/walking";
+import { disableBrowserPush } from "@/lib/browser-push";
 
 type State = { status: "checking" | "signed-out" | "signed-in" | "unavailable"; user: User | null };
 const Context = createContext<(State & { refresh: () => Promise<boolean>; signOut: () => Promise<boolean> }) | null>(null);
@@ -35,7 +36,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setState({ status: error && (!error.status || error.status >= 500) ? "unavailable" : "signed-out", user: null });
           return false;
         }
-        if (currentAccount.current !== data.user.id) { clearLocation(); clearWalkingCache(); }
+        if (currentAccount.current !== data.user.id) {
+          if (currentAccount.current) await disableBrowserPush().catch(() => {});
+          clearLocation(); clearWalkingCache();
+        }
         setDeviceAccount(data.user.id);
         currentAccount.current = data.user.id;
         setState({ status: "signed-in", user: data.user });
@@ -55,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     let timer: ReturnType<typeof setTimeout>;
     const { data } = client?.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") {
+        void disableBrowserPush().catch(() => {});
         invalidate();
         currentAccount.current = null;
         clearLocation(); clearWalkingCache();
@@ -66,13 +71,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }) ?? { data: null };
     queueMicrotask(() => void refresh());
-    const expired = () => { invalidate(); setState({ status: "signed-out", user: null }); };
+    const expired = () => { void disableBrowserPush().catch(() => {}); invalidate(); setState({ status: "signed-out", user: null }); };
     window.addEventListener("archride:session-expired", expired);
     return () => { invalidate(); clearTimeout(timer); data?.subscription.unsubscribe(); window.removeEventListener("archride:session-expired", expired); };
   }, [refresh, invalidate]);
   const signOut = async () => {
     const client = authClient();
     if (!client) return false;
+    try { await disableBrowserPush(); } catch { /* Local unsubscribe still silences an offline device. */ }
     const { error } = await client.auth.signOut({ scope: "local" });
     if (error) return false;
     generation.current++;

@@ -82,16 +82,16 @@ test("a guest sees an empty notification center that says where notifications ar
   await mockTransit(page);
   await page.goto("/notifications");
   await expect(page.getByRole("heading", { name: "No notifications" })).toBeVisible();
-  await expect(page.getByText("Only while ArchRide is open. Saved on this device.", { exact: true })).toBeVisible();
+  await expect(page.getByText("Saved on this device. Enable browser notifications in Profile for reminders while ArchRide is closed.", { exact: true })).toBeVisible();
   await expect(bell(page)).toBeVisible();
 });
 
-test("reminder settings are saved on this device and are honest about in-app delivery", async ({ page }) => {
+test("reminder settings are saved on this device and explain browser delivery", async ({ page }) => {
   await mockTransit(page);
   await page.goto("/profile");
   await expect(page.getByRole("heading", { name: "Leave-now reminders" })).toBeVisible();
   await page.getByRole("region", { name: "Leave-now reminders" }).getByText("About reminders", { exact: true }).click();
-  await expect(page.getByText(/not sent as texts, emails or phone notifications/)).toBeVisible();
+  await expect(page.getByText(/Your location is not tracked after closing the app/)).toBeVisible();
 
   const toggle = page.getByLabel("Remind me when a watched bus is close");
   const lead = page.getByRole("combobox", { name: "How early to remind me" });

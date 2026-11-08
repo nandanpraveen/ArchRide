@@ -88,7 +88,9 @@ export function leaveNowReminder(
   return {
     type: "leave_now",
     title: message,
-    body: `${watch.routeName} at ${watch.stopName}`,
+    body: (hasWalk && !cancelled
+      ? `Walk to ${watch.stopName} for ${watch.routeName}. Allow ${Math.ceil(walking! / 60)} minutes plus your buffer.`
+      : `${watch.routeName} at ${watch.stopName}`).slice(0, 200),
     // Opens the stop's details. The id is encoded because stop ids contain a colon.
     link: watch.planLink?.startsWith("/plan?")
       ? watch.planLink

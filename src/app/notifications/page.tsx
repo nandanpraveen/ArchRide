@@ -17,7 +17,7 @@ export default function NotificationsPage() {
           <Typography component="h1" variant="h1">Notifications</Typography>
           <Button component={Link} href="/profile" aria-label="Notification settings">Settings</Button>
         </Stack>
-        <Typography color="text.secondary" variant="body2" sx={{ mt: 1 }}>Only while ArchRide is open. Saved on this device.</Typography>
+        <Typography color="text.secondary" variant="body2" sx={{ mt: 1 }}>Saved on this device. Enable browser notifications in Profile for reminders while ArchRide is closed.</Typography>
       </Box>
       {saveError && <Alert severity="error">{saveError}</Alert>}
       {status === "loading" && <Typography role="status">Loading notifications…</Typography>}
@@ -52,7 +52,7 @@ export default function NotificationsPage() {
       </Box>}
       <Box component="details">
         <Typography component="summary" variant="body2" color="text.secondary" sx={{ cursor: "pointer", py: 1.5 }}>About reminders</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: "60ch" }}>Notifications are kept on this device only. Clearing browser data removes them. They are not sent as texts, emails or phone notifications.</Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: "60ch" }}>This history is saved in your browser. Browser notifications are optional and managed in Profile. Clearing device data also turns off browser reminders. Reminders are not sent as texts or emails.</Typography>
       </Box>
     </Stack>
   );

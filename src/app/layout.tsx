@@ -16,6 +16,7 @@ export const metadata: Metadata = {
   },
   description:
     "A student-built UGA campus transit planner. Compare a direct bus trip with walking and make a clearer plan for getting to class.",
+  icons: { apple: `${process.env.NEXT_PUBLIC_BASE_PATH || ""}/icons/app-192.png` },
 };
 export const viewport: Viewport = {
   width: "device-width",

@@ -429,7 +429,7 @@ function PlanContent() {
             ).toISOString()
           : null,
       selectedDestinationArrivalAt: j.destinationArrivalAt,
-      walkToSeconds: j.mode === "bus" ? Math.ceil(j.legs[0].seconds) : null,
+      walkToSeconds: Math.ceil(j.legs[0].seconds),
       walkFromSeconds:
         j.mode === "bus" ? Math.ceil(j.legs.at(-1)!.seconds) : null,
       expiresAt: new Date(now + 3 * 3600000).toISOString(),

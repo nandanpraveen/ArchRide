@@ -25,6 +25,8 @@ import {
 } from "@/lib/transit/contracts";
 import { useNotifications } from "@/lib/use-notifications";
 import { useClasses } from "@/lib/use-classes";
+import { useBrowserNotifications } from "@/lib/use-browser-notifications";
+import { dueReminder, scheduledWalkReminder } from "@/lib/reminder-schedule";
 import { reminderJobs } from "@/lib/class-reminders";
 import { classNotification } from "@/lib/class-notification";
 import { quietNow } from "@/lib/personal";
@@ -46,6 +48,7 @@ import {
   type WatchedBusEntry,
 } from "@/lib/watched-buses";
 type Center = ReturnType<typeof useNotifications> & {
+  browser: ReturnType<typeof useBrowserNotifications>;
   watched: WatchedBusEntry[];
   watchBus: (b: WatchedBus) => void;
   unwatchBus: (b: Pick<WatchedBus, "arrivalId" | "tripId" | "stopId">) => void;
@@ -66,6 +69,7 @@ export function NotificationsProvider({
     classes = useClasses();
   const [watched, setWatched] = useState<WatchedBusEntry[]>([]),
     [banner, setBanner] = useState<NewNotification | null>(null);
+  const browser = useBrowserNotifications({ ready: notifications.status === "ready" && classes.status === "ready" && personal.ready, watched, classes: classes.classes, travel: personal.prefs, active: personal.active, preferences: notifications.preferences });
   const generation = useRef(0);
   const cancelPending = useCallback(() => { generation.current++; }, []);
   const handled = useRef<HandledReminders>({}),
@@ -148,6 +152,14 @@ export function NotificationsProvider({
     [],
   );
   const { add, status } = notifications;
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    const received = (event: MessageEvent) => {
+      if (event.data?.type === "archride:push" && event.data.notification) void add(event.data.notification);
+    };
+    navigator.serviceWorker.addEventListener("message", received);
+    return () => navigator.serviceWorker.removeEventListener("message", received);
+  }, [add]);
   const check = useCallback(async () => {
     const state = latest.current,
       stamp = generation.current;
@@ -195,6 +207,8 @@ export function NotificationsProvider({
     }
     try {
       handled.current = pruneHandled(handled.current);
+      const walk = scheduledWalkReminder(latest.current.active, latest.current.travel.buffer);
+      if (walk && dueReminder(walk)) await deliver(walk.notification);
       if (list.length) {
         const [feed, ...rows] = await Promise.all([
           db
@@ -427,8 +441,8 @@ export function NotificationsProvider({
     };
   }, [check, status, classes.status, personal.ready, personal.active, watched]);
   const value = useMemo(
-    () => ({ ...notifications, watched, watchBus, unwatchBus }),
-    [notifications, watched, watchBus, unwatchBus],
+    () => ({ ...notifications, browser, watched, watchBus, unwatchBus }),
+    [notifications, browser, watched, watchBus, unwatchBus],
   );
   return (
     <Context.Provider value={value}>
