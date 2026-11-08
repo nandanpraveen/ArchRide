@@ -203,14 +203,14 @@ test("phone bus markers stay compact at enlarged text and retain touch targets",
     await page.goto(root + "map/");
     const marker = page.locator('[data-map-marker="vehicle"]');
     await expect(marker).toHaveCount(1);
+    await expect(marker).toBeVisible();
     await expect(marker.locator("svg")).toHaveAttribute("width", "18");
     await expect(marker).toHaveText("");
     await page.addStyleTag({ content: "html { font-size: 32px !important; }" });
-    const size = await marker.evaluate(element => {
+    await expect.poll(() => marker.evaluate(element => {
       const target = element.getBoundingClientRect(), pin = element.querySelector("span")!.getBoundingClientRect();
       return { target: [target.width, target.height], pin: [pin.width, pin.height] };
-    });
-    expect(size).toEqual({ target: [44, 44], pin: [28, 28] });
+    })).toEqual({ target: [44, 44], pin: [28, 28] });
     const zoom = await page.getByRole("button", { name: "Zoom in", exact: true }).boundingBox();
     expect(zoom?.width).toBe(44);
     expect(zoom?.height).toBe(44);
