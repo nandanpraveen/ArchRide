@@ -1,6 +1,6 @@
 # Browser leave-time notifications
 
-The production backend is configured: private migration applied, VAPID keys installed, `push-reminders` deployed, and the one-minute cron enabled. [Hosted API smoke evidence](evidence/push-hosted-smoke.json) records real configuration, sync, update, dispatch, validation, and unsubscribe checks. Those checks use a disposable subscription fixture; they do not prove OS notification delivery. The activation runbook below documents the setup for recovery or another environment.
+Live at [ArchRide](https://nandanpraveen.github.io/archride/): private migration applied, VAPID keys installed, `push-reminders` deployed, and the one-minute cron enabled. [Release evidence](evidence/browser-push-release.json) records production checks and a real desktop Chrome subscription receiving a scheduled push with the ArchRide tab closed. Browser receipt was confirmed through Chrome’s persistent notification list, and the owner confirmed the desktop alert appeared after both macOS Chrome notification entries were enabled. Physical iPhone/Android delivery remains unverified. [Hosted API smoke evidence](evidence/push-hosted-smoke.json) separately covers configuration, sync, update, dispatch, validation, and unsubscribe using a disposable subscription fixture. The activation runbook below documents recovery or setup in another environment.
 
 ## Student flow
 
@@ -11,6 +11,8 @@ In Profile → Leave-now reminders, choose **Enable browser notifications** and 
 - Class reminders use the default origin, cached walking duration adjusted for walking pace, arrival margin, and buffer. Without a cached route they say only “Your class is coming up.” Plan that walk once to populate the route cache. Each class’s reminder switch must be enabled.
 - Quiet hours use Athens time. Replan if your starting point changes; background GPS is not collected. Open the app weekly to refresh the next seven days of class reminders (up to 63 meetings plus one active walk).
 - Turn off browser notifications or use Clear device data to unsubscribe and remove server data. Signing out also unsubscribes. OS/browser permission can be revoked separately in site settings. Browser “clear site data” cannot notify the server, so orphan records expire within eight days.
+
+On macOS, browser permission alone is not enough if System Settings → Notifications has Chrome turned off. Check both Chrome entries when macOS lists more than one. Allow desktop/Notification Center display, and check Focus or screen-sharing suppression if a received push is not visible. ArchRide cannot detect or override these OS settings.
 
 ## Runtime and privacy
 

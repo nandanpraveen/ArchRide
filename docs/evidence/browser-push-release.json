@@ -1,0 +1,97 @@
+{
+  "checkedAt": "2026-11-08T02:24:57.949Z",
+  "status": "deployed and verified",
+  "url": "https://nandanpraveen.github.io/archride/",
+  "sourceCodeCommit": "c9a5551d94eab212ec18765e394fa5702c9578b6",
+  "verificationCommit": "03cc0b31636fb0cb7a63864f9b06b7452dcf8126",
+  "siteCommit": "0831e6fad4c32e6ea15eeba76e99625ecf0998f0",
+  "sourceCI": {
+    "run": 42436943896,
+    "conclusion": "success",
+    "verificationRun": 42437423817,
+    "verificationConclusion": "success",
+    "verificationUrl": "https://github.com/nandanpraveen/ArchRide/actions/runs/42437423817"
+  },
+  "pagesCI": {
+    "run": 42436980685,
+    "conclusion": "success"
+  },
+  "checks": {
+    "unitAndDatabase": 192,
+    "functionalBrowser": 192,
+    "edgeRuntime": 2,
+    "localStaticExport": 50,
+    "liveChromiumWebKit": 50,
+    "mapMarkerRepetitions": 20,
+    "lint": "passed",
+    "typecheck": "passed",
+    "productionBuild": "passed"
+  },
+  "backend": {
+    "project": "yivnryjbzhampecphlgr",
+    "migration": "20261108003314_browser_push_reminders",
+    "function": "push-reminders",
+    "cron": {
+      "id": 18,
+      "schedule": "* * * * *",
+      "active": true
+    },
+    "apiEvidence": "push-hosted-smoke.json",
+    "databaseEvidence": "push-backend-verification.json"
+  },
+  "desktopChrome": {
+    "realGoogleLogin": true,
+    "explicitBrowserPermission": "granted",
+    "realPushSubscription": true,
+    "appTabClosedDuringDispatch": true,
+    "scheduledProductionDispatch": {
+      "observedAt": "2026-11-08T02:08:00.029833Z",
+      "status": 200,
+      "checked": 1,
+      "sent": 1
+    },
+    "browserNotificationVerified": true,
+    "notificationTitle": "ArchRide background reminder test",
+    "verificationMethod": "Read persistent notifications through the native Chrome DevTools UI after reopening the app",
+    "testReminder": "Disposable server-scheduled reminder in this browser’s otherwise empty schedule; not a real class or bus observation",
+    "nativeUnsubscribeRemovedServerRecord": true,
+    "notificationsReenabledAfterTest": true,
+    "secondTest": {
+      "requestedByUser": true,
+      "dispatchObservedAt": "2026-11-08T02:15:36.931Z",
+      "checked": 1,
+      "sent": 1,
+      "appTabClosed": true,
+      "temporaryReminderRemoved": true,
+      "userBannerConfirmation": "not displayed while macOS Chrome notifications were disabled"
+    },
+    "temporaryReminderRemoved": true,
+    "thirdTest": {
+      "dispatchObservedAt": "2026-11-08T02:22:53.646Z",
+      "checked": 1,
+      "sent": 1
+    },
+    "macOSNotificationSettings": {
+      "bothChromeEntriesInitiallyOff": true,
+      "bothEnabledNow": true
+    },
+    "userConfirmedNotificationAppeared": true,
+    "osBannerVerifiedByUser": true,
+    "osBannerVisuallyObservedByAutomation": false
+  },
+  "portfolio": {
+    "filesPreserved": [
+      ".nojekyll",
+      "index.html",
+      "resume.pdf"
+    ],
+    "liveHashesMatched": true,
+    "changesRestrictedTo": "archride/"
+  },
+  "limitations": [
+    "Physical iPhone and Android notification delivery has not been tested.",
+    "Browser, OS Focus settings and network conditions can delay delivery.",
+    "Leave times use the selected starting point; background location is not tracked."
+  ],
+  "sourceTreeMatchesTestedClientCode": true
+}
