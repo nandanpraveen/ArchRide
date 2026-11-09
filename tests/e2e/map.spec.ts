@@ -53,7 +53,6 @@ test("WebGL failure keeps the accessible directory and stop details usable", asy
   await mockTransit(page);
   await page.goto("/map?stop=uga-passio%3Aeast");
   await expect(page.getByText("The map could not load.", { exact: false })).toBeVisible();
-  await page.getByText("Browse routes and stops", { exact: true }).click();
   await expect(page.getByRole("list", { name: "Routes", exact: true })).toBeVisible();
   await expect(page.getByRole("region", { name: "Stop details" })).toContainText("Memorial Hall");
   await expect(page.getByRole("button", { name: "Retry map" })).toBeVisible();
@@ -100,4 +99,26 @@ test("searchable route picker supports keyboard selection, clearing and distingu
   await expect(stops.getByRole("link", { name: "Memorial Hall Stop west" })).toBeVisible();
   await page.getByRole("link", { name: "Skip map", exact: true }).click();
   await expect(page.locator("#map-sources")).toBeFocused();
+});
+
+
+test("browsing stays open before selected details and details are one click away", async ({ page }) => {
+  await mockTransit(page);
+  await page.goto("/map?stop=uga-passio%3Aeast");
+  const directory = page.getByRole("region", { name: "Transit directory", exact: true });
+  const selected = page.getByRole("region", { name: "Stop details", exact: true });
+  await expect(directory.getByRole("list", { name: "Routes", exact: true })).toBeVisible();
+  await expect(directory.getByRole("list", { name: "Boarding stops", exact: true })).toBeVisible();
+  expect(await directory.evaluate(element => {
+    const details = document.getElementById("map-details")!;
+    return !!(element.compareDocumentPosition(details) & Node.DOCUMENT_POSITION_FOLLOWING);
+  })).toBe(true);
+  await page.getByRole("link", { name: "View selected details", exact: true }).click();
+  await expect(selected.getByRole("heading", { name: "Memorial Hall", exact: true })).toBeInViewport();
+  await expect(page.locator("#map-details")).toBeFocused();
+  const routeLink = directory.getByRole("list", { name: "Routes", exact: true }).getByRole("link").first();
+  await routeLink.focus();
+  await routeLink.press("Enter");
+  await expect(routeLink).toHaveAttribute("aria-current", "page");
+  await expect(routeLink).toBeFocused();
 });

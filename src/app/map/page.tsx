@@ -174,7 +174,10 @@ function MapContent() {
     );
   });
   useEffect(() => {
-    if (document.activeElement?.matches("input, textarea, [role=combobox]"))
+    if (
+      document.activeElement?.matches("input, textarea, [role=combobox]") ||
+      document.activeElement?.closest("#transit-directory")
+    )
       return;
     const label = parkingId
       ? "Parking details"
@@ -278,7 +281,7 @@ function MapContent() {
         }}
       >
         <Paper
-          id="map-details"
+          id="map-directory"
           variant="outlined"
           sx={{ p: { xs: 2, sm: 2.5 }, minWidth: 0, borderRadius: "12px", scrollMarginTop: 24 }}
         >
@@ -286,7 +289,10 @@ function MapContent() {
             <Typography component="h2" variant="h2">
               {mode === "parking" ? "Find parking" : "Find a bus or stop"}
             </Typography>
-            <Button component="a" href="#campus-map" sx={{ alignSelf: "flex-start", display: { md: "none" }, px: 0 }}>View map</Button>
+            <Stack direction="row" useFlexGap sx={{ flexWrap: "wrap", gap: 1, display: { xs: "flex", md: mode === "transit" && selected ? "flex" : "none" } }}>
+              <Button component="a" href="#campus-map" sx={{ display: { md: "none" }, px: 0 }}>View map</Button>
+              {mode === "transit" && selected && <Button component="a" href="#map-details" sx={{ px: 0 }}>View selected details</Button>}
+            </Stack>
             <TextField
               label={mode === "parking" ? "Search parking lots and decks" : "Search route and stop directory"}
               placeholder={mode === "parking" ? "Lot name or code" : "Route or stop name"}
@@ -326,7 +332,7 @@ function MapContent() {
               query={query}
             />
           ) : data ? (
-            <Stack spacing={2.5}>
+            <Stack spacing={3}>
               {routeId && !route && (
                 <Alert severity="warning">
                   This route is not available in the current catalog.
@@ -342,82 +348,16 @@ function MapContent() {
                   This bus is no longer in the current snapshot.
                 </Alert>
               )}
-              {placeId && (
-                <MapPlaceDetails
-                  key={`${placeId}:${search.get("type")}`}
-                  id={placeId}
-                  type={search.get("type")}
-                  onPlace={handlePlace}
-                />
-              )}
-              {route && (
-                <MapRouteDetails
-                  key={route.id}
-                  route={route}
-                  stops={data.stops}
-                  tripId={tripId}
-                  onTrip={selectTrip}
-                  onGeometry={handleGeometry}
-                  onStop={selectStop}
-                />
-              )}
-              {stop && (
-                <MapStopDetails
-                  key={stop.id}
-                  stop={stop}
-                  routes={data.routes}
-                  revision={revision}
-                  connected={
-                    !data.errors?.health &&
-                    arrivalFeedConnected(
-                      data.health.find((h) => h.id.endsWith(":arrivals")),
-                    )
-                  }
-                />
-              )}
-              {vehicle && (
-                <Stack component="section" aria-label="Bus details" spacing={1}>
-                  <Typography component="h2" variant="h2" tabIndex={-1}>
-                    Bus {vehicle.source_id_raw}
-                  </Typography>
-                  <Typography variant="body2">
-                    {data.routes.find((r) => r.id === vehicle.route_id)
-                      ?.long_name || "Route unavailable"}{" "}
-                    · {vehicleFreshness(vehicle)} position ·{" "}
-                    {transitTime(vehicle.position_timestamp)}
-                  </Typography>
-                  {vehicle.stop_id && (
-                    <Button
-                      component={Link} prefetch={false}
-                      href={`/map?stop=${encodeURIComponent(vehicle.stop_id)}`}
-                    >
-                      Open reported stop
-                    </Button>
-                  )}
-                </Stack>
-              )}
-              <Box
-                component="details"
-                open={!selected || !!query}
-                id="transit-directory"
-              >
-                <Box
-                  component="summary"
-                  sx={{
-                    cursor: "pointer",
-                    py: 1.5,
-                    minHeight: 48,
-                    fontWeight: 600,
-                  }}
-                >
+              <Box id="transit-directory">
+                <Typography component="h3" variant="h2" sx={{ mb: 2 }}>
                   Browse routes and stops
-                </Box>
+                </Typography>
                 <Stack
                   component="section"
                   aria-label="Transit directory"
                   spacing={1}
                 >
-                  <Typography component="h3" variant="h3" sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                  <Typography component="h4" variant="h3" sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                     Routes <Box component="span" sx={{ color: "text.secondary", fontSize: ".875rem", fontWeight: 400 }}>{shownRoutes.length}</Box>
                   </Typography>
                   <List
@@ -431,6 +371,7 @@ function MapContent() {
                           component={Link} prefetch={false}
                           href={`/map?route=${encodeURIComponent(r.id)}`}
                           selected={r.id === routeId}
+                          aria-current={r.id === routeId ? "page" : undefined}
                           sx={{ gap: 1.5, minHeight: 68, px: 1, borderRadius: "8px", "&.Mui-selected": { outline: "1px solid", outlineColor: "primary.main", outlineOffset: -1 } }}
                         >
                           <Box aria-hidden="true" sx={{ position: "relative", display: "grid", placeItems: "center", width: 36, height: 36, borderRadius: "8px", bgcolor: "action.hover", flexShrink: 0 }}>
@@ -451,7 +392,7 @@ function MapContent() {
                   {!shownRoutes.length && (
                     <Typography variant="body2">No matching routes.</Typography>
                   )}
-                  <Typography component="h3" variant="h3" sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", pt: 1.5 }}>
+                  <Typography component="h4" variant="h3" sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", pt: 1.5 }}>
                     Boarding stops <Box component="span" sx={{ color: "text.secondary", fontSize: ".875rem", fontWeight: 400 }}>{shownStops.length}</Box>
                   </Typography>
                   {route && !routeGeometry && (
@@ -470,6 +411,7 @@ function MapContent() {
                           component={Link} prefetch={false}
                           href={`/map?${route ? `route=${encodeURIComponent(route.id)}&${tripId ? `trip=${encodeURIComponent(tripId)}&` : ""}` : ""}stop=${encodeURIComponent(s.id)}`}
                           selected={s.id === stopId}
+                          aria-current={s.id === stopId ? "page" : undefined}
                           sx={{ gap: 1.5, minHeight: 68, px: 1, borderRadius: "8px" }}
                         >
                           <PlaceOutlined sx={{ color: "text.secondary", flexShrink: 0 }} />
@@ -511,6 +453,65 @@ function MapContent() {
                   )}
                 </Stack>
               </Box>
+              {selected && (
+                <Stack id="map-details" tabIndex={-1} spacing={2.5} sx={{ scrollMarginTop: 24 }}>
+                  {placeId && (
+                    <MapPlaceDetails
+                      key={`${placeId}:${search.get("type")}`}
+                      id={placeId}
+                      type={search.get("type")}
+                      onPlace={handlePlace}
+                    />
+                  )}
+                  {route && (
+                    <MapRouteDetails
+                      key={route.id}
+                      route={route}
+                      stops={data.stops}
+                      tripId={tripId}
+                      onTrip={selectTrip}
+                      onGeometry={handleGeometry}
+                      onStop={selectStop}
+                    />
+                  )}
+                  {stop && (
+                    <MapStopDetails
+                      key={stop.id}
+                      stop={stop}
+                      routes={data.routes}
+                      revision={revision}
+                      connected={
+                        !data.errors?.health &&
+                        arrivalFeedConnected(
+                          data.health.find((h) => h.id.endsWith(":arrivals")),
+                        )
+                      }
+                    />
+                  )}
+                  {vehicle && (
+                    <Stack component="section" aria-label="Bus details" spacing={1}>
+                      <Typography component="h2" variant="h2" tabIndex={-1}>
+                        Bus {vehicle.source_id_raw}
+                      </Typography>
+                      <Typography variant="body2">
+                        {data.routes.find((r) => r.id === vehicle.route_id)
+                          ?.long_name || "Route unavailable"}{" "}
+                        · {vehicleFreshness(vehicle)} position ·{" "}
+                        {transitTime(vehicle.position_timestamp)}
+                      </Typography>
+                      {vehicle.stop_id && (
+                        <Button
+                          component={Link} prefetch={false}
+                          href={`/map?stop=${encodeURIComponent(vehicle.stop_id)}`}
+                        >
+                          Open reported stop
+                        </Button>
+                      )}
+                    </Stack>
+                  )}
+
+                </Stack>
+              )}
             </Stack>
           ) : status === "loading" ? (
             <Skeleton variant="rounded" height={240} />
@@ -549,8 +550,8 @@ function MapContent() {
             >
               Skip map
             </a>
-            {(selected || parkingId) && (
-              <Button component="a" href="#map-details" sx={{ display: { xs: "inline-flex", md: "none" } }}>
+            {parkingId && (
+              <Button component="a" href="#map-directory" sx={{ display: { xs: "inline-flex", md: "none" } }}>
                 View selected details
               </Button>
             )}
