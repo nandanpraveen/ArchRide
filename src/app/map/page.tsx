@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Alert,
+  Autocomplete,
   Box,
   Button,
   Checkbox,
@@ -13,7 +14,6 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-  MenuItem,
   Paper,
   Skeleton,
   Stack,
@@ -22,6 +22,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
+import PlaceOutlined from "@mui/icons-material/PlaceOutlined";
+import ChevronRightRounded from "@mui/icons-material/ChevronRightRounded";
+import SearchRounded from "@mui/icons-material/SearchRounded";
 import { AgencyAlert } from "@/components/agency-alert";
 import { ManualNotices } from "@/components/manual-notices";
 import { ParkingDirectory } from "@/components/parking-directory";
@@ -220,53 +224,6 @@ function MapContent() {
         <Tab label="Transit" value="transit" disabled={!ready} />
         <Tab label="Parking" value="parking" disabled={!ready} />
       </Tabs>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "minmax(0,1fr)",
-            sm:
-              mode === "transit"
-                ? "minmax(0,1fr) minmax(180px,.45fr)"
-                : "minmax(0,1fr)",
-          },
-          gap: 1.5,
-        }}
-      >
-        <TextField
-          label={
-            mode === "parking"
-              ? "Search parking lots and decks"
-              : "Search route and stop directory"
-          }
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          disabled={!ready}
-        />
-        {mode === "transit" && (
-          <TextField
-            select
-            label="Route filter"
-            value={route?.id ?? ""}
-            disabled={!ready || !data}
-            onChange={(e) =>
-              router.push(
-                e.target.value
-                  ? `/map?route=${encodeURIComponent(e.target.value)}`
-                  : "/map",
-                { scroll: false },
-              )
-            }
-          >
-            <MenuItem value="">All routes</MenuItem>
-            {data?.routes.map((r) => (
-              <MenuItem key={r.id} value={r.id}>
-                {r.long_name || r.short_name}
-              </MenuItem>
-            ))}
-          </TextField>
-        )}
-      </Box>
       {mode === "transit" && status === "unavailable" && (
         <Alert
           severity="warning"
@@ -313,108 +270,55 @@ function MapContent() {
           display: "grid",
           gridTemplateColumns: {
             xs: "minmax(0,1fr)",
-            md: "minmax(0,1fr) minmax(320px,380px)",
-            xl: "minmax(0,1fr) 420px",
+            md: "minmax(320px,380px) minmax(0,1fr)",
+            xl: "420px minmax(0,1fr)",
           },
           gap: 2.5,
           alignItems: "start",
         }}
       >
-        <Box sx={{ minWidth: 0, position: { md: "sticky" }, top: 24 }}>
-          <Stack
-            direction="row"
-            sx={{
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              mb: 1,
-            }}
-          >
-            {mode === "transit" && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={showParking}
-                    disabled={!ready}
-                    onChange={(e) => setShowParking(e.target.checked)}
-                  />
-                }
-                label="Show parking pins"
-                sx={{ m: 0 }}
-              />
-            )}
-            <a
-              href={
-                mode === "parking" ? "#parking-directory" : "#transit-directory"
-              }
-              className="quiet-link"
-            >
-              Skip map
-            </a>
-            {(selected || parkingId) && (
-              <Button component="a" href="#map-details" sx={{ display: { xs: "inline-flex", md: "none" } }}>
-                View selected details
-              </Button>
-            )}
-          </Stack>
-          <Box
-            sx={{
-              position: "relative",
-              height: { xs: "min(42dvh,360px)", md: "max(420px, calc(100dvh - 330px))" },
-              minHeight: 280,
-              borderRadius: "12px",
-              overflow: "hidden",
-              border: 1,
-              borderColor: "divider",
-              bgcolor: "background.paper",
-            }}
-          >
-            <TransitMap
-              key={mapKey}
-              routes={data?.routes ?? []}
-              stops={mode === "parking" ? [] : routeStops}
-              vehicles={mode === "parking" ? [] : vehicles}
-              path={
-                mode === "parking"
-                  ? EMPTY_PATH
-                  : (routeGeometry?.path ?? EMPTY_PATH)
-              }
-              route={route}
-              selectedStop={mode === "parking" ? undefined : stop}
-              selectedVehicle={mode === "parking" ? undefined : vehicle}
-              selectedPlace={mode === "parking" ? undefined : shownPlace}
-              selectedParking={parking}
-              showParking={mode === "parking" || showParking}
-              onParkingSelect={selectParking}
-              onSelect={select}
-              onTilesFailed={handleTilesFailed}
-            />
-          </Box>
-          {tilesFailed && (
-            <Alert
-              severity="info"
-              sx={{ mt: 1 }}
-              action={
-                <Button
-                  color="inherit"
-                  onClick={() => {
-                    setTilesFailed(false);
-                    setMapKey((key) => key + 1);
-                  }}
-                >
-                  Retry map
-                </Button>
-              }
-            >
-              The map could not load. Use the directory below.
-            </Alert>
-          )}
-        </Box>
         <Paper
           id="map-details"
           variant="outlined"
-          sx={{ p: 2, minWidth: 0, borderRadius: "12px", scrollMarginTop: 24 }}
+          sx={{ p: { xs: 2, sm: 2.5 }, minWidth: 0, borderRadius: "12px", scrollMarginTop: 24 }}
         >
+          <Stack spacing={2} sx={{ mb: 2.5 }}>
+            <Typography component="h2" variant="h2">
+              {mode === "parking" ? "Find parking" : "Find a bus or stop"}
+            </Typography>
+            <Button component="a" href="#campus-map" sx={{ alignSelf: "flex-start", display: { md: "none" }, px: 0 }}>View map</Button>
+            <TextField
+              label={mode === "parking" ? "Search parking lots and decks" : "Search route and stop directory"}
+              placeholder={mode === "parking" ? "Lot name or code" : "Route or stop name"}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              disabled={!ready}
+              slotProps={{ input: { startAdornment: <SearchRounded sx={{ mr: 1, color: "text.secondary" }} /> } }}
+            />
+            {mode === "transit" && (
+              <Autocomplete
+                options={data?.routes ?? []}
+                value={route ?? null}
+                disabled={!ready || !data}
+                autoHighlight
+                openOnFocus
+                getOptionLabel={(option) => option.long_name || option.short_name || "Unnamed route"}
+                getOptionKey={(option) => option.id}
+                isOptionEqualToValue={(a, b) => a.id === b.id}
+                onChange={(_, next) => router.push(next ? `/map?route=${encodeURIComponent(next.id)}` : "/map", { scroll: false })}
+                noOptionsText="No matching routes. Try another name."
+                slotProps={{ paper: { sx: { mt: 0.75, border: 1, borderColor: "divider", boxShadow: 3 } } }}
+                renderInput={(params) => <TextField {...params} label="Route filter" placeholder="All routes · type to filter" />}
+                renderOption={(props, option) => {
+                  const { key, ...rest } = props;
+                  return <li key={key} {...rest} style={{ minHeight: 56, gap: 12 }}>
+                    <Box aria-hidden="true" sx={{ width: 12, height: 12, borderRadius: "50%", bgcolor: routeColor(option), flexShrink: 0 }} />
+                    <Typography sx={{ fontWeight: 600, overflowWrap: "anywhere" }}>{option.long_name || option.short_name}</Typography>
+                  </li>;
+                }}
+              />
+            )}
+          </Stack>
           {mode === "parking" ? (
             <ParkingDirectory
               selectedId={parkingId}
@@ -513,8 +417,8 @@ function MapContent() {
                   aria-label="Transit directory"
                   spacing={1}
                 >
-                  <Typography component="h2" variant="h3">
-                    Routes
+                  <Typography component="h3" variant="h3" sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+                    Routes <Box component="span" sx={{ color: "text.secondary", fontSize: ".875rem", fontWeight: 400 }}>{shownRoutes.length}</Box>
                   </Typography>
                   <List
                     aria-label="Routes"
@@ -527,19 +431,19 @@ function MapContent() {
                           component={Link} prefetch={false}
                           href={`/map?route=${encodeURIComponent(r.id)}`}
                           selected={r.id === routeId}
-                          sx={{ gap: 1.5 }}
+                          sx={{ gap: 1.5, minHeight: 68, px: 1, borderRadius: "8px", "&.Mui-selected": { outline: "1px solid", outlineColor: "primary.main", outlineOffset: -1 } }}
                         >
-                          <Box
-                            aria-hidden="true"
-                            sx={{
-                              width: 10,
-                              height: 10,
-                              borderRadius: "50%",
-                              bgcolor: routeColor(r),
-                              flexShrink: 0,
-                            }}
+                          <Box aria-hidden="true" sx={{ position: "relative", display: "grid", placeItems: "center", width: 36, height: 36, borderRadius: "8px", bgcolor: "action.hover", flexShrink: 0 }}>
+                            <DirectionsBusRounded fontSize="small" />
+                            <Box sx={{ position: "absolute", width: 10, height: 10, right: -2, bottom: -2, bgcolor: routeColor(r), borderRadius: "50%", border: "2px solid", borderColor: "background.paper" }} />
+                          </Box>
+                          <ListItemText
+                            sx={{ overflowWrap: "anywhere" }}
+                            primary={r.long_name || r.short_name}
+                            secondary={`${data.vehicles.filter(v => v.route_id === r.id && vehicleFreshness(v) === "current").length} current bus positions · View stops`}
+                            slotProps={{ primary: { sx: { fontWeight: 650 } }, secondary: { sx: { fontSize: ".8125rem" } } }}
                           />
-                          <ListItemText primary={r.long_name || r.short_name} />
+                          <ChevronRightRounded fontSize="small" color="action" />
                         </ListItemButton>
                       </ListItem>
                     ))}
@@ -547,8 +451,8 @@ function MapContent() {
                   {!shownRoutes.length && (
                     <Typography variant="body2">No matching routes.</Typography>
                   )}
-                  <Typography component="h2" variant="h3">
-                    Boarding stops
+                  <Typography component="h3" variant="h3" sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", pt: 1.5 }}>
+                    Boarding stops <Box component="span" sx={{ color: "text.secondary", fontSize: ".875rem", fontWeight: 400 }}>{shownStops.length}</Box>
                   </Typography>
                   {route && !routeGeometry && (
                     <Typography variant="body2">
@@ -564,10 +468,13 @@ function MapContent() {
                       <ListItem key={s.id} disablePadding>
                         <ListItemButton
                           component={Link} prefetch={false}
-                          href={`/map?stop=${encodeURIComponent(s.id)}`}
+                          href={`/map?${route ? `route=${encodeURIComponent(route.id)}&${tripId ? `trip=${encodeURIComponent(tripId)}&` : ""}` : ""}stop=${encodeURIComponent(s.id)}`}
                           selected={s.id === stopId}
+                          sx={{ gap: 1.5, minHeight: 68, px: 1, borderRadius: "8px" }}
                         >
-                          <ListItemText primary={s.name} />
+                          <PlaceOutlined sx={{ color: "text.secondary", flexShrink: 0 }} />
+                          <ListItemText sx={{ overflowWrap: "anywhere" }} primary={s.name} secondary={`Stop ${s.source_id_raw}`} slotProps={{ primary: { sx: { fontWeight: 600 } }, secondary: { sx: { fontSize: ".8125rem" } } }} />
+                          <ChevronRightRounded fontSize="small" color="action" />
                         </ListItemButton>
                       </ListItem>
                     ))}
@@ -613,10 +520,100 @@ function MapContent() {
             </Typography>
           )}
         </Paper>
+        <Box id="campus-map" sx={{ minWidth: 0, position: { md: "sticky" }, top: 24, scrollMarginTop: 24 }}>
+          <Stack
+            direction="row"
+            sx={{
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              mb: 1,
+            }}
+          >
+            {mode === "transit" && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={showParking}
+                    disabled={!ready}
+                    onChange={(e) => setShowParking(e.target.checked)}
+                  />
+                }
+                label="Show parking pins"
+                sx={{ m: 0 }}
+              />
+            )}
+            <a
+              href="#map-sources"
+              className="quiet-link"
+            >
+              Skip map
+            </a>
+            {(selected || parkingId) && (
+              <Button component="a" href="#map-details" sx={{ display: { xs: "inline-flex", md: "none" } }}>
+                View selected details
+              </Button>
+            )}
+          </Stack>
+          <Box
+            sx={{
+              position: "relative",
+              height: { xs: "min(42dvh,360px)", md: "max(420px, calc(100dvh - 280px))" },
+              minHeight: 280,
+              borderRadius: "12px",
+              overflow: "hidden",
+              border: 1,
+              borderColor: "divider",
+              bgcolor: "background.paper",
+            }}
+          >
+            <TransitMap
+              key={mapKey}
+              routes={data?.routes ?? []}
+              stops={mode === "parking" ? [] : routeStops}
+              vehicles={mode === "parking" ? [] : vehicles}
+              path={
+                mode === "parking"
+                  ? EMPTY_PATH
+                  : (routeGeometry?.path ?? EMPTY_PATH)
+              }
+              route={route}
+              pathId={routeGeometry ? `${routeGeometry.routeId}:${routeGeometry.tripId}` : undefined}
+              selectedStop={mode === "parking" ? undefined : stop}
+              selectedVehicle={mode === "parking" ? undefined : vehicle}
+              selectedPlace={mode === "parking" ? undefined : shownPlace}
+              selectedParking={parking}
+              showParking={mode === "parking" || showParking}
+              onParkingSelect={selectParking}
+              onSelect={select}
+              onTilesFailed={handleTilesFailed}
+            />
+          </Box>
+          {tilesFailed && (
+            <Alert
+              severity="info"
+              sx={{ mt: 1 }}
+              action={
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    setTilesFailed(false);
+                    setMapKey((key) => key + 1);
+                  }}
+                >
+                  Retry map
+                </Button>
+              }
+            >
+              The map could not load. Use the route and stop directory.
+            </Alert>
+          )}
+        </Box>
       </Box>
       <Box component="details">
         <Box
           component="summary"
+          id="map-sources"
           sx={{
             minHeight: 48,
             py: 1.5,

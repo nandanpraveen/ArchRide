@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@mui/material";
+import ZoomOutMapRounded from "@mui/icons-material/ZoomOutMapRounded";
 import { useRouter } from "next/navigation";
 import * as maplibregl from "maplibre-gl";
 import type { Route, Stop, Vehicle } from "@/lib/transit/contracts";
@@ -21,6 +23,7 @@ type TransitMapProps = {
   stops: Stop[];
   vehicles: Vehicle[];
   path: [number, number][];
+  pathId?: string;
   selectedStop?: Stop;
   selectedVehicle?: Vehicle;
   selectedPlace?: { latitude: number; longitude: number; name: string };
@@ -37,6 +40,7 @@ export default function TransitMap({
   stops,
   vehicles,
   path,
+  pathId,
   selectedStop,
   selectedVehicle,
   selectedPlace,
@@ -50,8 +54,25 @@ export default function TransitMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const lastSelection = useRef("");
+  const fittedPath = useRef("");
+  const [mapReady, setMapReady] = useState(false);
   const [outsideArea, setOutsideArea] = useState(false);
   const router = useRouter();
+  // Compare geometry by value: clocks and feed refreshes create new arrays.
+  const pathKey = JSON.stringify(path);
+  const cameraKey = pathId || route?.id || pathKey;
+  const color = routeColor(route);
+  const focusSelected = !!(selectedStop || selectedVehicle || selectedPlace || selectedParking);
+  const fitPath = useCallback(() => {
+    const map = mapRef.current;
+    const coordinates: [number, number][] = JSON.parse(pathKey);
+    if (!map || coordinates.length < 2) return;
+    const bounds = coordinates.reduce(
+      (bounds, point) => bounds.extend(point),
+      new maplibregl.LngLatBounds(coordinates[0], coordinates[0]),
+    );
+    map.fitBounds(bounds, { padding: 40, duration: 0, maxZoom: 16 });
+  }, [pathKey]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -106,6 +127,7 @@ export default function TransitMap({
       return;
     }
     mapRef.current = map;
+    map.once("load", () => setMapReady(true));
     map.addControl(
       new maplibregl.NavigationControl({ showCompass: false }),
       "top-right",
@@ -341,39 +363,35 @@ export default function TransitMap({
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map) return;
+    if (!map || !mapReady) return;
     const draw = () => {
-      if (map.getLayer("selected-route")) map.removeLayer("selected-route");
-      if (map.getSource("selected-route")) map.removeSource("selected-route");
-      if (path.length < 2) return;
-      map.addSource("selected-route", {
-        type: "geojson",
-        data: {
-          type: "Feature",
-          properties: {},
-          geometry: { type: "LineString", coordinates: path },
-        },
-      });
-      map.addLayer({
-        id: "selected-route",
-        type: "line",
-        source: "selected-route",
-        paint: { "line-color": routeColor(route), "line-width": 5 },
-      });
-      if (!selectedStop && !selectedVehicle) {
-        const bounds = path.reduce(
-          (b, p) => b.extend(p),
-          new maplibregl.LngLatBounds(path[0], path[0]),
-        );
-        map.fitBounds(bounds, { padding: 40, duration: 0, maxZoom: 16 });
+      const coordinates: [number, number][] = JSON.parse(pathKey);
+      const data = {
+        type: "FeatureCollection" as const,
+        features: coordinates.length < 2 ? [] : [{
+          type: "Feature" as const, properties: {},
+          geometry: { type: "LineString" as const, coordinates },
+        }],
+      };
+      const source = map.getSource("selected-route") as maplibregl.GeoJSONSource | undefined;
+      if (source) source.setData(data);
+      else {
+        map.addSource("selected-route", { type: "geojson", data });
+        map.addLayer({
+          id: "selected-route", type: "line", source: "selected-route",
+          layout: { "line-join": "round", "line-cap": "round" },
+          paint: { "line-color": color, "line-width": 5 },
+        });
+      }
+      map.setPaintProperty("selected-route", "line-color", color);
+      if (coordinates.length < 2) fittedPath.current = "";
+      else if (cameraKey !== fittedPath.current) {
+        if (!focusSelected) fitPath();
+        fittedPath.current = cameraKey;
       }
     };
-    if (map.isStyleLoaded()) draw();
-    else map.once("load", draw);
-    return () => {
-      map.off("load", draw);
-    };
-  }, [path, route, selectedStop, selectedVehicle]);
+    draw();
+  }, [mapReady, pathKey, color, cameraKey, focusSelected, fitPath]);
 
   return (
     <>
@@ -383,6 +401,16 @@ export default function TransitMap({
         aria-label="Campus map"
         style={{ position: "absolute", inset: 0 }}
       />
+      {path.length > 1 && (
+        <Button
+          onClick={fitPath}
+          startIcon={<ZoomOutMapRounded />}
+          variant="outlined"
+          sx={{ position: "absolute", left: 12, top: 12, bgcolor: "background.paper", color: "text.primary", borderColor: "divider", "&:hover": { bgcolor: "background.default" } }}
+        >
+          Fit route
+        </Button>
+      )}
       {outsideArea && (
         <div
           role="status"

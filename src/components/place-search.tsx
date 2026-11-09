@@ -9,6 +9,8 @@ import {
   Typography,
 } from "@mui/material";
 import { searchPlaces, type Place } from "@/lib/campus-data";
+import DirectionsBusRounded from "@mui/icons-material/DirectionsBusRounded";
+import PlaceOutlined from "@mui/icons-material/PlaceOutlined";
 
 type Status = "idle" | "loading" | "ok" | "unavailable" | "error";
 
@@ -110,6 +112,11 @@ export function PlaceSearch({
         getOptionKey={(option) => `${option.type}:${option.id}`}
         isOptionEqualToValue={(a, b) => a.id === b.id && a.type === b.type}
         loading={status === "loading"}
+        openOnFocus
+        slotProps={{
+          paper: { sx: { mt: 0.75, border: 1, borderColor: "divider", boxShadow: 3 } },
+          listbox: { sx: { py: 0.5, "& .MuiAutocomplete-option": { gap: 1.5, py: 1.25 } } },
+        }}
         noOptionsText={
           <Box>
             {emptyText}
@@ -140,12 +147,15 @@ export function PlaceSearch({
         renderOption={(props, option) => {
           const { key, ...rest } = props;
           return (
-            <li key={key} {...rest} style={{ minHeight: 48 }}>
+            <li key={key} {...rest} style={{ minHeight: 64 }}>
+              <Box sx={{ display: "grid", placeItems: "center", width: 36, height: 36, flexShrink: 0, borderRadius: "8px", bgcolor: "action.hover", color: "text.secondary" }}>
+                {option.type === "stop" ? <DirectionsBusRounded fontSize="small" /> : <PlaceOutlined fontSize="small" />}
+              </Box>
               <Box sx={{ minWidth: 0 }}>
-                <Typography sx={{ overflowWrap: "anywhere" }}>
+                <Typography sx={{ overflowWrap: "anywhere", fontWeight: 600 }}>
                   {option.name}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="body2" color="text.secondary">
                   {typeLabel[option.type]}
                   {options.filter(
                     (place) =>

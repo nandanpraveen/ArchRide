@@ -79,3 +79,25 @@ test("directory filtering, Back and mobile layout work without map tiles", async
   await expect(page).toHaveURL(/\/map\/?$/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
+
+test("searchable route picker supports keyboard selection, clearing and distinguishable stops", async ({ page }) => {
+  await mockTransit(page);
+  await page.goto("/map");
+  const picker = page.getByRole("combobox", { name: "Route filter", exact: true });
+  await picker.fill("Campus");
+  await expect(page.getByRole("option", { name: "Campus Loop", exact: true })).toBeVisible();
+  await picker.press("ArrowDown");
+  await picker.press("Enter");
+  await expect(page).toHaveURL(/route=uga-passio%3Ar/);
+  await expect(page.getByRole("list", { name: "Ordered stop occurrences" }).getByRole("button")).toHaveCount(3);
+  await picker.fill("does not exist");
+  await expect(page.getByText("No matching routes. Try another name.")).toBeVisible();
+  await picker.press("Escape");
+  await page.getByRole("button", { name: "Clear", exact: true }).click();
+  await expect(page).toHaveURL(/\/map\/?$/);
+  const stops = page.getByRole("list", { name: "Boarding stops" });
+  await expect(stops.getByRole("link", { name: "Memorial Hall Stop east" })).toBeVisible();
+  await expect(stops.getByRole("link", { name: "Memorial Hall Stop west" })).toBeVisible();
+  await page.getByRole("link", { name: "Skip map", exact: true }).click();
+  await expect(page.locator("#map-sources")).toBeFocused();
+});

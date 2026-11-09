@@ -26,6 +26,8 @@ async function startBus(page: Page) {
   await expect(page.getByRole("heading", { name: "Plan your trip", exact: true })).toBeVisible();
   const bus = page.getByRole("article").filter({ has: page.getByRole("heading", { name: "Campus Loop", exact: true }) }).first();
   await expect(bus).toContainText("Northbound Loop");
+  await expect(bus).toContainText("Board at · Stop east");
+  await expect(bus).toContainText("Get off at Memorial Hall · Stop west");
   await bus.getByRole("button", { name: "Start trip", exact: true }).click();
   const active = page.getByRole("region", { name: "Active trip" });
   await expect(active).toContainText("Walk to boarding stop");

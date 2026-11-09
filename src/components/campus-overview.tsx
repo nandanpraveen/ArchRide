@@ -14,10 +14,12 @@ const EMPTY: [number, number][] = [];
 export function CampusOverview({
   data,
   path = EMPTY,
+  pathId,
   unavailable = false,
 }: {
   data: PublicTransitData | null;
   path?: [number, number][];
+  pathId?: string;
   unavailable?: boolean;
 }) {
   const [failed, setFailed] = useState(false),
@@ -53,6 +55,7 @@ export function CampusOverview({
           vehicles={[]}
           showParking={false}
           path={path}
+          pathId={pathId}
           onSelect={select}
           onTilesFailed={failure}
         />

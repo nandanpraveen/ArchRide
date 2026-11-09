@@ -3,6 +3,16 @@ import type { PushState } from "./push-reminders";
 const KEY = "archride.browser-push.v1";
 const CHANGED = "archride:push-changed";
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const PUSH_SERVICE_ERROR = "Your browser couldn’t connect to its push service. Check your connection and browser push settings, then retry. Helium currently has no background push service; open ArchRide in Chrome, Firefox, Edge, or Safari to enable reminders when the app is closed.";
+
+async function within<T>(operation: Promise<T>, message: string, milliseconds = 12000): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([operation, new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error(message)), milliseconds);
+    })]);
+  } finally { clearTimeout(timer); }
+}
 export type PushDevice = { token: string; enabled: boolean; syncedAt?: string; expiresAt?: string };
 export function readPushDevice(): PushDevice | null {
   try {
@@ -23,10 +33,21 @@ export function browserPushSupport(): "supported" | "install" | "unsupported" {
 export async function pushRegistration() {
   const registration = await navigator.serviceWorker.register(`${basePath}/notifications-sw.js`, { scope: `${basePath}/`, updateViaCache: "none" });
   if (registration.active) return registration;
-  return Promise.race([
-    navigator.serviceWorker.ready,
-    new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Notification setup took too long. Try again.")), 10000)),
-  ]);
+  // Wait for this worker, rather than an unrelated registration on the origin.
+  const worker = registration.installing || registration.waiting;
+  if (!worker) throw new Error("Notification setup failed. Reload ArchRide and try again.");
+  await within(new Promise<void>((resolve, reject) => {
+    const changed = () => {
+      if (worker.state === "activated" || worker.state === "redundant") {
+        worker.removeEventListener("statechange", changed);
+        if (worker.state === "activated") resolve();
+        else reject(new Error("Notification setup failed. Reload ArchRide and try again."));
+      }
+    };
+    worker.addEventListener("statechange", changed);
+    changed();
+  }), "Notification setup took too long. Reload ArchRide and try again.");
+  return registration;
 }
 async function pushRequest(body?: unknown) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -63,8 +84,23 @@ export async function enableBrowserPush(state: PushState, permission: Promise<No
   await serialized(async () => {
     const { publicKey } = await pushRequest();
     const registration = await pushRegistration();
+    if (typeof publicKey !== "string" || !/^[A-Za-z0-9_-]{87}$/.test(publicKey)) throw new Error("Browser reminder configuration is unavailable. Try again later.");
     const bytes = Uint8Array.from(atob(publicKey.replace(/-/g, "+").replace(/_/g, "/")), character => character.charCodeAt(0));
-    const subscription = await registration.pushManager.getSubscription() ?? await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes });
+    if (bytes.length !== 65 || bytes[0] !== 4) throw new Error("Browser reminder configuration is unavailable. Try again later.");
+    let subscription = await registration.pushManager.getSubscription();
+    const existingKey = subscription?.options?.applicationServerKey;
+    if (subscription && existingKey && (existingKey.byteLength !== bytes.length || new Uint8Array(existingKey).some((byte, index) => byte !== bytes[index]))) {
+      if (!await subscription.unsubscribe()) throw new Error("Couldn’t refresh this browser’s old notification subscription. Reload and retry.");
+      subscription = null;
+    }
+    if (!subscription) {
+      try {
+        subscription = await within(registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: bytes }), PUSH_SERVICE_ERROR);
+      } catch (problem) {
+        if (Notification.permission === "denied" || problem instanceof DOMException && problem.name === "NotAllowedError") throw new Error("Notifications are blocked. Allow ArchRide in your browser’s site settings, then retry.");
+        throw new Error(PUSH_SERVICE_ERROR);
+      }
+    }
     const device = readPushDevice() ?? { token: Array.from(crypto.getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, "0")).join(""), enabled: false };
     // Persist the capability before sending so even a failed response can be revoked.
     saveDevice({ ...device, enabled: false });

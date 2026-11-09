@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Alert,
+  Autocomplete,
   Box,
   Button,
   List,
   ListItem,
   ListItemButton,
   ListItemText,
-  MenuItem,
   Stack,
   TextField,
   Typography,
@@ -99,19 +99,19 @@ export function MapRouteDetails({
         <Typography>No route patterns are available.</Typography>
       ) : (
         <>
-          <TextField
-            select
-            label="Direction"
-            value={trip?.id || ""}
-            onChange={(e) => onTrip(e.target.value)}
-          >
-            {trips.map((t) => (
-              <MenuItem key={t.id} value={t.id}>
-                {t.headsign || "Direction unavailable"}
-                {t.direction_id === null ? "" : ` · direction ${t.direction_id}`}
-              </MenuItem>
-            ))}
-          </TextField>
+          <Autocomplete
+            options={trips}
+            value={trip ?? null}
+            disableClearable={!!trip}
+            autoHighlight
+            openOnFocus
+            getOptionLabel={(option) => `${option.headsign || "Direction unavailable"}${option.direction_id === null ? "" : ` · direction ${option.direction_id}`}`}
+            getOptionKey={(option) => option.id}
+            isOptionEqualToValue={(a, b) => a.id === b.id}
+            onChange={(_, next) => { if (next) onTrip(next.id); }}
+            renderInput={(params) => <TextField {...params} label="Direction" helperText="Choose the direction before picking your stop." />}
+            slotProps={{ listbox: { sx: { "& .MuiAutocomplete-option": { minHeight: 56, overflowWrap: "anywhere" } } } }}
+          />
           {trip ? (
             <MapTripDetails
               key={trip.id}
@@ -262,13 +262,14 @@ function MapTripDetails({
               <ListItemButton
                 disabled={!stop}
                 onClick={() => onStop(time.stop_id)}
-                sx={{ minHeight: 48 }}
+                sx={{ minHeight: 60, borderRadius: "8px", gap: 1 }}
               >
                 <ListItemText
                   primary={`${time.stop_sequence}. ${stop?.name || "Stop unavailable"}`}
                   secondary={
-                    time.pickup_type === 1 ? "No boarding at this occurrence" : undefined
+                    time.pickup_type === 1 ? "No boarding at this occurrence" : stop ? `Stop ${stop.source_id_raw}` : undefined
                   }
+                  slotProps={{ primary: { sx: { fontWeight: 600 } } }}
                 />
               </ListItemButton>
             </ListItem>

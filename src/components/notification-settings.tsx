@@ -54,6 +54,7 @@ export function NotificationSettings() {
         ) : (
           <>
             <Typography variant="body2" color="text.secondary">Get leave-time reminders even when ArchRide is closed. Enabling shares this browser’s push subscription, watched buses, and the next seven days of reminder times with ArchRide.</Typography>
+            <Typography variant="body2" color="text.secondary">Requires a browser with background push support. Helium currently supports in-app reminders only.</Typography>
             <Button variant={browser.enabled ? "outlined" : "contained"} disabled={browser.busy || browser.support === "loading" || status !== "ready"} onClick={() => void (browser.enabled ? browser.disable() : browser.enable())} sx={{ alignSelf: "flex-start" }}>
               {browser.busy ? "Updating notifications…" : browser.enabled ? "Turn off browser notifications" : "Enable browser notifications"}
             </Button>

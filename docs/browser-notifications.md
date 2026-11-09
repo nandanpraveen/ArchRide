@@ -14,6 +14,12 @@ In Profile → Leave-now reminders, choose **Enable browser notifications** and 
 
 On macOS, browser permission alone is not enough if System Settings → Notifications has Chrome turned off. Check both Chrome entries when macOS lists more than one. Allow desktop/Notification Center display, and check Focus or screen-sharing suppression if a received push is not visible. ArchRide cannot detect or override these OS settings.
 
+### Registration failures
+
+Permission to display notifications does not prove that a browser has a background push service. Helium currently lacks Web Push delivery even though it exposes the browser APIs and permission prompt; its maintainers track this in [issue 705](https://github.com/imputnet/helium/issues/705) and [feature request 927](https://github.com/imputnet/helium/issues/927). Use Chrome, Firefox, Edge, or Safari for background reminders. In-app reminders remain available in Helium.
+
+If registration reports a push-service failure in a supported browser, check the connection and the browser’s push settings, then retry. ArchRide bounds a stalled subscription attempt to 12 seconds, waits for its own service worker to activate, and replaces subscriptions tied to an old application key before syncing. A failed subscription never claims that reminders are enabled or uploads a new reminder schedule. The production configuration endpoint was verified to return a valid 65-byte P-256 public key during the November 8 fix; the VAPID keys were not rotated.
+
 ## Runtime and privacy
 
 The app remains statically exported for GitHub Pages, including `/archride/`-scoped service worker, manifest, icons, and notification click links. There is no fetch handler or offline cache. The worker handles push even with no page loaded; tapping opens the relevant plan or stop. An expired instruction is suppressed rather than delivered late.

@@ -170,12 +170,12 @@ function JourneyCard({
                 min
               </Box>
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
               Arrive {time(journey.destinationArrivalAt)}
             </Typography>
           </Box>
         </Box>
-        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+        <Typography sx={{ fontSize: "1.125rem", fontWeight: 700 }}>
           {Date.parse(journey.departureAt) - now > 60000
             ? `Leave at ${time(journey.departureAt)}`
             : "Leave now"}
@@ -183,6 +183,16 @@ function JourneyCard({
             ? ` · ${minutes(journey.walkingSeconds)} min walking`
             : ""}
         </Typography>
+        {journey.mode === "bus" && journey.board && journey.alight && (
+          <Box sx={{ py: 1.5, borderBlock: 1, borderColor: "divider" }}>
+            <Typography variant="body2" color="text.secondary">Board at · Stop {journey.board.source_id_raw}</Typography>
+            <Typography sx={{ fontWeight: 700 }}>{journey.board.name}</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              Get off at {journey.alight.name} · Stop {journey.alight.source_id_raw}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">{minutes(journey.legs.find(leg => leg.kind === "wait")?.seconds ?? 0)} min wait at boarding stop</Typography>
+          </Box>
+        )}
         {assessment && (
           <Typography variant="body2" color="text.secondary">
             {assessment.reason} All times are estimates.
@@ -764,7 +774,7 @@ function PlanContent() {
               top: 24,
             }}
           >
-            <CampusOverview data={transit.data} path={first?.mode === "walk" ? mapPath : undefined} unavailable={transit.status === "unavailable"} />
+            <CampusOverview data={transit.data} path={first?.mode === "walk" ? mapPath : undefined} pathId={first ? `${query}:${first.id}` : undefined} unavailable={transit.status === "unavailable"} />
           </Box>
         )}
       </Box>
