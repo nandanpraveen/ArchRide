@@ -60,6 +60,9 @@ test("WebGL failure keeps the accessible directory and stop details usable", asy
 
 test("invalid route, stop and place direct links fail honestly", async ({ page }) => {
   await mockTransit(page);
+  await page.goto("/map?route=unknown");
+  await expect(page.getByText("This route is not available in the current catalog.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "View selected details", exact: true })).toHaveCount(0);
   await page.goto("/map?route=unknown&stop=unknown&place=unknown&type=building");
   await expect(page.getByText("This route is not available in the current catalog.")).toBeVisible();
   await expect(page.getByText("This stop is not available in the current catalog.")).toBeVisible();

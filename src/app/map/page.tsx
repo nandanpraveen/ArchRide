@@ -155,7 +155,7 @@ function MapContent() {
       .map((h) => `${h.id}:${h.updated_at}`)
       .join("|") ?? "";
   const shownPlace = placeId && place?.id === placeId ? place : undefined;
-  const selected = !!(routeId || stopId || vehicleId || placeId);
+  const selected = !!(route || stop || vehicle || placeId);
   const alerts = activeTransitAlerts(data?.alerts ?? []).filter((alert) => {
     if (!route && !stop) return true;
     if (
